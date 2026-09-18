@@ -1,11 +1,15 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '../../utils/supabase/server';
-import LogoutButton from '../../components/LogoutButton';
+import Link from 'next/link';
 
-export default async function Dashboard() {
-  const supabase=await createClient();
-  const {data:{user}}=await supabase.auth.getUser();
-  if(!user) redirect('/login');
-  const meta=user.user_metadata||{};
-  return <main><nav className="nav"><div className="brand">Sunstrade</div><LogoutButton /></nav><div className="container"><h1>Dashboard</h1><p className="muted">Welcome, {meta.name||user.email}.</p><div className="grid"><div className="stat"><h3>Email</h3><p>{user.email}</p></div><div className="stat"><h3>Country</h3><p>{meta.country||'Not set'}</p></div><div className="stat"><h3>Account</h3><p>Authenticated</p></div></div></div></main>;
+export default function Home() {
+  return <main>
+    <nav className="nav"><div className="brand">Sunstrade</div><div><Link className="btn secondary" href="/login">Login</Link></div></nav>
+    <section className="hero container">
+      <h1>Welcome to Sunstrade</h1>
+      <p className="muted">Create your account and access your personal dashboard.</p>
+      <div className="actions">
+        <Link className="btn" href="/signup">Create Account</Link>
+        <Link className="btn secondary" href="/login">Login</Link>
+      </div>
+    </section>
+  </main>;
 }
