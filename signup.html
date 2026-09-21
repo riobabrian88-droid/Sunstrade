@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create account · Sunraku Trade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <line x1="6" y1="2" x2="6" y2="20" stroke="#c2483d" stroke-width="1.4"/>
+      <rect x="3.2" y="7" width="5.6" height="8" fill="#c2483d"/>
+      <line x1="16" y1="4" x2="16" y2="18" stroke="#3e7d8c" stroke-width="1.4"/>
+      <rect x="13.2" y="9" width="5.6" height="6" fill="#3e7d8c"/>
+    </svg>
+    Sunraku Trade
+  </a>
+  <div class="nav-actions">
+    <a class="nav-link" href="login.html">Sign in</a>
+  </div>
+</nav>
+
+<div class="auth-wrap">
+  <div class="card">
+    <h2>Open an account</h2>
+    <form id="signupForm" novalidate>
+      <p>Takes about a minute. You can start exploring the dashboard right after.</p>
+
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" autocomplete="name">
+        <span class="field-error" id="name-error" role="alert"></span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+        <span class="field-error" id="email-error" role="alert"></span>
+      </div>
+
+      <div class="field">
+        <label for="country">Country of residence</label>
+        <select id="country" name="country">
+          <option value="" selected disabled>Select a country</option>
+          <option>Japan</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Singapore</option>
+          <option>Australia</option>
+          <option>Other</option>
+        </select>
+        <span class="field-error" id="country-error" role="alert"></span>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input id="password" name="password" type="password" autocomplete="new-password">
+          <button type="button" class="pw-toggle" id="pwToggle" aria-pressed="false">Show</button>
+        </div>
+        <div class="pw-meter" id="pwMeter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <span class="field-hint" id="pwHint">At least 8 characters.</span>
+        <span class="field-error" id="password-error" role="alert"></span>
+      </div>
+
+      <div class="field">
+        <label for="confirm">Confirm password</label>
+        <input id="confirm" name="confirm" type="password" autocomplete="new-password">
+        <span class="field-error" id="confirm-error" role="alert"></span>
+      </div>
+
+      <label class="checkbox-row" for="terms">
+        <input type="checkbox" id="terms" name="terms">
+        <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</span>
+      </label>
+      <span class="field-error" id="terms-error" role="alert"></span>
+
+      <button class="btn" type="submit">Create account</button>
+    </form>
+
+    <div class="success" id="successPanel">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#c89b3c" stroke-width="2">
+        <circle cx="20" cy="20" r="17"/>
+        <path d="M12 20l6 6 10-12"/>
+      </svg>
+      <h2>Account created</h2>
+      <p>We sent a confirmation to <span id="successEmail" class="mono"></span>. Click the link in that email, then <a href="login.html" style="color:var(--gold-bright)">sign in</a>.</p>
+    </div>
+
+    <div class="auth-page-link">Already have an account? <a href="login.html">Sign in</a></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/signup.js"></script>
+</body>
+</html>
