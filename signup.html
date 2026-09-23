@@ -3,143 +3,47 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Create Account · Sunraku Trade</title>
+<title>Create account · Sunraku Trade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/signup.css">
 </head>
 <body class="signup-app">
-
 <header class="signup-header">
-  <a class="brand" href="index.html">
-    <span class="brand-mark">
-      <svg viewBox="0 0 40 40" fill="none">
-        <path d="M5 29V18l7-5v8l8-12 5 4 10-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M26 4h9v9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </span>
-    <span><strong>Sunraku <em>Trade</em></strong><small>Read the candles, not the noise.</small></span>
-  </a>
-  <div class="header-login">Already have an account? <a href="login.html">Sign in</a></div>
+<a class="brand" href="index.html"><span class="brand-mark"><svg viewBox="0 0 40 40" fill="none"><path d="M6 28L15 19L21 24L34 9" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 9H34V16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Sunraku <em>Trade</em></strong><small>MARKET INTELLIGENCE</small></span></a>
+<div class="header-login">Already have an account?<a href="login.html">Sign in</a></div>
 </header>
-
 <main class="signup-layout">
-  <section class="signup-visual">
-    <div class="visual-copy">
-      <span class="eyebrow">START TRADING SMARTER</span>
-      <h1>Build your view.<br><span>Trade with clarity.</span></h1>
-      <p>One dashboard for markets, positions and trading insights — designed to keep the important numbers in view.</p>
-    </div>
-
-    <div class="mini-chart">
-      <div class="chart-label"><span>BTC/USD</span><strong>67,482.35</strong><b>+1.89%</b></div>
-      <svg viewBox="0 0 700 270" preserveAspectRatio="none">
-        <defs>
-          <pattern id="signupGrid" width="70" height="54" patternUnits="userSpaceOnUse">
-            <path d="M70 0H0V54" fill="none" stroke="#173047" stroke-width="1"/>
-          </pattern>
-        </defs>
-        <rect width="700" height="270" fill="url(#signupGrid)"/>
-        <path d="M0 220 C45 180,65 215,105 190 S155 200,195 165 S250 190,290 145 S345 155,380 120 S430 150,465 105 S520 125,555 80 S620 100,700 35" fill="none" stroke="#00d6a3" stroke-width="3"/>
-        <path d="M0 220 C45 180,65 215,105 190 S155 200,195 165 S250 190,290 145 S345 155,380 120 S430 150,465 105 S520 125,555 80 S620 100,700 35 L700 270 L0 270Z" fill="#00d6a3" opacity=".05"/>
-      </svg>
-      <div class="chart-time"><span>09:00</span><span>12:00</span><span>15:00</span><span>18:00</span><span>21:00</span></div>
-    </div>
-
-    <div class="feature-row">
-      <div><b>01</b><strong>Watch markets</strong><small>Track the instruments that matter.</small></div>
-      <div><b>02</b><strong>Manage positions</strong><small>Keep your account activity organized.</small></div>
-      <div><b>03</b><strong>Find what's next</strong><small>Spot setups worth a closer look.</small></div>
-    </div>
-    <small class="demo-note">Market data and trading shown in this demo are illustrative.</small>
-  </section>
-
-  <section class="signup-card">
-    <div class="form-heading">
-      <span class="form-icon">↗</span>
-      <div>
-        <span class="eyebrow">CREATE ACCOUNT</span>
-        <h2>Welcome to Sunraku</h2>
-        <p>Set up your account in a few steps.</p>
-      </div>
-    </div>
-
-    <form id="signupForm" novalidate>
-      <div class="field">
-        <label for="fullName">Full name</label>
-        <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Your full name" required>
-      </div>
-
-      <div class="field">
-        <label for="email">Email address</label>
-        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-      </div>
-
-      <div class="field">
-        <label for="country">Country</label>
-        <select id="country" name="country" required>
-          <option value="" selected disabled>Select your country</option>
-          <option>Kenya</option>
-          <option>Japan</option>
-          <option>United States</option>
-          <option>United Kingdom</option>
-          <option>Singapore</option>
-          <option>Australia</option>
-          <option>Other</option>
-        </select>
-      </div>
-
-      <div class="field-grid">
-        <div class="field">
-          <label for="password">Password</label>
-          <div class="password-wrap">
-            <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" required>
-            <button type="button" class="show-pass" data-target="password">Show</button>
-          </div>
-        </div>
-        <div class="field">
-          <label for="confirmPassword">Confirm password</label>
-          <div class="password-wrap">
-            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat password" required>
-            <button type="button" class="show-pass" data-target="confirmPassword">Show</button>
-          </div>
-        </div>
-      </div>
-
-      <label class="terms">
-        <input id="terms" type="checkbox" required>
-        <span>I agree to the <a href="#" onclick="return false">Terms of Service</a> and understand that this is a demo trading platform.</span>
-      </label>
-
-      <button class="create-btn" type="submit">
-        <span>Create trading account</span><span>→</span>
-      </button>
-
-      <div id="signupMessage" class="form-message" role="alert"></div>
-    </form>
-
-    <div class="security-note">
-      <span>⌁</span>
-      <p>Your account is secured with Supabase Authentication. Never share your password.</p>
-    </div>
-  </section>
+<section class="signup-visual">
+<div class="visual-copy"><span class="eyebrow">START TRADING SMARTER</span><h1>Build your view.<br><span>Trade with clarity.</span></h1><p>One dashboard for markets, positions and trading insights — designed to keep the important numbers in view.</p></div>
+<div class="mini-chart"><div class="chart-label"><span>BTC/USD</span><strong>67,482.35</strong><b>+1.89%</b></div>
+<svg viewBox="0 0 700 220" preserveAspectRatio="none" aria-hidden="true">
+<g stroke="#173047" stroke-width="1"><line x1="0" y1="55" x2="700" y2="55"/><line x1="0" y1="110" x2="700" y2="110"/><line x1="0" y1="165" x2="700" y2="165"/><line x1="70" y1="0" x2="70" y2="220"/><line x1="140" y1="0" x2="140" y2="220"/><line x1="210" y1="0" x2="210" y2="220"/><line x1="280" y1="0" x2="280" y2="220"/><line x1="350" y1="0" x2="350" y2="220"/><line x1="420" y1="0" x2="420" y2="220"/><line x1="490" y1="0" x2="490" y2="220"/><line x1="560" y1="0" x2="560" y2="220"/><line x1="630" y1="0" x2="630" y2="220"/></g>
+<path d="M0 175 C35 145 55 172 85 157 S125 166 150 145 S190 160 215 132 S255 150 280 118 S320 140 345 108 S385 132 410 95 S450 119 475 82 S520 104 545 65 S595 82 620 54 S665 62 700 30 L700 220 L0 220Z" fill="#071e29"/>
+<path d="M0 175 C35 145 55 172 85 157 S125 166 150 145 S190 160 215 132 S255 150 280 118 S320 140 345 108 S385 132 410 95 S450 119 475 82 S520 104 545 65 S595 82 620 54 S665 62 700 30" fill="none" stroke="#00d6a3" stroke-width="3"/>
+</svg><div class="chart-time"><span>09:00</span><span>12:00</span><span>15:00</span><span>18:00</span><span>21:00</span></div></div>
+<div class="feature-row"><div><b>01</b><strong>Watch markets</strong><small>Track the instruments that matter.</small></div><div><b>02</b><strong>Manage positions</strong><small>Keep your account activity organized.</small></div><div><b>03</b><strong>Find what's next</strong><small>Spot setups worth a closer look.</small></div></div>
+<small class="demo-note">Market data and trading shown in this demo are illustrative.</small>
+</section>
+<section class="signup-card">
+<div class="form-heading"><div class="form-icon">＋</div><div><h2>Create your account</h2><p>Set up your Sunraku Trade account.</p></div></div>
+<form id="signupForm" novalidate>
+<div class="field"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" placeholder="Your full name"><span class="field-error" id="name-error" role="alert"></span></div>
+<div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com"><span class="field-error" id="email-error" role="alert"></span></div>
+<div class="field"><label for="country">Country of residence</label><select id="country" name="country"><option value="" selected disabled>Select a country</option><option>Kenya</option><option>Japan</option><option>United States</option><option>United Kingdom</option><option>Singapore</option><option>Australia</option><option>Other</option></select><span class="field-error" id="country-error" role="alert"></span></div>
+<div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" class="show-pass" id="pwToggle" aria-pressed="false">Show</button></div><span class="field-error" id="password-error" role="alert"></span></div>
+<div class="field"><label for="confirm">Confirm password</label><input id="confirm" name="confirm" type="password" autocomplete="new-password" placeholder="Repeat your password"><span class="field-error" id="confirm-error" role="alert"></span></div>
+<label class="terms" for="terms"><input type="checkbox" id="terms" name="terms"><span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</span></label><span class="field-error" id="terms-error" role="alert"></span>
+<button class="create-btn" type="submit"><span>Create account</span><span>→</span></button>
+</form>
+<div class="form-message" id="successPanel"><span id="successEmail"></span></div>
+<div class="security-note"><span>◆</span><p>Your account is protected by Supabase authentication. Never share your password.</p></div>
+</section>
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabaseClient.js"></script>
 <script src="js/signup.js"></script>
-<script>
-document.querySelectorAll('.show-pass').forEach(button => {
-  button.addEventListener('click', () => {
-    const input = document.getElementById(button.dataset.target);
-    const showing = input.type === 'text';
-    input.type = showing ? 'password' : 'text';
-    button.textContent = showing ? 'Show' : 'Hide';
-  });
-});
-</script>
 </body>
 </html>
-
