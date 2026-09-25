@@ -10,18 +10,30 @@ export default function SignupPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [country, setCountry] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [terms, setTerms] = useState(false);
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSignup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setError("");
     setMessage("");
+
+    if (!name || !email || !country || !password || !confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (!terms) {
+      setError("You must accept the terms and conditions.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -35,18 +47,20 @@ export default function SignupPage() {
 
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error: signupError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          full_name: name
+          full_name: name,
+          country,
+          terms_accepted_at: new Date().toISOString()
         }
       }
     });
 
-    if (error) {
-      setError(error.message);
+    if (signupError) {
+      setError(signupError.message);
       setLoading(false);
       return;
     }
@@ -57,7 +71,7 @@ export default function SignupPage() {
     }
 
     setMessage(
-      "Account created. Check your email to confirm your account."
+      "Account created successfully. Please check your email to confirm your account."
     );
 
     setLoading(false);
@@ -71,93 +85,94 @@ export default function SignupPage() {
         <h2>Create your account</h2>
 
         <p>
-          Create your account to access Sunraku Trade.
+          Start your Sunraku Trade account and access your trading dashboard.
         </p>
 
         <form onSubmit={handleSignup}>
           <label htmlFor="name">Full name</label>
-
           <input
             id="name"
             type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
             placeholder="Your full name"
-            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
 
           <label htmlFor="email">Email</label>
-
           <input
             id="email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
             placeholder="you@example.com"
-            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          <label htmlFor="password">Password</label>
+          <label htmlFor="country">Country</label>
+          <select
+            id="country"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            required
+          >
+            <option value="">Select your country</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Japan">Japan</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Australia">Australia</option>
+            <option value="Other">Other</option>
+          </select>
 
+          <label htmlFor="password">Password</label>
           <input
             id="password"
             type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
             placeholder="Create a password"
-            autoComplete="new-password"
-            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
-          <label htmlFor="confirmPassword">
-            Confirm password
-          </label>
-
+          <label htmlFor="confirmPassword">Confirm password</label>
           <input
             id="confirmPassword"
             type="password"
-            value={confirmPassword}
-            onChange={(event) =>
-              setConfirmPassword(event.target.value)
-            }
             placeholder="Confirm your password"
-            autoComplete="new-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
 
-          {error && (
-            <p className="error-message">
-              {error}
-            </p>
-          )}
+          <label className="terms-label">
+            <input
+              type="checkbox"
+              checked={terms}
+              onChange={(e) => setTerms(e.target.checked)}
+            />
+            <span>
+              I agree to the Sunraku Trade terms and conditions.
+            </span>
+          </label>
 
-          {message && (
-            <p className="success-message">
-              {message}
-            </p>
-          )}
+          {error && <p className="error-message">{error}</p>}
+
+          {message && <p className="success-message">{message}</p>}
 
           <button type="submit" disabled={loading}>
-            {loading
-              ? "Creating account..."
-              : "Create account"}
+            {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 
         <p>
           Already have an account?{" "}
-          <Link href="/login">
-            Login
-          </Link>
+          <Link href="/login">Login</Link>
         </p>
 
         <p>
-          <Link href="/">
-            ← Back to Sunraku Trade
-          </Link>
+          <Link href="/">← Back to home</Link>
         </p>
       </div>
     </main>
