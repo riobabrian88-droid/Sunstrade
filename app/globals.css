@@ -112,3 +112,48 @@ a {
 .success-message {
   color: #6bd68a !important;
 }
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #090909;
+}
+
+.home-content {
+  text-align: center;
+}
+
+.home-content h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+  color: #d6a84f;
+}
+
+.home-content p {
+  color: #aaa;
+  font-size: 18px;
+}
+
+.home-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.home-button {
+  padding: 13px 22px;
+  border-radius: 8px;
+  background: #d6a84f;
+  color: #111;
+  font-weight: bold;
+}
+
+.home-button.secondary {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+}
