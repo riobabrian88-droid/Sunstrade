@@ -215,7 +215,17 @@ export default function DashboardPage() {
       subscription.unsubscribe();
     };
   }, []);
+  useEffect(() => {
+  loadLivePrices();
 
+  const interval = window.setInterval(() => {
+    loadLivePrices();
+  }, 30000);
+
+  return () => {
+    window.clearInterval(interval);
+  };
+}, []);
   useEffect(() => {
     if (!user) return;
 
@@ -346,7 +356,50 @@ export default function DashboardPage() {
       );
     }
   }
+  async function loadLivePrices() {
+  try {
+    const response = await fetch("/api/prices", {
+      cache: "no-store",
+    });
 
+    if (!response.ok) {
+      throw new Error("Unable to fetch prices");
+    }
+
+    const data = await response.json();
+
+    setAssets((currentAssets) =>
+      currentAssets.map((asset) => {
+        if (
+          asset.symbol === "BTC/USD" &&
+          typeof data["BTC/USD"] === "number"
+        ) {
+          return {
+            ...asset,
+            price: data["BTC/USD"],
+          };
+        }
+
+        if (
+          asset.symbol === "ETH/USD" &&
+          typeof data["ETH/USD"] === "number"
+        ) {
+          return {
+            ...asset,
+            price: data["ETH/USD"],
+          };
+        }
+
+        return asset;
+      })
+    );
+
+    setPriceStatus("Live prices");
+  } catch (error) {
+    console.error("Live price error:", error);
+    setPriceStatus("Price service unavailable");
+  }
+}
   async function handleSignOut() {
     setSigningOut(true);
 
@@ -551,14 +604,13 @@ export default function DashboardPage() {
               Go Pro
             </button>
           </div>
-
-          <div className="market-status">
-            <span className="status-dot" />
-            <div>
-              <strong>Live Market</strong>
-              <small>Database prices</small>
-            </div>
-          </div>
+       <div className="market-status">
+  <span className="status-dot" />
+  <div>
+    <strong>Crypto Market</strong>
+    <small>{priceStatus}</small>
+  </div>
+</div>
         </aside>
 
         <section className="workspace">
