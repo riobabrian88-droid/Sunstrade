@@ -115,7 +115,7 @@ export default function DashboardPage() {
   const [positions, setPositions] = useState<Position[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [assets, setAssets] = useState<Asset[]>(fallbackAssets);
-
+  const [priceStatus, setPriceStatus] = useState("Connecting...");
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [lotAmount, setLotAmount] = useState("0.01");
