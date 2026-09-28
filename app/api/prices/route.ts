@@ -74,9 +74,7 @@ for (const result of results) {
   }
 }
 
-    if (error) {
-      console.error("Error saving prices to Supabase:", error);
-    }
+    
 
     return NextResponse.json({
       "BTC/USD": data.bitcoin.usd,
