@@ -615,13 +615,17 @@ export default function DashboardPage() {
 
         <section className="workspace">
           <section className="stats-grid">
-            <article className="stat-card">
-              <span>Total Balance</span>
-              <strong>{formatMoney(walletBalance)}</strong>
-              <small className="positive">
-                Cash available in your wallet
-              </small>
-            </article>
+            <a
+  href="/wallet"
+  className="stat-card"
+  style={{ display: "block", textDecoration: "none" }}
+>
+  <span>Total Balance</span>
+  <strong>{formatMoney(walletBalance)}</strong>
+  <small className="positive">
+    View wallet, deposit or withdraw →
+  </small>
+</a>
 
             <article className="stat-card">
               <span>Equity</span>
