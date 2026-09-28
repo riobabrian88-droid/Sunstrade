@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import "./dashboard.css";
+import CandleChart from "./CandleChart";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -761,30 +762,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <div className="timeframes">
-                <button type="button">1m</button>
-                <button type="button">5m</button>
-                <button
-                  className="selected"
-                  type="button"
-                >
-                  15m
-                </button>
-                <button type="button">30m</button>
-                <button type="button">1h</button>
-                <button type="button">4h</button>
-                <button type="button">1D</button>
-              </div>
-
-              <div className="chart-area">
-                <div className="chart-placeholder">
-                  <div className="chart-line" />
-                  <span>
-                    {selectedAsset.symbol} · Database market
-                    data
-                  </span>
-                </div>
-              </div>
+              <CandleChart symbol={selectedSymbol} />
 
               <div className="chart-note">
                 Market prices are supplied by the Sunraku
