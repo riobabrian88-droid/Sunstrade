@@ -40,9 +40,39 @@ export async function GET() {
       },
     ];
 
-    const { error } = await supabase.from("prices").upsert(priceData, {
-      onConflict: "symbol",
-    });
+    const results = await Promise.all([
+  supabase
+    .from("assets")
+    .update({
+      price: data.bitcoin.usd,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("symbol", "BTC/USD")
+    .select("symbol"),
+
+  supabase
+    .from("assets")
+    .update({
+      price: data.ethereum.usd,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("symbol", "ETH/USD")
+    .select("symbol"),
+]);
+
+for (const result of results) {
+  if (result.error || !result.data?.length) {
+    console.error(
+      "Price update failed:",
+      result.error?.message ?? "Asset not found"
+    );
+
+    return NextResponse.json(
+      { error: "Unable to update asset prices" },
+      { status: 500 }
+    );
+  }
+}
 
     if (error) {
       console.error("Error saving prices to Supabase:", error);
