@@ -121,6 +121,65 @@ function assetPercentChange(asset: Asset) {
     : percentChange(asset.price, asset.prev_close);
 }
 
+type RealizedDailyPL = { profit: number; costBasis: number };
+
+function calculateTodayRealizedPL(orders: Order[]): RealizedDailyPL {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const today = startOfToday.getTime();
+
+  const lots = new Map<string, Array<{ qty: number; price: number }>>();
+  let profit = 0;
+  let costBasis = 0;
+
+  const filledOrders = orders
+    .filter((order) => order.status === "filled")
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(a.filled_at || a.created_at).getTime() -
+        new Date(b.filled_at || b.created_at).getTime()
+    );
+
+  for (const order of filledOrders) {
+    const queue = lots.get(order.symbol) || [];
+    const timestamp = new Date(order.filled_at || order.created_at).getTime();
+    const price = Number(order.filled_price);
+
+    if (!Number.isFinite(price) || price <= 0) continue;
+
+    if (order.side === "buy") {
+      queue.push({ qty: Number(order.qty), price });
+      lots.set(order.symbol, queue);
+      continue;
+    }
+
+    if (order.side !== "sell") continue;
+
+    let remaining = Number(order.qty);
+    let matchedCost = 0;
+    let matchedQty = 0;
+
+    while (remaining > 0 && queue.length > 0) {
+      const lot = queue[0];
+      const used = Math.min(remaining, lot.qty);
+      matchedCost += used * lot.price;
+      matchedQty += used;
+      remaining -= used;
+      lot.qty -= used;
+      if (lot.qty <= 0.000000001) queue.shift();
+    }
+
+    if (timestamp >= today && matchedQty > 0) {
+      costBasis += matchedCost;
+      profit += matchedQty * price - matchedCost;
+    }
+    lots.set(order.symbol, queue);
+  }
+
+  return { profit, costBasis };
+}
+
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -170,6 +229,15 @@ export default function DashboardPage() {
     () => positions.reduce((total, position) => total + position.qty * position.avg_price, 0),
     [positions]
   );
+
+  const todayPL = useMemo(
+    () => calculateTodayRealizedPL(orders),
+    [orders]
+  );
+
+  const todayPLPercent = todayPL.costBasis > 0
+    ? (todayPL.profit / todayPL.costBasis) * 100
+    : 0;
 
   const freeMargin = walletBalance;
 
@@ -664,11 +732,14 @@ export default function DashboardPage() {
             </article>
 
             <article className="stat-card">
-              <span>Open P/L</span>
-              <strong>{formatMoney(openPL)}</strong>
-              <small className={openPL >= 0 ? "positive" : "negative"}>
-                {openPL >= 0 ? "+" : ""}
-                {investedValue > 0 ? ((openPL / investedValue) * 100).toFixed(2) : "0.00"}% on open positions
+              <span>Today's P/L</span>
+              <strong className={todayPL.profit >= 0 ? "positive" : "negative"}>
+                {todayPL.profit >= 0 ? "+" : ""}
+                {formatMoney(todayPL.profit)}
+              </strong>
+              <small className={todayPL.profit >= 0 ? "positive" : "negative"}>
+                {todayPL.profit >= 0 ? "+" : ""}
+                {todayPLPercent.toFixed(2)}% realized today
               </small>
             </article>
           </section>
