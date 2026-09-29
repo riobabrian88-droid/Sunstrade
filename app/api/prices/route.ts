@@ -5,11 +5,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    const ids = "bitcoin,ethereum,binancecoin,solana,ripple,dogecoin,cardano,litecoin";
     const response = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd",
-      {
-        cache: "no-store",
-      }
+      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,
+      { cache: "no-store" }
     );
 
     if (!response.ok) {
@@ -20,65 +19,43 @@ export async function GET() {
     }
 
     const data = await response.json();
-
-    // Save prices to Supabase
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",
       process.env.SUPABASE_SERVICE_ROLE_KEY || ""
     );
 
-    const priceData = [
-      {
-        symbol: "BTC/USD",
-        price: data.bitcoin.usd,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        symbol: "ETH/USD",
-        price: data.ethereum.usd,
-        updated_at: new Date().toISOString(),
-      },
-    ];
+    const prices: Record<string, number> = {
+      "BTC/USD": data.bitcoin?.usd,
+      "ETH/USD": data.ethereum?.usd,
+      "BNB/USD": data.binancecoin?.usd,
+      "SOL/USD": data.solana?.usd,
+      "XRP/USD": data.ripple?.usd,
+      "DOGE/USD": data.dogecoin?.usd,
+      "ADA/USD": data.cardano?.usd,
+      "LTC/USD": data.litecoin?.usd,
+    };
 
-    const results = await Promise.all([
-  supabase
-    .from("assets")
-    .update({
-      price: data.bitcoin.usd,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("symbol", "BTC/USD")
-    .select("symbol"),
-
-  supabase
-    .from("assets")
-    .update({
-      price: data.ethereum.usd,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("symbol", "ETH/USD")
-    .select("symbol"),
-]);
-
-for (const result of results) {
-  if (result.error || !result.data?.length) {
-    console.error(
-      "Price update failed:",
-      result.error?.message ?? "Asset not found"
+    const entries = Object.entries(prices).filter((entry): entry is [string, number] =>
+      typeof entry[1] === "number" && Number.isFinite(entry[1])
     );
 
-    return NextResponse.json(
-      { error: "Unable to update asset prices" },
-      { status: 500 }
-    );
-  }
-}
+    const results = await Promise.all(entries.map(([symbol, price]) =>
+      supabase.from("assets").update({
+        price,
+        updated_at: new Date().toISOString(),
+      }).eq("symbol", symbol).select("symbol")
+    ));
 
-    
+    for (let i = 0; i < results.length; i++) {
+      if (results[i].error) {
+        console.error("Price update failed:", results[i].error.message);
+      }
+    }
+
+    const availablePrices = Object.fromEntries(entries);
 
     return NextResponse.json({
-      "BTC/USD": data.bitcoin.usd,
-      "ETH/USD": data.ethereum.usd,
+      ...availablePrices,
       updatedAt: new Date().toISOString(),
     });
   } catch {
