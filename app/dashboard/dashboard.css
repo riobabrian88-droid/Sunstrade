@@ -211,3 +211,10 @@
 /* Keep profile access available on mobile, where the sidebar is hidden. */
 .profile-shortcut { cursor:pointer; border-radius:8px; padding:3px; }
 .profile-shortcut:focus-visible { outline:2px solid var(--green); outline-offset:3px; }
+
+
+/* Advanced chart drawing overlay */
+.candle-chart-area { position: relative; }
+.candle-drawings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.candle-indicators { flex-wrap: wrap; }
+.candle-indicators button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
