@@ -154,7 +154,7 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       setError("");
       if (!pair) {
         setCandles([]);
-        setError("Candlestick data is not available for this asset yet.");
+        setError("Candlestick charts currently support BTC, ETH, BNB, SOL, XRP, DOGE, ADA, and LTC. Select one of these crypto markets to view candles.");
         setLoading(false);
         return;
       }
