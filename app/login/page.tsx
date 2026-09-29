@@ -31,6 +31,26 @@ export default function LoginPage() {
       return;
     }
 
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("is_suspended")
+      .eq("id", (await supabase.auth.getUser()).data.user?.id ?? "")
+      .maybeSingle();
+
+    if (profileError) {
+      await supabase.auth.signOut();
+      setError("Unable to verify account status. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    if (profile?.is_suspended) {
+      await supabase.auth.signOut();
+      setError("Your account is suspended. Please contact support.");
+      setLoading(false);
+      return;
+    }
+
     router.push("/dashboard");
   }
 
