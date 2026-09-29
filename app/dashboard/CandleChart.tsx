@@ -277,9 +277,19 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       </div>
       <div className="candle-indicators" aria-label="Chart indicators">
         <button type="button" className={showSma ? "active" : ""} onClick={() => setShowSma((value) => !value)}>SMA 20</button>
-        <button type="button" className={showRsi ? "active" : ""} onClick={() => setShowRsi((value) => !value)}>RSI 14</button>\n        <button type="button" className={showBollinger ? "active" : ""} onClick={() => setShowBollinger((value) => !value)}>Bollinger Bands</button>\n        <button type="button" className={showMacd ? "active" : ""} onClick={() => setShowMacd((value) => !value)}>MACD</button>\n        <button type="button" className={drawingMode ? "active" : ""} onClick={() => { pendingPoint.current = null; setDrawingMode((value) => !value); }}>Trend line</button>\n        <button type="button" onClick={() => { setDrawings([]); pendingPoint.current = null; }}>Clear drawings</button>
+        <button type="button" className={showRsi ? "active" : ""} onClick={() => setShowRsi((value) => !value)}>RSI 14</button>
+        <button type="button" className={showBollinger ? "active" : ""} onClick={() => setShowBollinger((value) => !value)}>Bollinger Bands</button>
+        <button type="button" className={showMacd ? "active" : ""} onClick={() => setShowMacd((value) => !value)}>MACD</button>
+        <button type="button" className={drawingMode ? "active" : ""} onClick={() => { pendingPoint.current = null; setDrawingMode((value) => !value); }}>Trend line</button>
+        <button type="button" onClick={() => { setDrawings([]); pendingPoint.current = null; }}>Clear drawings</button>
       </div>
-      <div className="candle-chart-area" ref={containerRef}>\n        <svg className="candle-drawings" viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">\n          {drawings.map((line, index) => <line key={index} x1={`${line.x1 / (containerRef.current?.clientWidth || 1000) * 1000}`} y1={`${line.y1 / (containerRef.current?.clientHeight || 360) * 360}`} x2={`${line.x2 / (containerRef.current?.clientWidth || 1000) * 1000}`} y2={`${line.y2 / (containerRef.current?.clientHeight || 360) * 360}`} stroke="#e6b75d" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />)}\n        </svg>\n      </div>\n      {drawingMode && <div className="candle-message">Trend line: tap two points on the chart to draw a line.</div>}\n      {showMacd && <div className="rsi-panel"><span>MACD (12, 26, 9)</span><strong>{macd ? macd.value.toFixed(4) : "Calculating…"}</strong><span>Signal: {macd ? macd.signal.toFixed(4) : "—"}</span><span>Histogram: {macd ? macd.histogram.toFixed(4) : "—"}</span></div>}
+      <div className="candle-chart-area" ref={containerRef}>
+        <svg className="candle-drawings" viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">
+          {drawings.map((line, index) => <line key={index} x1={`${line.x1 / (containerRef.current?.clientWidth || 1000) * 1000}`} y1={`${line.y1 / (containerRef.current?.clientHeight || 360) * 360}`} x2={`${line.x2 / (containerRef.current?.clientWidth || 1000) * 1000}`} y2={`${line.y2 / (containerRef.current?.clientHeight || 360) * 360}`} stroke="#e6b75d" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />)}
+        </svg>
+      </div>
+      {drawingMode && <div className="candle-message">Trend line: tap two points on the chart to draw a line.</div>}
+      {showMacd && <div className="rsi-panel"><span>MACD (12, 26, 9)</span><strong>{macd ? macd.value.toFixed(4) : "Calculating…"}</strong><span>Signal: {macd ? macd.signal.toFixed(4) : "—"}</span><span>Histogram: {macd ? macd.histogram.toFixed(4) : "—"}</span></div>}
       {showRsi && (
         <div className="rsi-panel">
           <span>RSI (14)</span>
