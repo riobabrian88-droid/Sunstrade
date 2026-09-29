@@ -763,10 +763,7 @@ export default function DashboardPage() {
                     {assetPercentChange(selectedAsset) >= 0
                       ? "+"
                       : ""}
-                    {percentChange(
-                      selectedAsset.price,
-                      selectedAsset.prev_close
-                    ).toFixed(2)}
+                    {assetPercentChange(selectedAsset).toFixed(2)}
                     %
                   </span>
                 </div>
