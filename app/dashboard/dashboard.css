@@ -215,6 +215,6 @@
 
 /* Advanced chart drawing overlay */
 .candle-chart-area { position: relative; }
-.candle-drawings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.candle-drawings { position: absolute; inset: 0; z-index: 10; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .candle-indicators { flex-wrap: wrap; }
 .candle-indicators button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
