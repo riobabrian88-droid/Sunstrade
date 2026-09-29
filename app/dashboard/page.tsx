@@ -188,6 +188,18 @@ export default function DashboardPage() {
         return;
       }
 
+      const { data: account, error: accountError } = await supabase
+        .from("profiles")
+        .select("is_suspended")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (accountError || account?.is_suspended) {
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+        return;
+      }
+
       setUser(session.user);
       await loadDashboardData(session.user.id);
 
@@ -418,6 +430,18 @@ export default function DashboardPage() {
   async function handlePlaceOrder() {
     if (!user) {
       showToast("Please sign in first.");
+      return;
+    }
+
+    const { data: account, error: accountError } = await supabase
+      .from("profiles")
+      .select("is_suspended")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (accountError || account?.is_suspended) {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
       return;
     }
 
