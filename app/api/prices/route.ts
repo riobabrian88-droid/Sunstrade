@@ -14,24 +14,38 @@ const symbols: Record<string, string> = {
   "LTC/USD": "LTCUSDT",
 };
 
+const marketHosts = [
+  "https://data-api.binance.vision",
+  "https://api.binance.com",
+  "https://api1.binance.com",
+  "https://api2.binance.com",
+  "https://api3.binance.com",
+];
+
+async function getMarketPrice(pair: string): Promise<number | null> {
+  for (const host of marketHosts) {
+    try {
+      const response = await fetch(
+        `${host}/api/v3/ticker/price?symbol=${pair}`,
+        { cache: "no-store" }
+      );
+      if (!response.ok) continue;
+      const data: { price?: string } = await response.json();
+      const price = Number(data.price);
+      if (Number.isFinite(price) && price > 0) return price;
+    } catch {
+      // Try the next public market-data endpoint.
+    }
+  }
+  return null;
+}
+
 export async function GET() {
   try {
     const entries = await Promise.all(
       Object.entries(symbols).map(async ([market, pair]) => {
-        try {
-          const response = await fetch(
-            `https://api.binance.com/api/v3/ticker/price?symbol=${pair}`,
-            { cache: "no-store" }
-          );
-          if (!response.ok) return null;
-          const data: { price?: string } = await response.json();
-          const price = Number(data.price);
-          return Number.isFinite(price) && price > 0
-            ? ([market, price] as [string, number])
-            : null;
-        } catch {
-          return null;
-        }
+        const price = await getMarketPrice(pair);
+        return price === null ? null : ([market, price] as [string, number]);
       })
     );
 
@@ -40,8 +54,9 @@ export async function GET() {
     );
 
     if (Object.keys(availablePrices).length === 0) {
+      console.error("All Binance public market-data endpoints failed");
       return NextResponse.json(
-        { error: "Unable to fetch live prices from the market provider" },
+        { error: "Market provider is unreachable. Please check the Vercel function logs." },
         { status: 502 }
       );
     }
