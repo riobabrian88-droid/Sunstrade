@@ -26,6 +26,12 @@ const intervals = [
 const symbols: Record<string, string> = {
   "BTC/USD": "BTCUSDT",
   "ETH/USD": "ETHUSDT",
+  "BNB/USD": "BNBUSDT",
+  "SOL/USD": "SOLUSDT",
+  "XRP/USD": "XRPUSDT",
+  "DOGE/USD": "DOGEUSDT",
+  "ADA/USD": "ADAUSDT",
+  "LTC/USD": "LTCUSDT",
 };
 
 export default function CandleChart({ symbol }: { symbol: string }) {
@@ -148,7 +154,7 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       setError("");
       if (!pair) {
         setCandles([]);
-        setError("Candlestick data is currently available for BTC/USD and ETH/USD.");
+        setError("Candlestick data is not available for this asset yet.");
         setLoading(false);
         return;
       }
