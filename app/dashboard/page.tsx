@@ -45,6 +45,12 @@ type Profile = {
 };
 
 const fallbackAssets: Asset[] = [
+  { symbol: "BNB/USD", name: "BNB / US Dollar", price: 0, prev_close: null, volatility: 0.02 },
+  { symbol: "SOL/USD", name: "Solana / US Dollar", price: 0, prev_close: null, volatility: 0.03 },
+  { symbol: "XRP/USD", name: "XRP / US Dollar", price: 0, prev_close: null, volatility: 0.03 },
+  { symbol: "DOGE/USD", name: "Dogecoin / US Dollar", price: 0, prev_close: null, volatility: 0.04 },
+  { symbol: "ADA/USD", name: "Cardano / US Dollar", price: 0, prev_close: null, volatility: 0.03 },
+  { symbol: "LTC/USD", name: "Litecoin / US Dollar", price: 0, prev_close: null, volatility: 0.03 },
   {
     symbol: "BTC/USD",
     name: "Bitcoin / US Dollar",
