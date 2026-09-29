@@ -207,3 +207,7 @@
 .rsi-panel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:9px 10px; border-top:1px solid var(--border); background:#111820; color:var(--muted); font-size:9px; }
 .rsi-panel strong { color:var(--text); font-size:12px; }
 .rsi-panel small { margin-left:auto; color:var(--muted); font-size:8px; }
+
+/* Keep profile access available on mobile, where the sidebar is hidden. */
+.profile-shortcut { cursor:pointer; border-radius:8px; padding:3px; }
+.profile-shortcut:focus-visible { outline:2px solid var(--green); outline-offset:3px; }
