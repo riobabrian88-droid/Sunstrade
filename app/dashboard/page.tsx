@@ -215,6 +215,9 @@ export default function DashboardPage() {
   const [positions, setPositions] = useState<Position[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [assets, setAssets] = useState<Asset[]>(fallbackAssets);
+  const [watchlistSymbols, setWatchlistSymbols] = useState<string[]>([]);
+  const [watchlistOnly, setWatchlistOnly] = useState(false);
+  const [watchlistBusy, setWatchlistBusy] = useState<string | null>(null);
   const [priceStatus, setPriceStatus] = useState("Connecting...");
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
   const [portfolioView, setPortfolioView] = useState<"portfolio" | "history" | "orders">("portfolio");
@@ -432,6 +435,9 @@ export default function DashboardPage() {
     };
   }, [user]);
   async function loadDashboardData(userId: string) {
+    const { data: savedWatchlist, error: watchlistError } = await supabase.from("user_watchlist").select("symbol").eq("user_id", userId);
+    if (watchlistError) console.error("Watchlist error:", watchlistError);
+    else setWatchlistSymbols((savedWatchlist || []).map((item: { symbol: string }) => item.symbol));
     const [
       profileResult,
       walletResult,
@@ -564,6 +570,22 @@ export default function DashboardPage() {
     setPriceStatus("Price service unavailable");
   }
 }
+  async function toggleWatchlist(symbol: string) {
+    if (!user || watchlistBusy) return;
+    setWatchlistBusy(symbol);
+    const isSaved = watchlistSymbols.includes(symbol);
+    if (isSaved) {
+      const { error } = await supabase.from("user_watchlist").delete().eq("user_id", user.id).eq("symbol", symbol);
+      if (error) showToast("Could not remove from watchlist: " + error.message);
+      else setWatchlistSymbols((current) => current.filter((item) => item !== symbol));
+    } else {
+      const { error } = await supabase.from("user_watchlist").insert({ user_id: user.id, symbol });
+      if (error) showToast("Could not save to watchlist: " + error.message);
+      else setWatchlistSymbols((current) => [...current, symbol]);
+    }
+    setWatchlistBusy(null);
+  }
+
   async function handleSignOut() {
     setSigningOut(true);
 
@@ -999,13 +1021,12 @@ export default function DashboardPage() {
                   <h2>Market Watch</h2>
                 </div>
 
-                <div className="tabs">
-                  <button className="active" type="button">
-                    Markets
-                  </button>
+                <div className="tabs watchlist-tabs">
+                  <button className={!watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(false)}>Markets</button>
+                  <button className={watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(true)}>Watchlist <span>{watchlistSymbols.length}</span></button>
                 </div>
 
-                {assets.map((asset) => {
+                {(watchlistOnly ? assets.filter((asset) => watchlistSymbols.includes(asset.symbol)) : assets).map((asset) => {
                   const change = assetPercentChange(asset);
 
                   return (
@@ -1031,6 +1052,7 @@ export default function DashboardPage() {
                         {change >= 0 ? "+" : ""}
                         {change.toFixed(2)}%
                       </strong>
+                      <span className="watch-star" role="button" tabIndex={0} aria-label={watchlistSymbols.includes(asset.symbol) ? "Remove from watchlist" : "Add to watchlist"} title={watchlistSymbols.includes(asset.symbol) ? "Remove from watchlist" : "Add to watchlist"} onClick={(event) => { event.stopPropagation(); void toggleWatchlist(asset.symbol); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); void toggleWatchlist(asset.symbol); } }}>{watchlistBusy === asset.symbol ? "…" : watchlistSymbols.includes(asset.symbol) ? "★" : "☆"}</span>
                     </button>
                   );
                 })}
