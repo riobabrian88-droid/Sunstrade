@@ -230,6 +230,7 @@ export default function DashboardPage() {
   const [notifications, setNotifications] = useState<Array<{ id: string; message: string; createdAt: string; read: boolean }>>([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const knownOrderStatuses = useRef<Map<string, string>>(new Map());
+  const knownWalletStatuses = useRef<Map<string, string>>(new Map());
 
   const selectedAsset =
     assets.find((asset) => asset.symbol === selectedSymbol) ||
@@ -382,6 +383,54 @@ export default function DashboardPage() {
     };
   }, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+    let initialized = false;
+
+    const loadWalletTransactions = async () => {
+      const { data, error } = await supabase
+        .from("wallet_transactions")
+        .select("id,type,amount,status,created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) {
+        console.error("Wallet notification error:", error);
+        return;
+      }
+      for (const transaction of data || []) {
+        const key = String(transaction.id);
+        const previousStatus = knownWalletStatuses.current.get(key);
+        if (initialized && previousStatus === undefined) {
+          const label = transaction.type === "deposit" ? "Deposit" : "Withdrawal";
+          const message = label + " request for " + formatMoney(Number(transaction.amount)) + " was submitted."; 
+          setNotifications((current) => [{ id: "wallet-" + key + "-submitted", message, createdAt: transaction.created_at || new Date().toISOString(), read: false }, ...current].slice(0, 20));
+          showToast(message);
+        } else if (initialized && previousStatus && previousStatus !== transaction.status) {
+          const label = transaction.type === "deposit" ? "Deposit" : "Withdrawal";
+          const message = label + " request for " + formatMoney(Number(transaction.amount)) + " was " + transaction.status + ".";
+          setNotifications((current) => [{ id: "wallet-" + key + "-" + transaction.status, message, createdAt: new Date().toISOString(), read: false }, ...current].slice(0, 20));
+          showToast(message);
+        }
+        knownWalletStatuses.current.set(key, transaction.status);
+      }
+      initialized = true;
+    };
+
+    void loadWalletTransactions();
+    const channel = supabase
+      .channel("wallet-notifications-" + user.id)
+      .on("postgres_changes", {
+        event: "*", schema: "public", table: "wallet_transactions",
+        filter: "user_id=eq." + user.id,
+      }, () => { void loadWalletTransactions(); })
+      .subscribe();
+
+    return () => {
+      initialized = false;
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
   async function loadDashboardData(userId: string) {
     const [
       profileResult,
@@ -577,6 +626,10 @@ export default function DashboardPage() {
       return;
     }
 
+    const orderMessage = orderType === "market"
+      ? (side === "buy" ? "Buy" : "Sell") + " market order for " + lotAmount + " " + selectedSymbol + " was filled successfully."
+      : (side === "buy" ? "Buy" : "Sell") + " " + orderType + " order for " + lotAmount + " " + selectedSymbol + " was submitted and is pending."; 
+    setNotifications((current) => [{ id: "order-created-" + Date.now(), message: orderMessage, createdAt: new Date().toISOString(), read: false }, ...current].slice(0, 20));
     showToast(
       orderType === "market"
         ? `${side === "buy" ? "Buy" : "Sell"} market order filled successfully.`
@@ -711,7 +764,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
                 {notifications.length === 0 ? (
-                  <p style={{ margin: 0, color: "var(--muted, #94a3b8)", fontSize: 13 }}>No new notifications. Order updates will appear here.</p>
+                  <p style={{ margin: 0, color: "var(--muted, #94a3b8)", fontSize: 13 }}>Trade and wallet updates will appear here while the dashboard is open.</p>
                 ) : (
                   notifications.map((item) => (
                     <div key={item.id} style={{ padding: "10px 0", borderTop: "1px solid var(--border, #293342)", opacity: item.read ? 0.7 : 1 }}>
