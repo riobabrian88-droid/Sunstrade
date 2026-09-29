@@ -228,3 +228,13 @@
 .portfolio-summary article small { color:var(--muted); font-size:8px; }
 .order-status-tag { background:#29343d; color:#c2ccd4; }
 @media (max-width:760px) { .portfolio-summary { grid-template-columns:repeat(2,minmax(0,1fr)); padding:10px; gap:7px; } .portfolio-summary article { padding:9px; } }
+
+
+/* Personal market watchlist controls */
+.watchlist-tabs { gap: 14px; }
+.watchlist-tabs button { display:flex; align-items:center; gap:5px; border-bottom:2px solid transparent; }
+.watchlist-tabs button.active { border-bottom-color:var(--green); color:#c9d2d9; }
+.watchlist-tabs button span { padding:2px 5px; border-radius:8px; background:#29343d; color:#b8c3cb; font-size:8px; }
+.watch-row { position:relative; }
+.watch-star { flex:none; display:inline-grid; place-items:center; width:22px; height:24px; border-radius:5px; color:#d9b66d; font-size:17px; cursor:pointer; }
+.watch-star:hover,.watch-star:focus-visible { background:#332b1d; outline:1px solid #806b42; }
