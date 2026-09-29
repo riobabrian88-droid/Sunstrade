@@ -1121,7 +1121,7 @@ export default function DashboardPage() {
           <section className="panel positions-panel portfolio-panel" id="positions">
             <div className="section-tabs portfolio-tabs">
               <button type="button" className={portfolioView === "portfolio" ? "active" : ""} onClick={() => setPortfolioView("portfolio")}>Portfolio <b>{positions.length}</b></button>
-              <button type="button" className={portfolioView === "history" ? "active" : ""} onClick={() => setPortfolioView("history")}>Trade History <b>{orders.filter((order) => order.status === "filled").length}</b></button>
+              <button type="button" id="history" className={portfolioView === "history" ? "active" : ""} onClick={() => setPortfolioView("history")}>Trade History <b>{orders.filter((order) => order.status === "filled").length}</b></button>
               <button type="button" className={portfolioView === "orders" ? "active" : ""} onClick={() => setPortfolioView("orders")}>All Orders <b>{orders.length}</b></button>
             </div>
 
