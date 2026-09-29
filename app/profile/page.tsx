@@ -10,7 +10,6 @@ export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [fullName, setFullName] = useState("");
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +25,7 @@ export default function ProfilePage() {
       }
       const { data, error: profileError } = await supabase
         .from("profiles")
-        .select("full_name,username")
+        .select("full_name")
         .eq("id", currentUser.id)
         .maybeSingle();
       if (!active) return;
@@ -34,7 +33,6 @@ export default function ProfilePage() {
         setError(profileError.message);
       } else {
         setFullName(data?.full_name || currentUser.user_metadata?.full_name || "");
-        setUsername(data?.username || "");
       }
       setUser(currentUser);
       setLoading(false);
@@ -53,15 +51,14 @@ export default function ProfilePage() {
       .from("profiles")
       .upsert({
         id: user.id,
-        full_name: fullName.trim(),
-        username: username.trim() || null
+        full_name: fullName.trim()
       }, { onConflict: "id" });
     if (saveError) setError(saveError.message);
     else setMessage("Profile updated successfully.");
     setSaving(false);
   }
 
-  const displayName = fullName.trim() || username.trim() || user?.email?.split("@")[0] || "Trader";
+  const displayName = fullName.trim() || user?.email?.split("@")[0] || "Trader";
   const initial = displayName.charAt(0).toUpperCase();
 
   if (loading) return <main className="profile-page"><p>Loading profile...</p></main>;
@@ -83,8 +80,6 @@ export default function ProfilePage() {
             <h3>Personal information</h3>
             <label htmlFor="fullName">Full name</label>
             <input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} maxLength={80} placeholder="Enter your full name" />
-            <label htmlFor="username">Username <span>(optional)</span></label>
-            <input id="username" value={username} onChange={e => setUsername(e.target.value)} maxLength={30} placeholder="Choose a username" />
             <label htmlFor="email">Email address</label>
             <input id="email" value={user?.email || ""} readOnly />
             <p className="profile-help">Your email is managed by your sign-in account and can't be changed here.</p>
