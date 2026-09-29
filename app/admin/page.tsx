@@ -14,6 +14,7 @@ type Profile = {
   full_name: string | null;
   username: string | null;
   is_admin: boolean | null;
+  is_suspended: boolean | null;
 };
 type Wallet = { user_id: string; cash_balance: number | string };
 type Transaction = {
@@ -39,6 +40,7 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
+  const [updatingUser, setUpdatingUser] = useState<string | null>(null);
 
   async function loadData() {
     setError("");
@@ -57,7 +59,7 @@ export default function AdminDashboardPage() {
     }
     setAuthorized(true);
     const [profileResult, walletResult, transactionResult] = await Promise.all([
-      supabase.from("profiles").select("id,full_name,username,is_admin").order("created_at", { ascending: false }),
+      supabase.from("profiles").select("id,full_name,username,is_admin,is_suspended").order("created_at", { ascending: false }),
       supabase.from("wallets").select("user_id,cash_balance"),
       supabase.from("wallet_transactions").select("id,user_id,type,amount,status,created_at").order("created_at", { ascending: false }).limit(500),
     ]);
@@ -90,6 +92,30 @@ export default function AdminDashboardPage() {
       item.type.toLowerCase().includes(search.toLowerCase());
     return matchesStatus && (search === "" || matchesSearch);
   });
+  async function setUserSuspended(user: Profile) {
+    const nextSuspended = !user.is_suspended;
+    const confirmed = window.confirm(
+      nextSuspended
+        ? "Suspend this account? The status will be saved, but access restrictions must also be enforced in your app."
+        : "Activate this account?"
+    );
+    if (!confirmed) return;
+    setUpdatingUser(user.id);
+    setError("");
+    const { error: updateError } = await supabase.rpc("admin_set_user_suspended", {
+      p_user_id: user.id,
+      p_suspended: nextSuspended,
+    });
+    setUpdatingUser(null);
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+    setUsers((current) => current.map((item) =>
+      item.id === user.id ? { ...item, is_suspended: nextSuspended } : item
+    ));
+  }
+
   const totalBalance = wallets.reduce((sum, wallet) => sum + Number(wallet.cash_balance || 0), 0);
   const pendingCount = transactions.filter((item) => item.status === "pending").length;
 
@@ -97,7 +123,7 @@ export default function AdminDashboardPage() {
     <main style={{ minHeight: "100vh", background: "#0b1220", color: "#e5edf7", padding: "22px", fontFamily: "Arial, sans-serif" }}>
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-          <div><p style={{ color: "#39b982", margin: "0 0 6px", fontSize: 12 }}>SUNRAKU TRADE · ADMIN</p><h1 style={{ margin: 0, fontSize: 28 }}>Admin dashboard</h1><p style={{ color: "#94a3b8", marginBottom: 0 }}>Users, wallet balances and transaction activity</p></div>
+          <div><p style={{ color: "#39b982", margin: "0 0 6px", fontSize: 12 }}>SUNRAKU TRADE · ADMIN</p><h1 style={{ margin: 0, fontSize: 28 }}>Admin dashboard</h1><p style={{ color: "#94a3b8", marginBottom: 0 }}>Users, wallet balances, account status and transaction activity</p></div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <button onClick={() => router.push("/admin/wallet")} style={buttonStyle}>Review requests</button>
             <button onClick={() => router.push("/dashboard")} style={buttonStyle}>← Trading dashboard</button>
@@ -118,9 +144,9 @@ export default function AdminDashboardPage() {
           </label>
           <section style={cardStyle}>
             <h2 style={headingStyle}>Users and wallet balances</h2>
-            <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={thStyle}>User</th><th style={thStyle}>User ID</th><th style={thStyle}>Wallet balance</th><th style={thStyle}>Role</th></tr></thead><tbody>
-              {filteredUsers.map((user) => <tr key={user.id}><td style={tdStyle}><strong>{user.full_name || user.username || "Unnamed user"}</strong>{user.username && user.full_name && <small style={{ display: "block", color: "#94a3b8" }}>@{user.username}</small>}</td><td style={{ ...tdStyle, maxWidth: 230, overflowWrap: "anywhere" }}>{user.id}</td><td style={tdStyle}>{money(walletByUser.get(user.id) ?? 0)}</td><td style={tdStyle}>{user.is_admin ? "Admin" : "User"}</td></tr>)}
-              {filteredUsers.length === 0 && <tr><td style={tdStyle} colSpan={4}>No users found.</td></tr>}
+            <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={thStyle}>User</th><th style={thStyle}>User ID</th><th style={thStyle}>Wallet balance</th><th style={thStyle}>Role</th><th style={thStyle}>Account status</th><th style={thStyle}>Action</th></tr></thead><tbody>
+              {filteredUsers.map((user) => <tr key={user.id}><td style={tdStyle}><strong>{user.full_name || user.username || "Unnamed user"}</strong>{user.username && user.full_name && <small style={{ display: "block", color: "#94a3b8" }}>@{user.username}</small>}</td><td style={{ ...tdStyle, maxWidth: 230, overflowWrap: "anywhere" }}>{user.id}</td><td style={tdStyle}>{money(walletByUser.get(user.id) ?? 0)}</td><td style={tdStyle}>{user.is_admin ? "Admin" : "User"}</td><td style={tdStyle}><span style={{ color: user.is_suspended ? "#f87171" : "#39b982" }}>{user.is_suspended ? "Suspended" : "Active"}</span></td><td style={tdStyle}>{user.is_admin ? "—" : <button disabled={updatingUser === user.id} onClick={() => setUserSuspended(user)} style={{ ...buttonStyle, background: user.is_suspended ? "#14532d" : "#7f1d1d", opacity: updatingUser === user.id ? 0.6 : 1 }}>{updatingUser === user.id ? "Saving…" : user.is_suspended ? "Activate" : "Suspend"}</button>}</td></tr>)}
+              {filteredUsers.length === 0 && <tr><td style={tdStyle} colSpan={6}>No users found.</td></tr>}
             </tbody></table></div>
           </section>
           <section style={{ ...cardStyle, marginTop: 18 }}>
