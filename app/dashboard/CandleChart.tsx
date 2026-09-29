@@ -189,6 +189,31 @@ export default function CandleChart({ symbol }: { symbol: string }) {
   }, [showSma, smaData]);
 
   useEffect(() => {
+    if (!upperBandRef.current || !lowerBandRef.current) return;
+    upperBandRef.current.setData(showBollinger ? bollingerData.map((point) => ({ time: point.time, value: point.upper })) : []);
+    lowerBandRef.current.setData(showBollinger ? bollingerData.map((point) => ({ time: point.time, value: point.lower })) : []);
+  }, [showBollinger, bollingerData]);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !drawingMode) return;
+    const handleClick = (param: any) => {
+      if (!param.point || param.point.x < 0 || param.point.y < 0) return;
+      const point = { x: param.point.x, y: param.point.y };
+      if (!pendingPoint.current) {
+        pendingPoint.current = point;
+      } else {
+        const start = pendingPoint.current;
+        setDrawings((current) => [...current, { x1: start.x, y1: start.y, x2: point.x, y2: point.y }]);
+        pendingPoint.current = null;
+        setDrawingMode(false);
+      }
+    };
+    chart.subscribeClick(handleClick);
+    return () => chart.unsubscribeClick(handleClick);
+  }, [drawingMode]);
+
+  useEffect(() => {
     let active = true;
     const pair = symbols[symbol];
 
