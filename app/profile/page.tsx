@@ -14,6 +14,8 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -35,6 +37,10 @@ export default function ProfilePage() {
         setFullName(data?.full_name || currentUser.user_metadata?.full_name || "");
       }
       setUser(currentUser);
+      const savedTheme = window.localStorage.getItem("sunraku-theme");
+      const nextTheme = savedTheme === "light" ? "light" : "dark";
+      setTheme(nextTheme);
+      document.documentElement.classList.toggle("light-theme", nextTheme === "light");
       setLoading(false);
     }
     load();
@@ -56,6 +62,24 @@ export default function ProfilePage() {
     if (saveError) setError(saveError.message);
     else setMessage("Profile updated successfully.");
     setSaving(false);
+  }
+
+  function changeTheme(value: "dark" | "light") {
+    setTheme(value);
+    window.localStorage.setItem("sunraku-theme", value);
+    document.documentElement.classList.toggle("light-theme", value === "light");
+  }
+
+  async function signOut() {
+    setSigningOut(true);
+    setError("");
+    const { error: signOutError } = await supabase.auth.signOut();
+    if (signOutError) {
+      setError(signOutError.message);
+      setSigningOut(false);
+      return;
+    }
+    router.replace("/login");
   }
 
   const displayName = fullName.trim() || user?.email?.split("@")[0] || "Trader";
@@ -87,6 +111,17 @@ export default function ProfilePage() {
             {message && <p className="profile-success" role="status">{message}</p>}
             <button type="submit" disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
           </form>
+        </section>
+        <section className="profile-card profile-settings-card">
+          <h2>Account preferences</h2>
+          <p className="profile-settings-intro">Choose how Sunraku Trade looks on this device.</p>
+          <div className="profile-setting-row"><div><strong>Appearance</strong><small>Select a theme for the dashboard.</small></div><div className="profile-theme-options" role="group" aria-label="Appearance"><button type="button" className={theme === "dark" ? "chosen" : ""} aria-pressed={theme === "dark"} onClick={() => changeTheme("dark")}>☾ Dark</button><button type="button" className={theme === "light" ? "chosen" : ""} aria-pressed={theme === "light"} onClick={() => changeTheme("light")}>☀ Light</button></div></div>
+          <p className="profile-settings-note">Your theme preference is saved on this device.</p>
+        </section>
+        <section className="profile-card profile-signout-card">
+          <h2>Sign out</h2><p>Sign out of your Sunraku Trade account on this device.</p>
+          {error && <p className="profile-error" role="alert">{error}</p>}
+          <button type="button" onClick={signOut} disabled={signingOut}>{signingOut ? "Signing out..." : "Sign out"}</button>
         </section>
       </section>
     </main>
