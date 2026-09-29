@@ -46,9 +46,9 @@ export async function GET() {
       }).eq("symbol", symbol).select("symbol")
     ));
 
-    for (let i = 0; i < results.length; i++) {
-      if (results[i].error) {
-        console.error("Price update failed:", results[i].error.message);
+    for (const result of results) {
+      if (result?.error) {
+        console.error("Price update failed:", result.error.message);
       }
     }
 
