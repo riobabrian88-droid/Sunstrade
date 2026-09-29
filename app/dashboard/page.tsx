@@ -192,6 +192,7 @@ export default function DashboardPage() {
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [orderType, setOrderType] = useState<"market" | "limit" | "stop">("market");
+  const [triggerPrice, setTriggerPrice] = useState("");
   const [lotAmount, setLotAmount] = useState("0.01");
 
   const [loading, setLoading] = useState(true);
@@ -511,14 +512,20 @@ export default function DashboardPage() {
       return;
     }
 
+    const price = Number(triggerPrice);
+    if (orderType !== "market" && (!Number.isFinite(price) || price <= 0)) {
+      showToast("Enter a valid trigger price.");
+      return;
+    }
+
     setPlacingOrder(true);
 
     const { error } = await supabase.rpc("place_order", {
       p_symbol: selectedSymbol,
       p_side: side,
-      p_order_type: "market",
+      p_order_type: orderType,
       p_qty: qty,
-      p_limit_price: null,
+      p_limit_price: orderType === "market" ? null : price,
     });
 
     if (error) {
@@ -529,7 +536,9 @@ export default function DashboardPage() {
     }
 
     showToast(
-      `${side === "buy" ? "Buy" : "Sell"} order placed successfully.`
+      orderType === "market"
+        ? `${side === "buy" ? "Buy" : "Sell"} market order filled successfully.`
+        : `${side === "buy" ? "Buy" : "Sell"} ${orderType} order saved as pending.`
     );
 
     await loadDashboardData(user.id);
@@ -893,7 +902,7 @@ export default function DashboardPage() {
 
                   <div>
                     <strong>{selectedSymbol}</strong>
-                    <small>Market order</small>
+                    <small>{orderType.charAt(0).toUpperCase() + orderType.slice(1)} order</small>
                   </div>
                 </div>
 
@@ -935,10 +944,22 @@ export default function DashboardPage() {
                   ))}
                 </div>
                 {orderType !== "market" && (
-                  <p className="demo-warning" role="status">
-                    {orderType === "limit" ? "Limit" : "Stop"} orders are not enabled yet.
-                    Choose Market to place an order; these buttons only select the order type.
-                  </p>
+                  <label>
+                    {orderType === "limit" ? "Limit price" : "Stop trigger price"} (USD)
+                    <input
+                      type="number"
+                      min="0.00000001"
+                      step="any"
+                      value={triggerPrice}
+                      onChange={(event) => setTriggerPrice(event.target.value)}
+                      placeholder={formatPrice(selectedPrice)}
+                    />
+                    <small className="order-help">
+                      {orderType === "limit"
+                        ? side === "buy" ? "Triggers when market price is at or below this price." : "Triggers when market price is at or above this price."
+                        : side === "buy" ? "Triggers when market price reaches or exceeds this price." : "Triggers when market price reaches or falls below this price."}
+                    </small>
+                  </label>
                 )}
 
                 <label>
@@ -978,13 +999,13 @@ export default function DashboardPage() {
                   id="placeOrder"
                   type="button"
                   onClick={handlePlaceOrder}
-                  disabled={placingOrder || orderType !== "market"}
+                  disabled={placingOrder}
                 >
                   {placingOrder
                     ? "Processing..."
-                    : orderType !== "market"
-                      ? `${orderType.charAt(0).toUpperCase() + orderType.slice(1)} orders unavailable`
-                      : `${side === "buy" ? "Buy" : "Sell"} ${selectedSymbol}`}
+                    : orderType === "market"
+                      ? `${side === "buy" ? "Buy" : "Sell"} ${selectedSymbol}`
+                      : `Place ${orderType} ${side} order`}
                 </button>
 
                 <div className="margin-info">
