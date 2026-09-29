@@ -191,6 +191,7 @@ export default function DashboardPage() {
   const [priceStatus, setPriceStatus] = useState("Connecting...");
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
   const [side, setSide] = useState<"buy" | "sell">("buy");
+  const [orderType, setOrderType] = useState<"market" | "limit" | "stop">("market");
   const [lotAmount, setLotAmount] = useState("0.01");
 
   const [loading, setLoading] = useState(true);
@@ -920,16 +921,25 @@ export default function DashboardPage() {
                   </button>
                 </div>
 
-                <div className="order-types">
-                  <button
-                    className="active"
-                    type="button"
-                  >
-                    Market
-                  </button>
-                  <button type="button">Limit</button>
-                  <button type="button">Stop</button>
+                <div className="order-types" aria-label="Order type">
+                  {(["market", "limit", "stop"] as const).map((type) => (
+                    <button
+                      key={type}
+                      className={orderType === type ? "active" : ""}
+                      type="button"
+                      aria-pressed={orderType === type}
+                      onClick={() => setOrderType(type)}
+                    >
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </button>
+                  ))}
                 </div>
+                {orderType !== "market" && (
+                  <p className="demo-warning" role="status">
+                    {orderType === "limit" ? "Limit" : "Stop"} orders are not enabled yet.
+                    Choose Market to place an order; these buttons only select the order type.
+                  </p>
+                )}
 
                 <label>
                   Amount (Lot)
@@ -968,11 +978,13 @@ export default function DashboardPage() {
                   id="placeOrder"
                   type="button"
                   onClick={handlePlaceOrder}
-                  disabled={placingOrder}
+                  disabled={placingOrder || orderType !== "market"}
                 >
                   {placingOrder
                     ? "Processing..."
-                    : `${side === "buy" ? "Buy" : "Sell"} ${selectedSymbol}`}
+                    : orderType !== "market"
+                      ? `${orderType.charAt(0).toUpperCase() + orderType.slice(1)} orders unavailable`
+                      : `${side === "buy" ? "Buy" : "Sell"} ${selectedSymbol}`}
                 </button>
 
                 <div className="margin-info">
