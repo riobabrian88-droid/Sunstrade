@@ -121,6 +121,33 @@ function assetPercentChange(asset: Asset) {
     : percentChange(asset.price, asset.prev_close);
 }
 
+function calculateTotalRealizedPL(orders: Order[]) {
+  const lots = new Map<string, Array<{ qty: number; price: number }>>();
+  let profit = 0;
+  let matchedCost = 0;
+  const filledOrders = orders.filter((order) => order.status === "filled" && Number(order.filled_price) > 0).slice()
+    .sort((a, b) => new Date(a.filled_at || a.created_at).getTime() - new Date(b.filled_at || b.created_at).getTime());
+  for (const order of filledOrders) {
+    const queue = lots.get(order.symbol) || [];
+    const price = Number(order.filled_price);
+    if (order.side === "buy") queue.push({ qty: Number(order.qty), price });
+    else if (order.side === "sell") {
+      let remaining = Number(order.qty);
+      while (remaining > 0 && queue.length) {
+        const lot = queue[0];
+        const used = Math.min(remaining, lot.qty);
+        profit += used * (price - lot.price);
+        matchedCost += used * lot.price;
+        remaining -= used;
+        lot.qty -= used;
+        if (lot.qty <= 0.000000001) queue.shift();
+      }
+    }
+    lots.set(order.symbol, queue);
+  }
+  return { profit, matchedCost };
+}
+
 type RealizedDailyPL = { profit: number; costBasis: number };
 
 function calculateTodayRealizedPL(orders: Order[]): RealizedDailyPL {
@@ -190,6 +217,7 @@ export default function DashboardPage() {
   const [assets, setAssets] = useState<Asset[]>(fallbackAssets);
   const [priceStatus, setPriceStatus] = useState("Connecting...");
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
+  const [portfolioView, setPortfolioView] = useState<"portfolio" | "history" | "orders">("portfolio");
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [orderType, setOrderType] = useState<"market" | "limit" | "stop">("market");
   const [triggerPrice, setTriggerPrice] = useState("");
@@ -1090,175 +1118,64 @@ export default function DashboardPage() {
             </aside>
           </div>
 
-          <section
-            className="panel positions-panel"
-            id="positions"
-          >
-            <div className="section-tabs">
-              <button className="active" type="button">
-                Open Positions <b>{positions.length}</b>
-              </button>
-
-              <button type="button">
-                Pending Orders (
-                {
-                  orders.filter(
-                    (order) =>
-                      order.status === "open" ||
-                      order.status === "pending"
-                  ).length
-                }
-                )
-              </button>
-
-              <button id="history" type="button">
-                Trade History
-              </button>
+          <section className="panel positions-panel portfolio-panel" id="positions">
+            <div className="section-tabs portfolio-tabs">
+              <button type="button" className={portfolioView === "portfolio" ? "active" : ""} onClick={() => setPortfolioView("portfolio")}>Portfolio <b>{positions.length}</b></button>
+              <button type="button" className={portfolioView === "history" ? "active" : ""} onClick={() => setPortfolioView("history")}>Trade History <b>{orders.filter((order) => order.status === "filled").length}</b></button>
+              <button type="button" className={portfolioView === "orders" ? "active" : ""} onClick={() => setPortfolioView("orders")}>All Orders <b>{orders.length}</b></button>
             </div>
 
-            <div className="table-wrap">
-              {positions.length === 0 ? (
-                <div className="empty-state">
-                  You don't have any open positions.
+            {portfolioView === "portfolio" && (
+              <>
+                <div className="portfolio-summary">
+                  <article><span>Portfolio value</span><strong>{formatMoney(positions.reduce((total, position) => total + position.qty * (assets.find((asset) => asset.symbol === position.symbol)?.price || position.avg_price), 0))}</strong><small>Current market value</small></article>
+                  <article><span>Cost basis</span><strong>{formatMoney(investedValue)}</strong><small>Open positions</small></article>
+                  <article><span>Unrealized P/L</span><strong className={openPL >= 0 ? "positive" : "negative"}>{openPL >= 0 ? "+" : ""}{formatMoney(openPL)}</strong><small>Open positions only</small></article>
+                  <article><span>Realized P/L</span><strong className={calculateTotalRealizedPL(orders).profit >= 0 ? "positive" : "negative"}>{calculateTotalRealizedPL(orders).profit >= 0 ? "+" : ""}{formatMoney(calculateTotalRealizedPL(orders).profit)}</strong><small>Matched filled sells (FIFO)</small></article>
                 </div>
-              ) : (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Symbol</th>
-                      <th>Type</th>
-                      <th>Lots</th>
-                      <th>Open Price</th>
-                      <th>Current Price</th>
-                      <th>P/L</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {positions.map((position) => {
-                      const asset = assets.find(
-                        (a) =>
-                          a.symbol === position.symbol
-                      );
-
-                      const currentPrice =
-                        asset?.price || position.avg_price;
-
-                      const pnl =
-                        (currentPrice -
-                          position.avg_price) *
-                        position.qty;
-
-                      return (
-                        <tr key={position.symbol}>
-                          <td>
-                            <span className="coin btc">
-                              ◆
-                            </span>{" "}
-                            {position.symbol}
-                          </td>
-
-                          <td>
-                            <span className="tag buy-tag">
-                              Position
-                            </span>
-                          </td>
-
-                          <td>{position.qty}</td>
-
-                          <td>
-                            {formatPrice(position.avg_price)}
-                          </td>
-
-                          <td>
-                            {formatPrice(currentPrice)}
-                          </td>
-
-                          <td
-                            className={
-                              pnl >= 0
-                                ? "positive"
-                                : "negative"
-                            }
-                          >
-                            {pnl >= 0 ? "+" : ""}
-                            {formatMoney(pnl)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </section>
-
-          <section className="panel positions-panel">
-            <div className="section-tabs">
-              <button className="active" type="button">
-                Recent Orders <b>{orders.length}</b>
-              </button>
-            </div>
-
-            <div className="table-wrap">
-              {orders.length === 0 ? (
-                <div className="empty-state">
-                  No orders have been placed yet.
+                <div className="table-wrap">
+                  {positions.length === 0 ? <div className="empty-state">You don't have any open positions.</div> : (
+                    <table>
+                      <thead><tr><th>Asset</th><th>Quantity</th><th>Average entry</th><th>Market price</th><th>Market value</th><th>Unrealized P/L</th><th>Return</th></tr></thead>
+                      <tbody>{positions.map((position) => {
+                        const currentPrice = assets.find((asset) => asset.symbol === position.symbol)?.price || position.avg_price;
+                        const value = position.qty * currentPrice;
+                        const cost = position.qty * position.avg_price;
+                        const pnl = value - cost;
+                        const returnPct = cost > 0 ? pnl / cost * 100 : 0;
+                        return <tr key={position.symbol}><td><span className="coin btc">◆</span> {position.symbol}</td><td>{position.qty}</td><td>{formatPrice(position.avg_price)}</td><td>{formatPrice(currentPrice)}</td><td>{formatMoney(value)}</td><td className={pnl >= 0 ? "positive" : "negative"}>{pnl >= 0 ? "+" : ""}{formatMoney(pnl)}</td><td className={returnPct >= 0 ? "positive" : "negative"}>{returnPct >= 0 ? "+" : ""}{returnPct.toFixed(2)}%</td></tr>;
+                      })}</tbody>
+                    </table>
+                  )}
                 </div>
-              ) : (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Symbol</th>
-                      <th>Side</th>
-                      <th>Type</th>
-                      <th>Lots</th>
-                      <th>Status</th>
-                      <th>Filled Price</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
+              </>
+            )}
 
-                  <tbody>
-                    {orders.slice(0, 20).map((order) => (
-                      <tr key={order.id}>
-                        <td>{order.symbol}</td>
+            {portfolioView === "history" && (
+              <div className="table-wrap">
+                {orders.filter((order) => order.status === "filled").length === 0 ? <div className="empty-state">Completed trades will appear here after an order is filled.</div> : (
+                  <table>
+                    <thead><tr><th>Trade ID</th><th>Asset</th><th>Side</th><th>Order type</th><th>Quantity</th><th>Execution price</th><th>Trade value</th><th>Executed at</th></tr></thead>
+                    <tbody>{orders.filter((order) => order.status === "filled").map((order) => (
+                      <tr key={order.id}><td>#{order.id}</td><td>{order.symbol}</td><td><span className={order.side === "buy" ? "tag buy-tag" : "tag sell-tag"}>{order.side}</span></td><td>{order.order_type}</td><td>{order.qty}</td><td>{order.filled_price ? formatPrice(Number(order.filled_price)) : "—"}</td><td>{order.filled_price ? formatMoney(Number(order.filled_price) * Number(order.qty)) : "—"}</td><td>{new Date(order.filled_at || order.created_at).toLocaleString()}</td></tr>
+                    ))}</tbody>
+                  </table>
+                )}
+              </div>
+            )}
 
-                        <td>
-                          <span
-                            className={
-                              order.side === "buy"
-                                ? "tag buy-tag"
-                                : "tag sell-tag"
-                            }
-                          >
-                            {order.side}
-                          </span>
-                        </td>
-
-                        <td>{order.order_type}</td>
-                        <td>{order.qty}</td>
-                        <td>{order.status}</td>
-
-                        <td>
-                          {order.filled_price
-                            ? formatPrice(
-                                order.filled_price
-                              )
-                            : "—"}
-                        </td>
-
-                        <td>
-                          {new Date(
-                            order.created_at
-                          ).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+            {portfolioView === "orders" && (
+              <div className="table-wrap">
+                {orders.length === 0 ? <div className="empty-state">No orders have been placed yet.</div> : (
+                  <table>
+                    <thead><tr><th>Order ID</th><th>Asset</th><th>Side</th><th>Type</th><th>Quantity</th><th>Status</th><th>Trigger price</th><th>Fill price</th><th>Created</th></tr></thead>
+                    <tbody>{orders.map((order) => (
+                      <tr key={order.id}><td>#{order.id}</td><td>{order.symbol}</td><td><span className={order.side === "buy" ? "tag buy-tag" : "tag sell-tag"}>{order.side}</span></td><td>{order.order_type}</td><td>{order.qty}</td><td><span className="tag order-status-tag">{order.status}</span></td><td>{order.limit_price ? formatPrice(Number(order.limit_price)) : "—"}</td><td>{order.filled_price ? formatPrice(Number(order.filled_price)) : "—"}</td><td>{new Date(order.created_at).toLocaleString()}</td></tr>
+                    ))}</tbody>
+                  </table>
+                )}
+              </div>
+            )}
           </section>
 
           <section className="insights" id="insights">
