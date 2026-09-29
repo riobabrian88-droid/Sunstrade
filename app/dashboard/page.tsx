@@ -1168,15 +1168,6 @@ export default function DashboardPage() {
                 </div>
               </article>
 
-              <article>
-                <span className="insight-icon">●</span>
-                <div>
-                  <small>Account</small>
-                  <strong>
-                    {user?.email || "Trader"}
-                  </strong>
-                </div>
-              </article>
             </div>
           </section>
         </section>
