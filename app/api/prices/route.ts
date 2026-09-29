@@ -99,6 +99,15 @@ export async function GET() {
       }
     }
 
+    // Check pending Limit/Stop orders against the freshly updated prices.
+    const { data: executedCount, error: executionError } = await supabase.rpc(
+      "process_pending_orders"
+    );
+    if (executionError) {
+      // Price delivery should remain available even if order processing needs attention.
+      console.error("Pending order processing failed:", executionError.message);
+    }
+
     return NextResponse.json({
       ...prices,
       changes,
