@@ -622,7 +622,7 @@ export default function DashboardPage() {
               <span>◉</span> Profile
             </a>
 
-            <a href="#settings">
+            <a href="/settings">
               <span>⚙</span> Settings
             </a>
           </nav>
