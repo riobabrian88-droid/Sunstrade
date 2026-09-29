@@ -16,6 +16,7 @@ type Asset = {
   price: number;
   prev_close: number | null;
   volatility: number | null;
+  change_24h?: number | null;
 };
 
 type Position = {
@@ -112,6 +113,12 @@ function percentChange(
 ) {
   if (!previous) return 0;
   return ((price - previous) / previous) * 100;
+}
+
+function assetPercentChange(asset: Asset) {
+  return typeof asset.change_24h === "number" && Number.isFinite(asset.change_24h)
+    ? asset.change_24h
+    : percentChange(asset.price, asset.prev_close);
 }
 
 export default function DashboardPage() {
@@ -390,9 +397,16 @@ export default function DashboardPage() {
     setAssets((currentAssets) =>
       currentAssets.map((asset) => {
         const livePrice = data[asset.symbol];
-        return typeof livePrice === "number" && Number.isFinite(livePrice)
-          ? { ...asset, price: livePrice }
-          : asset;
+        const liveChange = data.changes?.[asset.symbol];
+        return {
+          ...asset,
+          ...(typeof livePrice === "number" && Number.isFinite(livePrice)
+            ? { price: livePrice }
+            : {}),
+          ...(typeof liveChange === "number" && Number.isFinite(liveChange)
+            ? { change_24h: liveChange }
+            : {}),
+        };
       })
     );
 
@@ -689,10 +703,7 @@ export default function DashboardPage() {
 
           <section className="market-strip">
             {assets.slice(0, 5).map((asset) => {
-              const change = percentChange(
-                asset.price,
-                asset.prev_close
-              );
+              const change = assetPercentChange(asset);
 
               return (
                 <button
@@ -744,18 +755,12 @@ export default function DashboardPage() {
 
                   <span
                     className={
-                      percentChange(
-                        selectedAsset.price,
-                        selectedAsset.prev_close
-                      ) >= 0
+                      assetPercentChange(selectedAsset) >= 0
                         ? "positive"
                         : "negative"
                     }
                   >
-                    {percentChange(
-                      selectedAsset.price,
-                      selectedAsset.prev_close
-                    ) >= 0
+                    {assetPercentChange(selectedAsset) >= 0
                       ? "+"
                       : ""}
                     {percentChange(
@@ -808,10 +813,7 @@ export default function DashboardPage() {
                 </div>
 
                 {assets.map((asset) => {
-                  const change = percentChange(
-                    asset.price,
-                    asset.prev_close
-                  );
+                  const change = assetPercentChange(asset);
 
                   return (
                     <button
