@@ -150,41 +150,28 @@ export default function DashboardPage() {
   const requiredMargin =
     selectedPrice * Number(lotAmount || 0);
 
-  const equity = useMemo(() => {
-    const positionsValue = positions.reduce(
-      (total, position) => {
-        const asset = assets.find(
-          (a) => a.symbol === position.symbol
-        );
-
-        if (!asset) return total;
-
-        const currentValue = position.qty * asset.price;
-        const costValue =
-          position.qty * position.avg_price;
-
-        return total + (currentValue - costValue);
-      },
-      0
-    );
-
-    return walletBalance + positionsValue;
-  }, [walletBalance, positions, assets]);
-
-  const todayPL = useMemo(() => {
+  const openPL = useMemo(() => {
     return positions.reduce((total, position) => {
-      const asset = assets.find(
-        (a) => a.symbol === position.symbol
-      );
-
+      const asset = assets.find((item) => item.symbol === position.symbol);
       if (!asset) return total;
-
-      return (
-        total +
-        (asset.price - position.avg_price) * position.qty
-      );
+      return total + (asset.price - position.avg_price) * position.qty;
     }, 0);
   }, [positions, assets]);
+
+  const equity = useMemo(() => {
+    const marketValue = positions.reduce((total, position) => {
+      const asset = assets.find((item) => item.symbol === position.symbol);
+      return total + (asset ? position.qty * asset.price : 0);
+    }, 0);
+    return walletBalance + marketValue;
+  }, [walletBalance, positions, assets]);
+
+  const investedValue = useMemo(
+    () => positions.reduce((total, position) => total + position.qty * position.avg_price, 0),
+    [positions]
+  );
+
+  const freeMargin = walletBalance;
 
   useEffect(() => {
     let mounted = true;
@@ -667,36 +654,21 @@ export default function DashboardPage() {
             <article className="stat-card">
               <span>Equity</span>
               <strong>{formatMoney(equity)}</strong>
-              <small
-                className={
-                  todayPL >= 0 ? "positive" : "negative"
-                }
-              >
-                {todayPL >= 0 ? "+" : ""}
-                {formatMoney(todayPL)}
-              </small>
+              <small>Cash + current position value</small>
             </article>
 
             <article className="stat-card">
               <span>Free Margin</span>
-              <strong>{formatMoney(availableBalance)}</strong>
-              <small>Available cash</small>
+              <strong>{formatMoney(freeMargin)}</strong>
+              <small>Cash available for new trades</small>
             </article>
 
             <article className="stat-card">
-              <span>Today's P/L</span>
-              <strong>{formatMoney(todayPL)}</strong>
-              <small
-                className={
-                  todayPL >= 0 ? "positive" : "negative"
-                }
-              >
-                {walletBalance
-                  ? `${(
-                      (todayPL / walletBalance) *
-                      100
-                    ).toFixed(2)}%`
-                  : "0.00%"}
+              <span>Open P/L</span>
+              <strong>{formatMoney(openPL)}</strong>
+              <small className={openPL >= 0 ? "positive" : "negative"}>
+                {openPL >= 0 ? "+" : ""}
+                {investedValue > 0 ? ((openPL / investedValue) * 100).toFixed(2) : "0.00"}% on open positions
               </small>
             </article>
           </section>
