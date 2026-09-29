@@ -199,6 +199,8 @@ export default function DashboardPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [toast, setToast] = useState("");
+  const [notifications, setNotifications] = useState<Array<{ id: string; message: string; createdAt: string; read: boolean }>>([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const knownOrderStatuses = useRef<Map<string, string>>(new Map());
 
   const selectedAsset =
@@ -425,7 +427,9 @@ export default function DashboardPage() {
         const previousStatus = knownOrderStatuses.current.get(String(order.id));
         if (previousStatus === "pending" && (order.status === "filled" || order.status === "rejected")) {
           const resultText = order.status === "filled" ? "was filled" : "was rejected";
-          showToast(`${order.symbol} ${order.side} ${order.order_type} order ${resultText}${order.filled_price ? ` at ${formatPrice(Number(order.filled_price))}` : ""}.`);
+          const message = `${order.symbol} ${order.side} ${order.order_type} order ${resultText}${order.filled_price ? ` at ${formatPrice(Number(order.filled_price))}` : ""}.`;
+          setNotifications((current) => [{ id: `${order.id}-${order.status}`, message, createdAt: new Date().toISOString(), read: false }, ...current].slice(0, 20));
+          showToast(message);
         }
         knownOrderStatuses.current.set(String(order.id), order.status);
       }
@@ -635,14 +639,62 @@ export default function DashboardPage() {
             ☾
           </button>
 
-          <button
-            className="icon-btn notification"
-            type="button"
-            aria-label="Notifications"
-          >
-            ♧
-            <span>3</span>
-          </button>
+          <div style={{ position: "relative" }}>
+            <button
+              className="icon-btn notification"
+              type="button"
+              aria-label="Notifications"
+              aria-expanded={notificationsOpen}
+              onClick={() => setNotificationsOpen((open) => !open)}
+            >
+              ♧
+              {notifications.filter((item) => !item.read).length > 0 && (
+                <span>{notifications.filter((item) => !item.read).length}</span>
+              )}
+            </button>
+            {notificationsOpen && (
+              <div
+                role="dialog"
+                aria-label="Notifications"
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 12px)",
+                  right: 0,
+                  width: "min(340px, calc(100vw - 32px))",
+                  maxHeight: 360,
+                  overflowY: "auto",
+                  zIndex: 100,
+                  padding: 14,
+                  border: "1px solid var(--border, #293342)",
+                  borderRadius: 12,
+                  background: "var(--panel, #141b24)",
+                  boxShadow: "0 12px 32px rgba(0,0,0,.35)",
+                  color: "var(--text, #e5e7eb)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <strong>Notifications</strong>
+                  <button
+                    type="button"
+                    onClick={() => setNotifications((items) => items.map((item) => ({ ...item, read: true })))}
+                    style={{ background: "transparent", border: 0, color: "var(--muted, #94a3b8)", cursor: "pointer", fontSize: 12 }}
+                  >
+                    Mark all read
+                  </button>
+                </div>
+                {notifications.length === 0 ? (
+                  <p style={{ margin: 0, color: "var(--muted, #94a3b8)", fontSize: 13 }}>No new notifications. Order updates will appear here.</p>
+                ) : (
+                  notifications.map((item) => (
+                    <div key={item.id} style={{ padding: "10px 0", borderTop: "1px solid var(--border, #293342)", opacity: item.read ? 0.7 : 1 }}>
+                      <p style={{ margin: "0 0 4px", fontSize: 13 }}>{item.message}</p>
+                      <small style={{ color: "var(--muted, #94a3b8)" }}>{new Date(item.createdAt).toLocaleString()}</small>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
 
           <a
             href="/profile"
