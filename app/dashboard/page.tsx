@@ -613,6 +613,10 @@ export default function DashboardPage() {
               <span>▥</span> Analytics
             </a>
 
+            <a href="/profile">
+              <span>◉</span> Profile
+            </a>
+
             <a href="#settings">
               <span>⚙</span> Settings
             </a>
