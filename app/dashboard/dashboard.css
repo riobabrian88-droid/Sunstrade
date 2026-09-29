@@ -198,3 +198,12 @@
 .candle-chart-area { width:100%; height:360px; }
 .candle-message { padding:8px 0; color:var(--muted); font-size:10px; }
 @media (max-width:760px) { .candle-chart-area { height:300px; } }
+
+
+/* Chart indicator controls */
+.candle-indicators { display:flex; align-items:center; gap:6px; padding:8px 0; }
+.candle-indicators button { padding:5px 9px; border:1px solid var(--border); border-radius:5px; background:transparent; color:var(--muted); font-size:9px; }
+.candle-indicators button.active { border-color:#9d7838; background:#332b1d; color:#e6b75d; }
+.rsi-panel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:9px 10px; border-top:1px solid var(--border); background:#111820; color:var(--muted); font-size:9px; }
+.rsi-panel strong { color:var(--text); font-size:12px; }
+.rsi-panel small { margin-left:auto; color:var(--muted); font-size:8px; }
