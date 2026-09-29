@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import "./dashboard.css";
 import CandleChart from "./CandleChart";
@@ -199,6 +199,7 @@ export default function DashboardPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [toast, setToast] = useState("");
+  const knownOrderStatuses = useRef<Map<string, string>>(new Map());
 
   const selectedAsset =
     assets.find((asset) => asset.symbol === selectedSymbol) ||
@@ -419,7 +420,16 @@ export default function DashboardPage() {
     if (ordersResult.error) {
       console.error("Orders error:", ordersResult.error);
     } else {
-      setOrders(ordersResult.data || []);
+      const latestOrders = (ordersResult.data || []) as Order[];
+      for (const order of latestOrders) {
+        const previousStatus = knownOrderStatuses.current.get(String(order.id));
+        if (previousStatus === "pending" && (order.status === "filled" || order.status === "rejected")) {
+          const resultText = order.status === "filled" ? "was filled" : "was rejected";
+          showToast(`${order.symbol} ${order.side} ${order.order_type} order ${resultText}${order.filled_price ? ` at ${formatPrice(Number(order.filled_price))}` : ""}.`);
+        }
+        knownOrderStatuses.current.set(String(order.id), order.status);
+      }
+      setOrders(latestOrders);
     }
 
     if (!assetsResult.error && assetsResult.data?.length) {
