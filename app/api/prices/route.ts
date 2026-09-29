@@ -22,17 +22,25 @@ const marketHosts = [
   "https://api3.binance.com",
 ];
 
-async function getMarketPrice(pair: string): Promise<number | null> {
+type Ticker24h = {
+  lastPrice?: string;
+  priceChangePercent?: string;
+};
+
+async function getMarketTicker(pair: string): Promise<{ price: number; change: number } | null> {
   for (const host of marketHosts) {
     try {
       const response = await fetch(
-        `${host}/api/v3/ticker/price?symbol=${pair}`,
+        `${host}/api/v3/ticker/24hr?symbol=${pair}`,
         { cache: "no-store" }
       );
       if (!response.ok) continue;
-      const data: { price?: string } = await response.json();
-      const price = Number(data.price);
-      if (Number.isFinite(price) && price > 0) return price;
+      const data: Ticker24h = await response.json();
+      const price = Number(data.lastPrice);
+      const change = Number(data.priceChangePercent);
+      if (Number.isFinite(price) && price > 0 && Number.isFinite(change)) {
+        return { price, change };
+      }
     } catch {
       // Try the next public market-data endpoint.
     }
@@ -44,22 +52,25 @@ export async function GET() {
   try {
     const entries = await Promise.all(
       Object.entries(symbols).map(async ([market, pair]) => {
-        const price = await getMarketPrice(pair);
-        return price === null ? null : ([market, price] as [string, number]);
+        const ticker = await getMarketTicker(pair);
+        return ticker ? ([market, ticker] as const) : null;
       })
     );
 
-    const availablePrices = Object.fromEntries(
-      entries.filter((entry): entry is [string, number] => entry !== null)
+    const available = entries.filter(
+      (entry): entry is readonly [string, { price: number; change: number }] => entry !== null
     );
 
-    if (Object.keys(availablePrices).length === 0) {
-      console.error("All Binance public market-data endpoints failed");
+    if (available.length === 0) {
+      console.error("All Binance public 24-hour ticker endpoints failed");
       return NextResponse.json(
         { error: "Market provider is unreachable. Please check the Vercel function logs." },
         { status: 502 }
       );
     }
+
+    const prices = Object.fromEntries(available.map(([symbol, ticker]) => [symbol, ticker.price]));
+    const changes = Object.fromEntries(available.map(([symbol, ticker]) => [symbol, ticker.change]));
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -73,7 +84,7 @@ export async function GET() {
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const results = await Promise.all(
-      Object.entries(availablePrices).map(([symbol, price]) =>
+      Object.entries(prices).map(([symbol, price]) =>
         supabase
           .from("assets")
           .update({ price, updated_at: new Date().toISOString() })
@@ -89,7 +100,8 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      ...availablePrices,
+      ...prices,
+      changes,
       updatedAt: new Date().toISOString(),
     });
   } catch (error) {
