@@ -389,27 +389,10 @@ export default function DashboardPage() {
 
     setAssets((currentAssets) =>
       currentAssets.map((asset) => {
-        if (
-          asset.symbol === "BTC/USD" &&
-          typeof data["BTC/USD"] === "number"
-        ) {
-          return {
-            ...asset,
-            price: data["BTC/USD"],
-          };
-        }
-
-        if (
-          asset.symbol === "ETH/USD" &&
-          typeof data["ETH/USD"] === "number"
-        ) {
-          return {
-            ...asset,
-            price: data["ETH/USD"],
-          };
-        }
-
-        return asset;
+        const livePrice = data[asset.symbol];
+        return typeof livePrice === "number" && Number.isFinite(livePrice)
+          ? { ...asset, price: livePrice }
+          : asset;
       })
     );
 
