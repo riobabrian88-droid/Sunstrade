@@ -566,14 +566,19 @@ export default function DashboardPage() {
             <span>3</span>
           </button>
 
-          <div className="user-chip">
+          <a
+            href="/profile"
+            className="user-chip profile-shortcut"
+            aria-label="Open your profile"
+            title="Open your profile"
+          >
             <span className="avatar">{getInitial()}</span>
 
             <span className="user-copy">
               <strong>{getDisplayName()}</strong>
               <small>{user?.email || "No email"}</small>
             </span>
-          </div>
+          </a>
 
           <button
             className="signout-btn"
