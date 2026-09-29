@@ -39,6 +39,14 @@ export default function CandleChart({ symbol }: { symbol: string }) {
   const chartRef = useRef<ReturnType<typeof createChart> | null>(null);
   const candleSeriesRef = useRef<any>(null);
   const smaSeriesRef = useRef<any>(null);
+  const upperBandRef = useRef<any>(null);
+  const lowerBandRef = useRef<any>(null);
+  const macdSeriesRef = useRef<any>(null);
+  const [showBollinger, setShowBollinger] = useState(false);
+  const [showMacd, setShowMacd] = useState(false);
+  const [drawingMode, setDrawingMode] = useState(false);
+  const [drawings, setDrawings] = useState<Array<{ x1: number; y1: number; x2: number; y2: number }>>([]);
+  const pendingPoint = useRef<{ x: number; y: number } | null>(null);
   const [timeframe, setTimeframe] = useState("15m");
   const [candles, setCandles] = useState<Candle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +63,35 @@ export default function CandleChart({ symbol }: { symbol: string }) {
         value: window.reduce((sum, item) => sum + item.close, 0) / period,
       };
     });
+  }, [candles]);
+
+  const bollingerData = useMemo(() => {
+    const period = 20;
+    return candles.slice(period - 1).map((candle, index) => {
+      const window = candles.slice(index, index + period);
+      const mean = window.reduce((sum, item) => sum + item.close, 0) / period;
+      const variance = window.reduce((sum, item) => sum + (item.close - mean) ** 2, 0) / period;
+      const deviation = Math.sqrt(variance) * 2;
+      return { time: candle.time, upper: mean + deviation, lower: mean - deviation };
+    });
+  }, [candles]);
+
+  const macd = useMemo(() => {
+    const ema = (values: number[], period: number) => {
+      const k = 2 / (period + 1);
+      let value = values[0] || 0;
+      return values.map((item, index) => {
+        value = index === 0 ? item : item * k + value * (1 - k);
+        return value;
+      });
+    };
+    if (candles.length < 35) return null;
+    const closes = candles.map((candle) => candle.close);
+    const fast = ema(closes, 12);
+    const slow = ema(closes, 26);
+    const line = fast.map((value, index) => value - slow[index]);
+    const signal = ema(line, 9);
+    return { value: line[line.length - 1], signal: signal[signal.length - 1], histogram: line[line.length - 1] - signal[signal.length - 1] };
   }, [candles]);
 
   const rsi = useMemo(() => {
@@ -111,6 +148,8 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       wickUpColor: "#39b982",
       wickDownColor: "#e36d6d",
     });
+    upperBandRef.current = chart.addSeries(LineSeries, { color: "#7c8ee8", lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, title: "BB Upper" });
+    lowerBandRef.current = chart.addSeries(LineSeries, { color: "#7c8ee8", lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, title: "BB Lower" });
     smaSeriesRef.current = chart.addSeries(LineSeries, {
       color: "#e6b75d",
       lineWidth: 2,
@@ -130,6 +169,9 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       chartRef.current = null;
       candleSeriesRef.current = null;
       smaSeriesRef.current = null;
+      upperBandRef.current = null;
+      lowerBandRef.current = null;
+      macdSeriesRef.current = null;
     };
   }, []);
 
@@ -210,9 +252,9 @@ export default function CandleChart({ symbol }: { symbol: string }) {
       </div>
       <div className="candle-indicators" aria-label="Chart indicators">
         <button type="button" className={showSma ? "active" : ""} onClick={() => setShowSma((value) => !value)}>SMA 20</button>
-        <button type="button" className={showRsi ? "active" : ""} onClick={() => setShowRsi((value) => !value)}>RSI 14</button>
+        <button type="button" className={showRsi ? "active" : ""} onClick={() => setShowRsi((value) => !value)}>RSI 14</button>\n        <button type="button" className={showBollinger ? "active" : ""} onClick={() => setShowBollinger((value) => !value)}>Bollinger Bands</button>\n        <button type="button" className={showMacd ? "active" : ""} onClick={() => setShowMacd((value) => !value)}>MACD</button>\n        <button type="button" className={drawingMode ? "active" : ""} onClick={() => { pendingPoint.current = null; setDrawingMode((value) => !value); }}>Trend line</button>\n        <button type="button" onClick={() => { setDrawings([]); pendingPoint.current = null; }}>Clear drawings</button>
       </div>
-      <div className="candle-chart-area" ref={containerRef} />
+      <div className="candle-chart-area" ref={containerRef}>\n        <svg className="candle-drawings" viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">\n          {drawings.map((line, index) => <line key={index} x1={`${line.x1 / (containerRef.current?.clientWidth || 1000) * 1000}`} y1={`${line.y1 / (containerRef.current?.clientHeight || 360) * 360}`} x2={`${line.x2 / (containerRef.current?.clientWidth || 1000) * 1000}`} y2={`${line.y2 / (containerRef.current?.clientHeight || 360) * 360}`} stroke="#e6b75d" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />)}\n        </svg>\n      </div>\n      {drawingMode && <div className="candle-message">Trend line: tap two points on the chart to draw a line.</div>}\n      {showMacd && <div className="rsi-panel"><span>MACD (12, 26, 9)</span><strong>{macd ? macd.value.toFixed(4) : "Calculating…"}</strong><span>Signal: {macd ? macd.signal.toFixed(4) : "—"}</span><span>Histogram: {macd ? macd.histogram.toFixed(4) : "—"}</span></div>}
       {showRsi && (
         <div className="rsi-panel">
           <span>RSI (14)</span>
