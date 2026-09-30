@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import "./dashboard.css";
 import CandleChart from "./CandleChart";
 import OrderBook from "./OrderBook";
+import MarketDepth from "./MarketDepth";
 import RecentTrades from "./RecentTrades";
 import MarketStats from "./MarketStats";
 import PortfolioPerformance from "./PortfolioPerformance";
@@ -1118,6 +1119,7 @@ export default function DashboardPage() {
               </div>
 
               <OrderBook symbol={selectedSymbol} />
+              <MarketDepth symbol={selectedSymbol} />
               <div className="market-detail-grid">
                 <RecentTrades symbol={selectedSymbol} />
                 <MarketStats symbol={selectedSymbol} />
