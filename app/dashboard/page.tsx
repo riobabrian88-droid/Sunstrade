@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import "./dashboard.css";
 import CandleChart from "./CandleChart";
+import OrderBook from "./OrderBook";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -1112,6 +1113,8 @@ export default function DashboardPage() {
                 Market prices are supplied by the Sunraku
                 database.
               </div>
+
+              <OrderBook symbol={selectedSymbol} />
             </section>
 
             <aside className="right-column">
