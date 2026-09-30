@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import "./dashboard.css";
 import CandleChart from "./CandleChart";
 import OrderBook from "./OrderBook";
+import RecentTrades from "./RecentTrades";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -1115,6 +1116,7 @@ export default function DashboardPage() {
               </div>
 
               <OrderBook symbol={selectedSymbol} />
+              <RecentTrades symbol={selectedSymbol} />
             </section>
 
             <aside className="right-column">
