@@ -83,7 +83,7 @@ export default function MarketDepth({ symbol }: { symbol: string }) {
       askArea: `${askLine} L ${x(askPoints[askPoints.length - 1].price).toFixed(2)} 166 L ${x(askPoints[0].price).toFixed(2)} 166 Z`,
       min: minPrice, max: maxPrice,
       bidQty: bidTotal, askQty: askTotal,
-      midpoint: (bids[0].price + asks[0].price) / 2,
+      midpoint: (bids[0].price + asks[0].price) / 2,\n      midpointX: x((bids[0].price + asks[0].price) / 2),
     };
   }, [depth]);
 
@@ -106,7 +106,7 @@ export default function MarketDepth({ symbol }: { symbol: string }) {
             <path d={chart.askArea} className="depth-ask-area" />
             <path d={chart.bidLine} className="depth-bid-line" />
             <path d={chart.askLine} className="depth-ask-line" />
-            <line x1={300} x2={300} y1="18" y2="166" className="depth-midline" />
+            <line x1={chart.midpointX} x2={chart.midpointX} y1="18" y2="166" className="depth-midline" />
             <text x="8" y="184" className="depth-axis-label">{priceLabel(chart.min)}</text>
             <text x="300" y="184" textAnchor="middle" className="depth-axis-label">{priceLabel(chart.midpoint)}</text>
             <text x="592" y="184" textAnchor="end" className="depth-axis-label">{priceLabel(chart.max)}</text>
