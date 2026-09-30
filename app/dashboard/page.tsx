@@ -881,6 +881,18 @@ export default function DashboardPage() {
         </aside>
 
         <section className="workspace">
+          <section className="dashboard-welcome" aria-label="Dashboard overview">
+            <div>
+              <span className="eyebrow">TRADING OVERVIEW</span>
+              <h1>Welcome back{profile?.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}</h1>
+              <p>Track your balance, monitor markets, and manage your trading activity.</p>
+            </div>
+            <div className="welcome-actions">
+              <a href="#orderPanel">Start trading <span aria-hidden="true">↗</span></a>
+              <a href="#positions">View portfolio <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+
           <section className="stats-grid">
             <a
   href="/wallet"
