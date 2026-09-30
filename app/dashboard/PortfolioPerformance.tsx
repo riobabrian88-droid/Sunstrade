@@ -13,6 +13,8 @@ type Order = {
   filled_at: string | null;
 };
 
+type Position = { symbol: string; qty: number; avg_price: number };
+type Asset = { symbol: string; price: number };
 type Point = { time: number; value: number };
 
 function money(value: number) {
@@ -24,7 +26,30 @@ function money(value: number) {
   }).format(value);
 }
 
-export default function PortfolioPerformance({ orders }: { orders: Order[] }) {
+export default function PortfolioPerformance({
+  orders,
+  positions,
+  assets,
+}: {
+  orders: Order[];
+  positions: Position[];
+  assets: Asset[];
+}) {
+  const openPositionSummary = useMemo(() => {
+    const prices = new Map(assets.map((asset) => [asset.symbol, Number(asset.price)]));
+    return positions.reduce(
+      (summary, position) => {
+        const qty = Number(position.qty) || 0;
+        const average = Number(position.avg_price) || 0;
+        const price = prices.get(position.symbol) || 0;
+        summary.costBasis += qty * average;
+        summary.marketValue += qty * price;
+        summary.unrealized += qty * (price - average);
+        return summary;
+      },
+      { costBasis: 0, marketValue: 0, unrealized: 0 },
+    );
+  }, [positions, assets]);
   const points = useMemo(() => {
     const lots = new Map<string, Array<{ qty: number; price: number }>>();
     const realized: Point[] = [];
@@ -73,11 +98,17 @@ export default function PortfolioPerformance({ orders }: { orders: Order[] }) {
   return (
     <section className="panel performance-panel" aria-label="Portfolio realized performance">
       <div className="panel-title performance-heading">
-        <div><h2>Portfolio Performance</h2><small>Realized profit &amp; loss · Completed trades</small></div>
+        <div><h2>Portfolio Performance</h2><small>Open-position value and profit &amp; loss</small></div>
         <span className={positive ? "trade-buy" : "trade-sell"}>{positive ? "+" : ""}{money(latest)}</span>
       </div>
+      <div className="performance-summary-grid">
+        <div className="performance-metric"><span>Current portfolio value</span><strong>{money(openPositionSummary.marketValue)}</strong></div>
+        <div className="performance-metric"><span>Unrealized P/L</span><strong className={openPositionSummary.unrealized >= 0 ? "trade-buy" : "trade-sell"}>{openPositionSummary.unrealized > 0 ? "+" : ""}{money(openPositionSummary.unrealized)}</strong></div>
+        <div className="performance-metric"><span>Open position cost</span><strong>{money(openPositionSummary.costBasis)}</strong></div>
+        <div className="performance-metric"><span>Realized P/L</span><strong className={latest >= 0 ? "trade-buy" : "trade-sell"}>{latest > 0 ? "+" : ""}{money(latest)}</strong></div>
+      </div>
       {points.length === 0 ? (
-        <div className="performance-empty">Your performance chart will appear after you complete a sell trade.</div>
+        <div className="performance-empty">Realized P/L history will appear after you complete a sell trade. Current open-position value and unrealized P/L are shown above.</div>
       ) : (
         <>
           <div className="performance-chart">
@@ -89,7 +120,7 @@ export default function PortfolioPerformance({ orders }: { orders: Order[] }) {
             </svg>
           </div>
           <div className="performance-dates"><span>{new Date(points[0].time).toLocaleDateString()}</span><span>{new Date(points[points.length - 1].time).toLocaleDateString()}</span></div>
-          <p className="performance-note">Cumulative realized P/L from filled sell orders, matched against buys using FIFO. Open-position gains are not included.</p>
+          <p className="performance-note">Chart: cumulative realized P/L from filled sell orders, matched against buys using FIFO. Current value and unrealized P/L above use the latest available asset prices; historical total portfolio values require saved snapshots.</p>
         </>
       )}
     </section>
