@@ -349,3 +349,11 @@
 .performance-note,.performance-empty { margin:10px 0 0; color:var(--muted); font-size:8px; line-height:1.5; }
 .performance-empty { padding:16px 8px; text-align:center; }
 @media(max-width:760px) { .performance-panel { margin-top:12px; padding:12px; } .performance-chart { height:155px; } }
+
+
+/* Current portfolio value and open-position P/L */
+.performance-summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 12px; }
+.performance-metric { min-width:0; display:grid; gap:5px; padding:10px; border:1px solid var(--border); border-radius:7px; background:var(--surface-2,rgba(255,255,255,.025)); }
+.performance-metric>span { color:var(--muted); font-size:9px; }
+.performance-metric>strong { min-width:0; overflow-wrap:anywhere; color:var(--text); font:700 12px Manrope,Arial,sans-serif; font-variant-numeric:tabular-nums; }
+@media(max-width:760px) { .performance-summary-grid { gap:7px; } .performance-metric { padding:9px; } }
