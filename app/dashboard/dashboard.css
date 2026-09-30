@@ -293,3 +293,22 @@
   .order-book-panel { margin-top:12px; padding:12px; }
   .book-column-head,.book-row { grid-template-columns:1.1fr 1fr 1fr; gap:6px; }
 }
+
+
+/* Recent exchange market trades */
+.recent-trades-panel { margin-top:14px; overflow:hidden; }
+.recent-trades-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.recent-trades-heading>div { display:grid; gap:4px; }
+.recent-trades-heading small { color:var(--muted); font-size:9px; }
+.recent-trades-columns,.recent-trade-row { display:grid; grid-template-columns:.9fr .65fr 1.2fr 1fr; gap:8px; align-items:center; }
+.recent-trades-columns { padding:7px 8px; color:var(--muted); font-size:8px; text-align:right; }
+.recent-trades-columns span:first-child,.recent-trades-columns span:nth-child(2) { text-align:left; }
+.recent-trade-row { min-height:29px; padding:5px 8px; border-top:1px solid var(--border); color:var(--text); font-size:9px; font-variant-numeric:tabular-nums; text-align:right; }
+.recent-trade-row>span:first-child,.recent-trade-row>strong { text-align:left; }
+.recent-trade-row strong { font-size:9px; }
+.trade-buy { color:#54c995; }
+.trade-sell { color:#e88787; }
+@media(max-width:760px) {
+  .recent-trades-panel { margin-top:12px; padding:12px; }
+  .recent-trades-columns,.recent-trade-row { grid-template-columns:.9fr .6fr 1.2fr 1fr; gap:5px; }
+}
