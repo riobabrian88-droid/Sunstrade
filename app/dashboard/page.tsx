@@ -6,6 +6,7 @@ import "./dashboard.css";
 import CandleChart from "./CandleChart";
 import OrderBook from "./OrderBook";
 import RecentTrades from "./RecentTrades";
+import MarketStats from "./MarketStats";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -1116,7 +1117,10 @@ export default function DashboardPage() {
               </div>
 
               <OrderBook symbol={selectedSymbol} />
-              <RecentTrades symbol={selectedSymbol} />
+              <div className="market-detail-grid">
+                <RecentTrades symbol={selectedSymbol} />
+                <MarketStats symbol={selectedSymbol} />
+              </div>
             </section>
 
             <aside className="right-column">
