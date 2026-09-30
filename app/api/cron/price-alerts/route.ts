@@ -67,8 +67,55 @@ export async function GET(request: Request) {
       user_id: alert.user_id, alert_id: alert.id, symbol: alert.symbol,
       target_price: target, triggered_price: price, message,
     });
-    if (notificationError) console.error("Could not save price alert notification:", notificationError.message);
-    else triggered++;
+    if (notificationError) {
+      console.error("Could not save price alert notification:", notificationError.message);
+      continue;
+    }
+    triggered++;
+
+    const { data: preference, error: preferenceError } = await supabase
+      .from("email_notification_preferences")
+      .select("email_alerts_enabled")
+      .eq("user_id", alert.user_id)
+      .maybeSingle();
+    if (preferenceError) {
+      console.error("Could not load email preference:", preferenceError.message);
+      continue;
+    }
+    if (!preference?.email_alerts_enabled) continue;
+
+    const resendKey = process.env.RESEND_API_KEY;
+    const emailFrom = process.env.EMAIL_FROM;
+    if (!resendKey || !emailFrom) {
+      console.error("Email alerts enabled, but RESEND_API_KEY or EMAIL_FROM is missing.");
+      continue;
+    }
+    const { data: account, error: accountError } = await supabase.auth.admin.getUserById(alert.user_id);
+    const recipient = account?.user?.email;
+    if (accountError || !recipient) {
+      console.error("Could not resolve email recipient:", accountError?.message || "No email");
+      continue;
+    }
+    try {
+      const emailResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: emailFrom,
+          to: [recipient],
+          subject: `SunStrade price alert: ${alert.symbol}`,
+          text: `Your price alert was triggered.\\n\\n${message}\\n\\nTarget: ${target} USD\\nTriggered price: ${price} USD`,
+        }),
+      });
+      if (!emailResponse.ok) {
+        console.error("Email provider rejected alert:", await emailResponse.text());
+      }
+    } catch (emailError) {
+      console.error("Could not send price alert email:", emailError);
+    }
   }
 
   const { error: orderError } = await supabase.rpc("process_pending_orders");
