@@ -312,3 +312,20 @@
   .recent-trades-panel { margin-top:12px; padding:12px; }
   .recent-trades-columns,.recent-trade-row { grid-template-columns:.9fr .6fr 1.2fr 1fr; gap:5px; }
 }
+
+
+/* Pair recent trades with 24-hour market statistics */
+.market-detail-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; align-items:stretch; margin-top:14px; }
+.market-detail-grid>.panel { min-width:0; height:100%; margin-top:0; }
+.market-stats-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
+.market-stats-heading>div { display:grid; gap:4px; min-width:0; }
+.market-stats-heading small { color:var(--muted); font-size:9px; }
+.market-stats-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.market-stat { min-width:0; display:grid; gap:5px; padding:10px; border:1px solid var(--border); border-radius:7px; background:var(--surface-2,rgba(255,255,255,.025)); }
+.market-stat>span { color:var(--muted); font-size:9px; }
+.market-stat>strong { min-width:0; overflow-wrap:anywhere; color:var(--text); font:700 12px Manrope,Arial,sans-serif; font-variant-numeric:tabular-nums; }
+.market-stat>small { color:var(--muted); font-size:8px; }
+@media(max-width:760px) {
+  .market-detail-grid { grid-template-columns:minmax(0,1fr); gap:12px; margin-top:12px; }
+  .market-detail-grid>.panel { padding:12px; }
+}
