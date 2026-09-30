@@ -83,7 +83,8 @@ export default function MarketDepth({ symbol }: { symbol: string }) {
       askArea: `${askLine} L ${x(askPoints[askPoints.length - 1].price).toFixed(2)} 166 L ${x(askPoints[0].price).toFixed(2)} 166 Z`,
       min: minPrice, max: maxPrice,
       bidQty: bidTotal, askQty: askTotal,
-      midpoint: (bids[0].price + asks[0].price) / 2,\n      midpointX: x((bids[0].price + asks[0].price) / 2),
+      midpoint: (bids[0].price + asks[0].price) / 2,
+      midpointX: x((bids[0].price + asks[0].price) / 2),
     };
   }, [depth]);
 
