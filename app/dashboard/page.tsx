@@ -7,6 +7,7 @@ import CandleChart from "./CandleChart";
 import OrderBook from "./OrderBook";
 import RecentTrades from "./RecentTrades";
 import MarketStats from "./MarketStats";
+import PortfolioPerformance from "./PortfolioPerformance";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -1322,6 +1323,7 @@ export default function DashboardPage() {
                   trading database.
                 </p>
               </section>
+              <PortfolioPerformance orders={orders} />
             </aside>
           </div>
 
