@@ -315,7 +315,14 @@
 
 
 /* Pair recent trades with 24-hour market statistics */
-.market-detail-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; align-items:stretch; margin-top:14px; }
+.market-detail-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr); gap:12px; align-items:stretch; margin-top:14px; }
+/* Keep the 24-hour summary compact so it balances the longer recent-trades table on desktop. */
+@media(min-width:761px) {
+  .market-detail-grid>.market-stats-panel { padding:12px; }
+  .market-detail-grid .market-stats-grid { gap:7px; }
+  .market-detail-grid .market-stat { padding:8px; gap:4px; }
+  .market-detail-grid .market-stat>strong { font-size:11px; }
+}
 .market-detail-grid>.panel { min-width:0; height:100%; margin-top:0; }
 .market-stats-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
 .market-stats-heading>div { display:grid; gap:4px; min-width:0; }
