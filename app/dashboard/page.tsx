@@ -1323,7 +1323,7 @@ export default function DashboardPage() {
                   trading database.
                 </p>
               </section>
-              <PortfolioPerformance orders={orders} />
+              <PortfolioPerformance orders={orders} positions={positions} assets={assets} />
             </aside>
           </div>
 
