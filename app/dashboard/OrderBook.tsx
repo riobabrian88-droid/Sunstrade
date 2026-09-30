@@ -114,7 +114,7 @@ export default function OrderBook({ symbol }: { symbol: string }) {
           <div className="book-levels asks">{rows(book.asks, "ask")}</div>
           <div className="book-spread">
             <strong>{spread ? formatSpread(spread.amount) : "—"}</strong>
-            <span>Spread {spread ? `(${spread.percent.toFixed(3)}%)` : "—"}</span>
+            <span>Spread {spread ? `(${spread.percent.toFixed(6)}%)` : "—"}</span>
           </div>
           <div className="book-levels bids">{rows(book.bids, "bid")}</div>
           {status === "error" && <p className="book-message">Showing the last available snapshot; refresh is unavailable.</p>}
