@@ -10,6 +10,9 @@ export default function SettingsPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [emailAlerts, setEmailAlerts] = useState(false);
+  const [savingEmailAlerts, setSavingEmailAlerts] = useState(false);
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
@@ -24,6 +27,17 @@ export default function SettingsPage() {
       }
       if (!active) return;
       setEmail(user.email || "");
+      setUserId(user.id);
+      const { data: notificationPreference, error: preferenceError } = await supabase
+        .from("email_notification_preferences")
+        .select("email_alerts_enabled")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (preferenceError) {
+        console.error("Email notification preference error:", preferenceError);
+      } else {
+        setEmailAlerts(Boolean(notificationPreference?.email_alerts_enabled));
+      }
       const savedTheme = window.localStorage.getItem("sunraku-theme");
       const nextTheme = savedTheme === "light" ? "light" : "dark";
       setTheme(nextTheme);
@@ -33,6 +47,21 @@ export default function SettingsPage() {
     load();
     return () => { active = false; };
   }, [router]);
+
+  async function changeEmailAlerts(enabled: boolean) {
+    if (!userId) return;
+    setSavingEmailAlerts(true);
+    setError("");
+    const { error: saveError } = await supabase
+      .from("email_notification_preferences")
+      .upsert({ user_id: userId, email_alerts_enabled: enabled, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    if (saveError) {
+      setError("Could not save email preference: " + saveError.message);
+    } else {
+      setEmailAlerts(enabled);
+    }
+    setSavingEmailAlerts(false);
+  }
 
   function changeTheme(value: "dark" | "light") {
     setTheme(value);
@@ -80,6 +109,16 @@ export default function SettingsPage() {
             </div>
           </div>
           <p className="settings-note">Your theme preference is saved on this device.</p>
+        </section>
+
+        <section className="settings-card">
+          <div className="settings-card-heading"><div><h2>Email notifications</h2><p>Choose whether you want price-alert emails.</p></div><span className="settings-symbol">✉</span></div>
+          <div className="settings-row">
+            <div><strong>Price alert emails</strong><small>Send an email when one of your price alerts is triggered.</small><small>Account email: {email || "Not available"}</small></div>
+            <button className={"email-toggle" + (emailAlerts ? " enabled" : "")} type="button" role="switch" aria-checked={emailAlerts} disabled={savingEmailAlerts} onClick={() => void changeEmailAlerts(!emailAlerts)}>{savingEmailAlerts ? "Saving..." : emailAlerts ? "On" : "Off"}</button>
+          </div>
+          <p className="settings-note">This saves your preference. Email delivery will work once SunStrade's email service is configured.</p>
+          {error && <p className="settings-error" role="alert">{error}</p>}
         </section>
 
         <section className="settings-card signout-card">
