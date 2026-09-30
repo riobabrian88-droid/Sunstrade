@@ -249,3 +249,17 @@
 .dashboard-welcome .welcome-actions a:first-child{background:rgba(16,185,129,.13);border-color:rgba(16,185,129,.35)}
 .dashboard-welcome .welcome-actions a:hover{transform:translateY(-1px);border-color:rgba(16,185,129,.55)}
 @media(max-width:640px){.dashboard-welcome{align-items:flex-start;flex-direction:column;padding:20px}.dashboard-welcome .welcome-actions{width:100%}.dashboard-welcome .welcome-actions a{flex:1;justify-content:center}}
+
+
+/* Price alerts */
+.price-alert-panel .panel-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.price-alert-panel .panel-title small,.alert-current,.alert-label{color:var(--muted);font-size:9px}
+.alert-current{margin:12px 0}.alert-current strong{color:var(--text);font-size:11px}
+.alert-label{display:grid;gap:6px}.alert-label input{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:5px;background:#0f151b;color:var(--text);font:inherit}
+.alert-condition{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:8px 0}
+.alert-condition button{padding:7px 4px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);font-size:9px}
+.alert-condition button.active{border-color:#398d6c;background:#18382e;color:#7bd7ad}
+.create-alert-btn{width:100%;padding:9px;border:0;border-radius:5px;background:#23845f;color:#fff;font-size:10px;font-weight:700}
+.create-alert-btn:disabled{opacity:.6}.alert-list{margin-top:9px}.alert-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--border)}
+.alert-row>div{display:grid;gap:4px;min-width:0}.alert-row strong{font-size:10px}.alert-row small{color:var(--muted);font-size:9px}.alert-row span{font-size:8px}.alert-active{color:#7bd7ad}.alert-triggered{color:#e6b75d}.alert-inactive{color:var(--muted)}.alert-row>button{width:25px;height:25px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);font-size:17px}
+.light-theme .trade-app .alert-label input{background:#f5f7f8;color:#26343c}
