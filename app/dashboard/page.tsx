@@ -616,6 +616,34 @@ export default function DashboardPage() {
   }
 
   useEffect(() => { if (user) void loadPriceAlerts(user.id); }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    const loadSavedPriceNotifications = async () => {
+      const { data, error } = await supabase.from("price_alert_notifications")
+        .select("id,message,created_at,read_at")
+        .eq("user_id", user.id).order("created_at", { ascending: false }).limit(20);
+      if (error) { console.error("Saved price notifications error:", error); return; }
+      if (cancelled) return;
+      const saved = (data || []).map((item: any) => ({
+        id: "saved-price-alert-" + item.id,
+        message: item.message,
+        createdAt: item.created_at,
+        read: Boolean(item.read_at),
+      }));
+      setNotifications((current) => {
+        const other = current.filter((item) => !item.id.startsWith("saved-price-alert-"));
+        return [...saved, ...other].slice(0, 20);
+      });
+    };
+    void loadSavedPriceNotifications();
+    const channel = supabase.channel("price-alert-notifications-" + user.id)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "price_alert_notifications", filter: "user_id=eq." + user.id }, () => { void loadSavedPriceNotifications(); })
+      .subscribe();
+    return () => { cancelled = true; supabase.removeChannel(channel); };
+  }, [user]);
+
+
   useEffect(() => { if (user) void checkPriceAlerts(); }, [user, assets, priceAlerts]);
 
   async function toggleWatchlist(symbol: string) {
