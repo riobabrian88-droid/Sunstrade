@@ -218,6 +218,10 @@ export default function DashboardPage() {
   const [watchlistSymbols, setWatchlistSymbols] = useState<string[]>([]);
   const [watchlistOnly, setWatchlistOnly] = useState(false);
   const [watchlistBusy, setWatchlistBusy] = useState<string | null>(null);
+  const [priceAlerts, setPriceAlerts] = useState<any[]>([]);
+  const [alertTarget, setAlertTarget] = useState("");
+  const [alertCondition, setAlertCondition] = useState<"above" | "below">("above");
+  const [alertBusy, setAlertBusy] = useState(false);
   const [priceStatus, setPriceStatus] = useState("Connecting...");
   const [selectedSymbol, setSelectedSymbol] = useState("BTC/USD");
   const [portfolioView, setPortfolioView] = useState<"portfolio" | "history" | "orders">("portfolio");
@@ -570,6 +574,50 @@ export default function DashboardPage() {
     setPriceStatus("Price service unavailable");
   }
 }
+  async function loadPriceAlerts(userId: string) {
+    const { data, error } = await supabase.from("price_alerts").select("id,symbol,target_price,condition,is_active,is_triggered,created_at").eq("user_id", userId).order("created_at", { ascending: false });
+    if (error) { console.error("Price alerts error:", error); return; }
+    setPriceAlerts(data || []);
+  }
+
+  async function createPriceAlert() {
+    const target = Number(alertTarget);
+    if (!user || !Number.isFinite(target) || target <= 0) { showToast("Enter a valid target price."); return; }
+    setAlertBusy(true);
+    const { error } = await supabase.from("price_alerts").insert({ user_id: user.id, symbol: selectedSymbol, target_price: target, condition: alertCondition });
+    if (error) showToast("Could not create alert: " + error.message);
+    else { setAlertTarget(""); showToast("Price alert created."); await loadPriceAlerts(user.id); }
+    setAlertBusy(false);
+  }
+
+  async function deletePriceAlert(id: string) {
+    if (!user) return;
+    const { error } = await supabase.from("price_alerts").delete().eq("id", id).eq("user_id", user.id);
+    if (error) showToast("Could not delete alert: " + error.message);
+    else setPriceAlerts((current) => current.filter((alert) => alert.id !== id));
+  }
+
+  async function checkPriceAlerts() {
+    if (!user) return;
+    const active = priceAlerts.filter((alert) => alert.is_active && !alert.is_triggered);
+    for (const alert of active) {
+      const asset = assets.find((item) => item.symbol === alert.symbol);
+      if (!asset || !Number.isFinite(asset.price) || asset.price <= 0) continue;
+      const hit = alert.condition === "above" ? asset.price >= Number(alert.target_price) : asset.price <= Number(alert.target_price);
+      if (!hit) continue;
+      const { data, error } = await supabase.from("price_alerts").update({ is_triggered: true, is_active: false, triggered_at: new Date().toISOString() }).eq("id", alert.id).eq("user_id", user.id).eq("is_triggered", false).select("id");
+      if (!error && data?.length) {
+        const message = `${alert.symbol} reached ${formatPrice(asset.price)} (${alert.condition} ${formatPrice(Number(alert.target_price))}).`;
+        setNotifications((current) => [{ id: "price-alert-" + alert.id, message, createdAt: new Date().toISOString(), read: false }, ...current].slice(0, 20));
+        showToast(message);
+        await loadPriceAlerts(user.id);
+      }
+    }
+  }
+
+  useEffect(() => { if (user) void loadPriceAlerts(user.id); }, [user]);
+  useEffect(() => { if (user) void checkPriceAlerts(); }, [user, assets, priceAlerts]);
+
   async function toggleWatchlist(symbol: string) {
     if (!user || watchlistBusy) return;
     setWatchlistBusy(symbol);
@@ -1068,6 +1116,27 @@ export default function DashboardPage() {
                     </button>
                   );
                 })}
+              </section>
+
+              <section className="panel price-alert-panel" id="priceAlerts">
+                <div className="panel-title"><h2>Price Alerts</h2><small>{priceAlerts.filter((alert) => alert.is_active && !alert.is_triggered).length} active</small></div>
+                <p className="alert-current">Current {selectedSymbol}: <strong>{formatPrice(selectedPrice)}</strong></p>
+                <label className="alert-label">Target price (USD)
+                  <input type="number" min="0.00000001" step="any" value={alertTarget} onChange={(event) => setAlertTarget(event.target.value)} placeholder="Enter target price" />
+                </label>
+                <div className="alert-condition" aria-label="Alert condition">
+                  <button type="button" className={alertCondition === "above" ? "active" : ""} onClick={() => setAlertCondition("above")}>At or above</button>
+                  <button type="button" className={alertCondition === "below" ? "active" : ""} onClick={() => setAlertCondition("below")}>At or below</button>
+                </div>
+                <button className="create-alert-btn" type="button" disabled={alertBusy} onClick={() => void createPriceAlert()}>{alertBusy ? "Saving..." : "Create price alert"}</button>
+                <div className="alert-list">
+                  {priceAlerts.length === 0 ? <p className="empty-state">No price alerts yet. Create one to get started.</p> : priceAlerts.map((alert) => (
+                    <div className="alert-row" key={alert.id}>
+                      <div><strong>{alert.symbol}</strong><small>{alert.condition === "above" ? "At or above" : "At or below"} {formatPrice(Number(alert.target_price))}</small><span className={alert.is_triggered ? "alert-triggered" : alert.is_active ? "alert-active" : "alert-inactive"}>{alert.is_triggered ? "Triggered" : alert.is_active ? "Active" : "Inactive"}</span></div>
+                      <button type="button" aria-label={"Delete alert for " + alert.symbol} onClick={() => void deletePriceAlert(alert.id)}>×</button>
+                    </div>
+                  ))}
+                </div>
               </section>
 
               <section
