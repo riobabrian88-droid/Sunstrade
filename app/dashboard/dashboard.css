@@ -329,3 +329,23 @@
   .market-detail-grid { grid-template-columns:minmax(0,1fr); gap:12px; margin-top:12px; }
   .market-detail-grid>.panel { padding:12px; }
 }
+
+
+/* Portfolio realized performance chart under the order ticket */
+.performance-panel { margin-top:14px; min-width:0; overflow:hidden; }
+.performance-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.performance-heading>div { display:grid; gap:4px; min-width:0; }
+.performance-heading small { color:var(--muted); font-size:9px; line-height:1.4; }
+.performance-heading>span { flex:none; font-size:11px; font-weight:700; font-variant-numeric:tabular-nums; }
+.performance-chart { display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px; height:145px; }
+.performance-axis { display:flex; flex-direction:column; justify-content:space-between; color:var(--muted); font-size:8px; padding:3px 0 14px; }
+.performance-chart svg { width:100%; height:100%; overflow:visible; background:linear-gradient(to bottom,rgba(255,255,255,.015),transparent); }
+.performance-zero { stroke:var(--muted); stroke-width:.45; stroke-dasharray:2 2; opacity:.55; }
+.performance-line { fill:none; stroke-width:1.7; vector-effect:non-scaling-stroke; stroke-linejoin:round; stroke-linecap:round; }
+.performance-line.positive-line { stroke:#54c995; }
+.performance-line.negative-line { stroke:#e88787; }
+.performance-dot { fill:var(--green); }
+.performance-dates { display:flex; justify-content:space-between; margin:3px 0 0 34px; color:var(--muted); font-size:8px; }
+.performance-note,.performance-empty { margin:10px 0 0; color:var(--muted); font-size:8px; line-height:1.5; }
+.performance-empty { padding:16px 8px; text-align:center; }
+@media(max-width:760px) { .performance-panel { margin-top:12px; padding:12px; } .performance-chart { height:155px; } }
