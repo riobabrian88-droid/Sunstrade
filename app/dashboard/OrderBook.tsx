@@ -24,7 +24,17 @@ function formatPrice(value: number) {
 }
 
 function formatQuantity(value: number) {
-  return value.toLocaleString("en-US", { maximumFractionDigits: 5 });
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 8,
+  });
+}
+
+function formatSpread(value: number) {
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 8,
+  });
 }
 
 export default function OrderBook({ symbol }: { symbol: string }) {
@@ -103,7 +113,7 @@ export default function OrderBook({ symbol }: { symbol: string }) {
           <div className="book-column-head"><span>Price (USD)</span><span>Amount</span><span>Total</span></div>
           <div className="book-levels asks">{rows(book.asks, "ask")}</div>
           <div className="book-spread">
-            <strong>{spread ? formatPrice(spread.amount) : "—"}</strong>
+            <strong>{spread ? formatSpread(spread.amount) : "—"}</strong>
             <span>Spread {spread ? `(${spread.percent.toFixed(3)}%)` : "—"}</span>
           </div>
           <div className="book-levels bids">{rows(book.bids, "bid")}</div>
