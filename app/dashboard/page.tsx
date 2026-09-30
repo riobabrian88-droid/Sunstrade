@@ -605,11 +605,21 @@ export default function DashboardPage() {
       if (!asset || !Number.isFinite(asset.price) || asset.price <= 0) continue;
       const hit = alert.condition === "above" ? asset.price >= Number(alert.target_price) : asset.price <= Number(alert.target_price);
       if (!hit) continue;
-      const { data, error } = await supabase.from("price_alerts").update({ is_triggered: true, is_active: false, triggered_at: new Date().toISOString() }).eq("id", alert.id).eq("user_id", user.id).eq("is_triggered", false).select("id");
+      const now = new Date().toISOString();
+      const { data, error } = await supabase.from("price_alerts").update({ is_triggered: true, is_active: false, triggered_at: now }).eq("id", alert.id).eq("user_id", user.id).eq("is_active", true).eq("is_triggered", false).select("id");
       if (!error && data?.length) {
-        const message = `${alert.symbol} reached ${formatPrice(asset.price)} (${alert.condition} ${formatPrice(Number(alert.target_price))}).`;
-        setNotifications((current) => [{ id: "price-alert-" + alert.id, message, createdAt: new Date().toISOString(), read: false }, ...current].slice(0, 20));
-        showToast(message);
+        const message = alert.symbol + " reached " + formatPrice(asset.price) + " (" + alert.condition + " " + formatPrice(Number(alert.target_price)) + ").";
+        const { error: notificationError } = await supabase.from("price_alert_notifications").insert({
+          user_id: user.id, alert_id: alert.id, symbol: alert.symbol,
+          target_price: Number(alert.target_price), triggered_price: asset.price, message,
+        });
+        if (notificationError) {
+          console.error("Could not save triggered price alert:", notificationError.message);
+          showToast("Alert triggered, but its notification could not be saved.");
+        } else {
+          setNotifications((current) => [{ id: "price-alert-" + alert.id, message, createdAt: now, read: false }, ...current].slice(0, 20));
+          showToast(message);
+        }
         await loadPriceAlerts(user.id);
       }
     }
