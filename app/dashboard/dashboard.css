@@ -439,3 +439,13 @@
   .internal-paper-books td,.internal-paper-table-wrap td { font-size:9px; }
 }
 @media(max-width:360px) { .internal-paper-panel { padding:11px; }.internal-paper-books { gap:7px; } }
+
+/* Make shared book price levels selectable on touch and keyboard. */
+.internal-paper-books .internal-book-level { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.internal-paper-books .internal-book-level td { transition:background .15s ease; }
+.internal-paper-books .internal-book-bid td:first-child { color:var(--green); }
+.internal-paper-books .internal-book-ask td:first-child { color:var(--red); }
+.internal-paper-books .internal-book-level:hover td,
+.internal-paper-books .internal-book-level:focus td { background:rgba(120,145,165,.14); }
+.internal-paper-books .internal-book-level:focus { outline:2px solid #4c9b7a; outline-offset:-2px; }
+.internal-paper-books .internal-book-level:active td { background:rgba(60,170,125,.2); }
