@@ -9,6 +9,7 @@ import MarketDepth from "./MarketDepth";
 import RecentTrades from "./RecentTrades";
 import MarketStats from "./MarketStats";
 import PortfolioPerformance from "./PortfolioPerformance";
+import AIAssistant from "./AIAssistant";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -1514,6 +1515,7 @@ export default function DashboardPage() {
         </section>
       </div>
 
+      <AIAssistant />
       {toast && <div className="toast">{toast}</div>}
     </main>
   );
