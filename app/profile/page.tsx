@@ -20,28 +20,45 @@ export default function ProfilePage() {
   useEffect(() => {
     let active = true;
     async function load() {
-      const { data: { user: currentUser }, error: authError } = await supabase.auth.getUser();
-      if (authError || !currentUser) {
-        router.replace("/login");
-        return;
+      try {
+        // Read the persisted session first; getUser() can wait on a network request.
+        const sessionResult = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Sign-in check timed out. Please refresh and try again.")), 12000))
+        ]);
+        if (!active) return;
+        const currentUser = sessionResult.data.session?.user;
+        if (sessionResult.error || !currentUser) {
+          router.replace("/login");
+          return;
+        }
+
+        // Render the profile from the authenticated session even if the profile
+        // table is slow or unavailable. The metadata is a safe display fallback.
+        setUser(currentUser);
+        setFullName(currentUser.user_metadata?.full_name || "");
+        const savedTheme = window.localStorage.getItem("sunraku-theme");
+        const nextTheme = savedTheme === "light" ? "light" : "dark";
+        setTheme(nextTheme);
+        document.documentElement.classList.toggle("light-theme", nextTheme === "light");
+        setLoading(false);
+
+        const profileResult = await Promise.race([
+          supabase.from("profiles").select("full_name").eq("id", currentUser.id).maybeSingle(),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Profile details could not be loaded. You can still view your account and try saving your name.")), 12000))
+        ]);
+        if (!active) return;
+        if (profileResult.error) {
+          setError("Your account loaded, but profile details could not be fetched: " + profileResult.error.message);
+        } else if (profileResult.data?.full_name) {
+          setFullName(profileResult.data.full_name);
+        }
+      } catch (loadError) {
+        if (!active) return;
+        setError(loadError instanceof Error ? loadError.message : "Unable to load your profile. Please refresh and try again.");
+      } finally {
+        if (active) setLoading(false);
       }
-      const { data, error: profileError } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", currentUser.id)
-        .maybeSingle();
-      if (!active) return;
-      if (profileError) {
-        setError(profileError.message);
-      } else {
-        setFullName(data?.full_name || currentUser.user_metadata?.full_name || "");
-      }
-      setUser(currentUser);
-      const savedTheme = window.localStorage.getItem("sunraku-theme");
-      const nextTheme = savedTheme === "light" ? "light" : "dark";
-      setTheme(nextTheme);
-      document.documentElement.classList.toggle("light-theme", nextTheme === "light");
-      setLoading(false);
     }
     load();
     return () => { active = false; };
