@@ -212,6 +212,78 @@ function calculateTodayRealizedPL(orders: Order[]): RealizedDailyPL {
   return { profit, costBasis };
 }
 
+
+function InternalPaperOrderBook({ symbol }: { symbol: string }) {
+  const [side, setSide] = useState<"buy" | "sell">("buy");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("0.01");
+  const [orders, setOrders] = useState<any[]>([]);
+  const [trades, setTrades] = useState<any[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const refresh = async () => {
+    const [{ data: orderData, error: orderError }, { data: tradeData, error: tradeError }] = await Promise.all([
+      supabase.from("internal_orders").select("id,side,price,quantity,remaining_quantity,status,created_at").eq("symbol", symbol).in("status", ["open", "partially_filled"]).order("created_at", { ascending: true }).limit(100),
+      supabase.from("internal_trades").select("id,price,quantity,created_at").eq("symbol", symbol).order("created_at", { ascending: false }).limit(20),
+    ]);
+    if (orderError) setMessage("Order book unavailable. Apply the matching-engine SQL and check permissions.");
+    else setOrders(orderData || []);
+    if (!tradeError) setTrades(tradeData || []);
+  };
+  useEffect(() => {
+    void refresh();
+    const channel = supabase.channel("internal-book-" + symbol)
+      .on("postgres_changes", { event: "*", schema: "public", table: "internal_orders" }, () => void refresh())
+      .on("postgres_changes", { event: "*", schema: "public", table: "internal_trades" }, () => void refresh())
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [symbol]);
+  const submit = async () => {
+    const p = Number(price), q = Number(quantity);
+    if (!Number.isFinite(p) || p <= 0 || !Number.isFinite(q) || q <= 0) {
+      setMessage("Enter a valid limit price and quantity."); return;
+    }
+    setBusy(true); setMessage("");
+    const { data, error } = await supabase.rpc("place_internal_limit_order", {
+      p_symbol: symbol, p_side: side, p_price: p, p_quantity: q,
+    });
+    if (error) setMessage(error.message);
+    else setMessage("Paper order accepted: " + data.status.replace("_", " ") + (Number(data.remaining_quantity) > 0 ? " · remaining " + data.remaining_quantity : ""));
+    await refresh(); setBusy(false);
+  };
+  const cancel = async (id: string) => {
+    setBusy(true);
+    const { error } = await supabase.rpc("cancel_internal_order", { p_order_id: id });
+    setMessage(error ? error.message : "Paper order cancelled and reserved funds released.");
+    await refresh(); setBusy(false);
+  };
+  const buys = orders.filter(o => o.side === "buy").sort((a,b) => Number(b.price)-Number(a.price) || new Date(a.created_at).getTime()-new Date(b.created_at).getTime());
+  const sells = orders.filter(o => o.side === "sell").sort((a,b) => Number(a.price)-Number(b.price) || new Date(a.created_at).getTime()-new Date(b.created_at).getTime());
+  const cell: React.CSSProperties = { padding: "7px 5px", borderBottom: "1px solid var(--border, #29313d)", fontSize: 12 };
+  return <section className="panel" style={{ marginTop: 16, padding: 16 }}>
+    <div className="panel-title"><h2>SunStrade Paper Order Book</h2><small>Internal simulated market</small></div>
+    <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
+      <button type="button" onClick={() => setSide("buy")} className={side === "buy" ? "buy active" : "buy"}>Buy limit</button>
+      <button type="button" onClick={() => setSide("sell")} className={side === "sell" ? "sell active" : "sell"}>Sell limit</button>
+    </div>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+      <label style={{ fontSize: 12 }}>Limit price (USD)<input type="number" min="0.00000001" step="any" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" /></label>
+      <label style={{ fontSize: 12 }}>Quantity<input type="number" min="0.00000001" step="any" value={quantity} onChange={e => setQuantity(e.target.value)} /></label>
+    </div>
+    <button type="button" disabled={busy} onClick={() => void submit()} className={side === "buy" ? "place-order buy" : "place-order sell"} style={{ width: "100%", marginTop: 10 }}>{busy ? "Processing..." : "Place paper limit order"}</button>
+    {message && <p role="status" style={{ fontSize: 12, overflowWrap: "anywhere" }}>{message}</p>}
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
+      <div><strong style={{ color: "#16a34a" }}>Bids · Buy</strong><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Price</th><th style={cell}>Remaining</th></tr></thead><tbody>{buys.slice(0,8).map(o=><tr key={o.id}><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
+      <div><strong style={{ color: "#dc2626" }}>Asks · Sell</strong><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Price</th><th style={cell}>Remaining</th></tr></thead><tbody>{sells.slice(0,8).map(o=><tr key={o.id}><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
+    </div>
+    <h3 style={{ marginTop: 16, fontSize: 14 }}>Your open orders</h3>
+    {orders.length === 0 ? <p style={{ fontSize: 12 }}>No open orders for {symbol}.</p> : <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Side</th><th style={cell}>Limit</th><th style={cell}>Remaining</th><th style={cell}>Action</th></tr></thead><tbody>{orders.map(o=><tr key={o.id}><td style={cell}>{o.side}</td><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td><td style={cell}><button type="button" disabled={busy} onClick={() => void cancel(o.id)}>Cancel</button></td></tr>)}</tbody></table></div>}
+    <h3 style={{ marginTop: 16, fontSize: 14 }}>Recent internal trades</h3>
+    {trades.length === 0 ? <p style={{ fontSize: 12 }}>No internal trades yet.</p> : trades.slice(0,8).map(t=><div key={t.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 12, padding: "5px 0" }}><span>{formatPrice(Number(t.price))}</span><span>{t.quantity}</span><span>{new Date(t.created_at).toLocaleTimeString()}</span></div>)}
+    <p style={{ fontSize: 11, opacity: .7, marginTop: 10 }}>Only orders placed in SunStrade's internal paper market appear here. This is separate from the external exchange reference book above.</p>
+  </section>;
+}
+
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -1325,6 +1397,7 @@ export default function DashboardPage() {
                   trading database.
                 </p>
               </section>
+              <InternalPaperOrderBook symbol={selectedSymbol} />
               <PortfolioPerformance orders={orders} positions={positions} assets={assets} />
             </aside>
           </div>
