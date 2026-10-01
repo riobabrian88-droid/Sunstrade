@@ -236,7 +236,10 @@ function InternalPaperOrderBook({ symbol }: { symbol: string }) {
       .on("postgres_changes", { event: "*", schema: "public", table: "internal_orders" }, () => void refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "internal_trades" }, () => void refresh())
       .subscribe();
-    return () => { void supabase.removeChannel(channel); };
+    // RLS intentionally hides other users' raw order rows, so poll the
+    // privacy-preserving aggregate RPC for shared-book updates.
+    const poll = window.setInterval(() => void refresh(), 5000);
+    return () => { window.clearInterval(poll); void supabase.removeChannel(channel); };
   }, [symbol]);
   const submit = async () => {
     const p = Number(price), q = Number(quantity);
