@@ -854,11 +854,26 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <main className="dashboard-loading">
+        <div className="loading-market-art" aria-hidden="true">
+          <div className="loading-chart-grid" />
+          <svg className="loading-chart-line" viewBox="0 0 900 300" preserveAspectRatio="none">
+            <path d="M0 230 C55 205 70 170 115 192 S165 225 210 188 S265 220 310 165 S370 140 410 175 S470 240 520 185 S590 160 635 105 S690 80 730 135 S790 175 835 80 S875 65 900 20" />
+          </svg>
+          <div className="loading-candles">{[24,38,30,54,43,67,48,76,61,89,73,100,84,116,95,132,109,151].map((h,i)=><i key={i} style={{height: h+"px",left:(i*5.7)+"%"}} />)}</div>
+        </div>
         <div className="loading-card">
           <div className="loading-logo">S</div>
-          <h1>Sunraku Trade</h1>
-          <p>Loading your trading dashboard...</p>
+          <h1>Sunraku <span>Trade</span></h1>
+          <p className="loading-tagline">Your markets, positions and wallet in one place</p>
+          <div className="loading-progress" role="progressbar" aria-label="Loading dashboard"><span /></div>
+          <p className="loading-status"><span className="loading-shield">✓</span> Connecting securely...</p>
         </div>
+        <div className="loading-features" aria-hidden="true">
+          <div><span className="loading-feature-icon">▥</span><span>Live markets</span></div>
+          <div><span className="loading-feature-icon">▣</span><span>Portfolio</span></div>
+          <div><span className="loading-feature-icon">♢</span><span>Secure account</span></div>
+        </div>
+        <div className="loading-data-wave" aria-hidden="true" />
       </main>
     );
   }
