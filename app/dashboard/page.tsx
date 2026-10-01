@@ -95,6 +95,32 @@ const fallbackAssets: Asset[] = [
   },
 ];
 
+function AssetIcon({ symbol }: { symbol: string }) {
+  const base = symbol.split("/")[0];
+  const marks: Record<string, string> = {
+    BTC: "₿",
+    ETH: "◆",
+    BNB: "◆",
+    SOL: "≋",
+    XRP: "✕",
+    DOGE: "Ð",
+    ADA: "●",
+    LTC: "Ł",
+    XAU: "▰",
+    EUR: "€",
+  };
+  const isYenPair = symbol === "USD/JPY";
+  const mark = isYenPair ? "🇺🇸🇯🇵" : marks[base] || base.slice(0, 1);
+  return (
+    <span
+      className={`coin asset-coin asset-${isYenPair ? "usd-jpy" : base.toLowerCase()}`}
+      aria-hidden="true"
+    >
+      {mark}
+    </span>
+  );
+}
+
 function formatMoney(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -1130,7 +1156,7 @@ export default function DashboardPage() {
                     setSelectedSymbol(asset.symbol)
                   }
                 >
-                  <span className="coin btc">◆</span>
+                  <AssetIcon symbol={asset.symbol} />
 
                   <span>
                     <b>{asset.symbol}</b>
@@ -1154,7 +1180,7 @@ export default function DashboardPage() {
             <section className="chart-panel">
               <div className="chart-head">
                 <div className="instrument">
-                  <span className="coin btc">◆</span>
+                  <AssetIcon symbol={selectedAsset.symbol} />
 
                   <div>
                     <strong>{selectedAsset.symbol}</strong>
@@ -1239,7 +1265,7 @@ export default function DashboardPage() {
                         setSelectedSymbol(asset.symbol)
                       }
                     >
-                      <span className="coin btc">◆</span>
+                      <AssetIcon symbol={asset.symbol} />
                       <b>{asset.symbol}</b>
                       <span>{formatPrice(asset.price)}</span>
 
@@ -1285,7 +1311,7 @@ export default function DashboardPage() {
                 id="orderPanel"
               >
                 <div className="order-symbol">
-                  <span className="coin btc">◆</span>
+                  <AssetIcon symbol={selectedSymbol} />
 
                   <div>
                     <strong>{selectedSymbol}</strong>
@@ -1442,7 +1468,7 @@ export default function DashboardPage() {
                         const cost = position.qty * position.avg_price;
                         const pnl = value - cost;
                         const returnPct = cost > 0 ? pnl / cost * 100 : 0;
-                        return <tr key={position.symbol}><td><span className="coin btc">◆</span> {position.symbol}</td><td>{position.qty}</td><td>{formatPrice(position.avg_price)}</td><td>{formatPrice(currentPrice)}</td><td>{formatMoney(value)}</td><td className={pnl >= 0 ? "positive" : "negative"}>{pnl >= 0 ? "+" : ""}{formatMoney(pnl)}</td><td className={returnPct >= 0 ? "positive" : "negative"}>{returnPct >= 0 ? "+" : ""}{returnPct.toFixed(2)}%</td></tr>;
+                        return <tr key={position.symbol}><td><AssetIcon symbol={position.symbol} /> {position.symbol}</td><td>{position.qty}</td><td>{formatPrice(position.avg_price)}</td><td>{formatPrice(currentPrice)}</td><td>{formatMoney(value)}</td><td className={pnl >= 0 ? "positive" : "negative"}>{pnl >= 0 ? "+" : ""}{formatMoney(pnl)}</td><td className={returnPct >= 0 ? "positive" : "negative"}>{returnPct >= 0 ? "+" : ""}{returnPct.toFixed(2)}%</td></tr>;
                       })}</tbody>
                     </table>
                   )}
