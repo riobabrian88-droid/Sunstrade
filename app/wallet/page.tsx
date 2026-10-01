@@ -173,149 +173,67 @@ export default function WalletPage() {
     setSubmitting(false);
   }
 
+  const pendingCount = transactions.filter((t) => t.status === "pending").length;
+  const approvedCount = transactions.filter((t) => t.status === "approved").length;
+  const recentTransactions = transactions.slice(0, 6);
+
   if (loading) {
-    return (
-      <main style={styles.page}>
-        <p>Loading your wallet...</p>
-      </main>
-    );
+    return <main className="sun-wallet-page"><div className="sun-wallet-container"><div className="sun-wallet-loading">Loading your wallet...</div></div></main>;
   }
 
   return (
-    <main style={styles.page}>
-      <div style={styles.container}>
-        <header style={styles.header}>
-          <div>
-            <h1 style={styles.title}>Sunraku Trade</h1>
-            <p style={styles.subtitle}>Your wallet</p>
-          </div>
-          <a href="/dashboard" style={styles.back}>
-            ← Dashboard
-          </a>
+    <main className="sun-wallet-page">
+      <div className="sun-wallet-container">
+        <header className="sun-wallet-header">
+          <div className="sun-wallet-brand"><span className="sun-wallet-mark">S</span><div><strong>SunStrade</strong><small>WALLET CENTER</small></div></div>
+          <a href="/dashboard" className="sun-wallet-back">← Dashboard</a>
         </header>
 
-        <section style={styles.balanceCard}>
-          <p style={styles.label}>Available wallet balance</p>
-          <h2 style={styles.balance}>{money(balance)}</h2>
-          <p style={styles.note}>
-            Your balance changes after an admin approves a request.
-          </p>
-        </section>
+        <div className="sun-wallet-title-row">
+          <div><p className="sun-wallet-kicker">ACCOUNT OVERVIEW</p><h1>Wallet Overview</h1><p className="sun-wallet-subtitle">Your funds at a glance</p></div>
+          <span className="sun-wallet-demo-badge">PAPER / DEMO</span>
+        </div>
 
-        <section style={styles.card}>
-          <h2 style={styles.heading}>Deposit or withdraw</h2>
-
-          <div style={styles.tabs}>
-            <button
-              type="button"
-              onClick={() => setType("deposit")}
-              style={{
-                ...styles.tab,
-                ...(type === "deposit" ? styles.activeTab : {}),
-              }}
-            >
-              Deposit
-            </button>
-            <button
-              type="button"
-              onClick={() => setType("withdrawal")}
-              style={{
-                ...styles.tab,
-                ...(type === "withdrawal" ? styles.activeTab : {}),
-              }}
-            >
-              Withdraw
-            </button>
+        <section className="sun-wallet-overview">
+          <div className="sun-wallet-balance-card">
+            <div className="sun-wallet-balance-top"><span>Total wallet balance</span><span className="sun-wallet-live-dot">Account balance</span></div>
+            <strong>{money(balance)}</strong>
+            <small>USD · Available wallet funds</small>
+            <div className="sun-wallet-balance-graphic" aria-hidden="true"><span/><span/><span/><span/><span/><span/><span/><span/><span/></div>
+            <p>Balance updates when an administrator approves a request.</p>
           </div>
-
-          <form onSubmit={submitRequest}>
-            <label style={styles.label}>
-              Amount (USD)
-              <input
-                type="number"
-                min="0.01"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Enter amount"
-                required
-                style={styles.input}
-              />
-            </label>
-
-            <button
-              type="submit"
-              disabled={submitting}
-              style={{
-                ...styles.submit,
-                opacity: submitting ? 0.6 : 1,
-              }}
-            >
-              {submitting
-                ? "Submitting..."
-                : `Request ${type === "deposit" ? "Deposit" : "Withdrawal"}`}
-            </button>
-          </form>
-
-          {message && <p style={styles.message}>{message}</p>}
-
-          <p style={styles.note}>
-            Demo mode: requests are reviewed by an administrator.
-            No real money is transferred.
-          </p>
+          <div className="sun-wallet-stat-stack">
+            <article className="sun-wallet-stat-card"><span>Available balance</span><strong>{money(balance)}</strong><small>Current wallet balance</small></article>
+            <article className="sun-wallet-stat-card"><span>Pending requests</span><strong>{pendingCount}</strong><small>Awaiting administrator review</small></article>
+            <article className="sun-wallet-stat-card"><span>Approved requests</span><strong>{approvedCount}</strong><small>In your transaction history</small></article>
+          </div>
         </section>
 
-        <section style={styles.card}>
-          <h2 style={styles.heading}>Transaction history</h2>
+        <section className="sun-wallet-action-card">
+          <div className="sun-wallet-section-heading"><div><h2>Wallet actions</h2><p>Request a deposit or withdrawal</p></div><span className="sun-wallet-lock">⌑ Secure request</span></div>
+          <div className="sun-wallet-tabs" role="tablist" aria-label="Wallet action">
+            <button type="button" role="tab" aria-selected={type === "deposit"} className={type === "deposit" ? "active" : ""} onClick={() => { setType("deposit"); setMessage(""); }}>＋ Deposit</button>
+            <button type="button" role="tab" aria-selected={type === "withdrawal"} className={type === "withdrawal" ? "active" : ""} onClick={() => { setType("withdrawal"); setMessage(""); }}>↗ Withdraw</button>
+          </div>
+          <form className="sun-wallet-request-form" onSubmit={submitRequest}>
+            <label htmlFor="wallet-amount">Amount <span>(USD)</span></label>
+            <div className="sun-wallet-amount-wrap"><span>$</span><input id="wallet-amount" type="number" min="0.01" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" required /></div>
+            <p className="sun-wallet-hint">{type === "deposit" ? "Submit a deposit request for administrator review." : "Submit a withdrawal request. The requested amount cannot exceed your current wallet balance."}</p>
+            {message && <p className={message.includes("successfully") ? "sun-wallet-message success" : "sun-wallet-message"} role="status">{message}</p>}
+            <button className="sun-wallet-submit" type="submit" disabled={submitting}>{submitting ? "Submitting request..." : type === "deposit" ? "Request deposit →" : "Request withdrawal →"}</button>
+          </form>
+          <p className="sun-wallet-demo-note">Demo mode: no real money is transferred. Requests are reviewed by an administrator.</p>
+        </section>
 
-          {transactions.length === 0 ? (
-            <p style={styles.note}>No requests yet.</p>
-          ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>Type</th>
-                    <th style={styles.th}>Amount</th>
-                    <th style={styles.th}>Status</th>
-                    <th style={styles.th}>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((transaction) => (
-                    <tr key={transaction.id}>
-                      <td style={styles.td}>
-                        {transaction.type}
-                      </td>
-                      <td style={styles.td}>
-                        {money(Number(transaction.amount))}
-                      </td>
-                      <td style={styles.td}>
-                        <span
-                          style={{
-                            ...styles.status,
-                            ...(transaction.status === "approved"
-                              ? styles.approved
-                              : transaction.status === "rejected"
-                              ? styles.rejected
-                              : styles.pending),
-                          }}
-                        >
-                          {transaction.status}
-                        </span>
-                      </td>
-                      <td style={styles.td}>
-                        {new Date(
-                          transaction.created_at
-                        ).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        <section className="sun-wallet-transactions">
+          <div className="sun-wallet-section-heading"><div><h2>Recent transactions</h2><p>Your latest wallet requests and their status</p></div><span className="sun-wallet-count">{transactions.length} total</span></div>
+          {recentTransactions.length === 0 ? <div className="sun-wallet-empty"><span>↗</span><strong>No transactions yet</strong><p>Your deposit and withdrawal requests will appear here.</p></div> : (
+            <div className="sun-wallet-table-wrap"><table className="sun-wallet-table"><thead><tr><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>
+              {recentTransactions.map((transaction) => <tr key={transaction.id}><td><span className={`sun-wallet-tx-icon ${transaction.type}`}>{transaction.type === "deposit" ? "↓" : "↑"}</span><span className="sun-wallet-tx-type">{transaction.type}</span></td><td className="sun-wallet-tx-amount">{money(Number(transaction.amount))}</td><td><span className={`sun-wallet-status ${transaction.status}`}>{transaction.status}</span></td><td className="sun-wallet-date">{new Date(transaction.created_at).toLocaleString()}</td></tr>)}
+            </tbody></table></div>
           )}
         </section>
+        <footer className="sun-wallet-footer"><span>SunStrade Wallet</span><span>Demo wallet · No real funds transferred</span></footer>
       </div>
     </main>
   );
