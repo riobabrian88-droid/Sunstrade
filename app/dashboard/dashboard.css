@@ -493,3 +493,28 @@
 .sun-ai-error{margin:5px 0;padding:9px;border:1px solid #79434a;border-radius:8px;background:#321f25;color:#ffb0b0;font-size:10px;line-height:1.45}
 .sun-ai-form{display:flex;gap:8px;padding:11px;border-top:1px solid #273542;background:#111b25}.sun-ai-form input{flex:1;min-width:0;padding:11px 12px;border:1px solid #2b3b49;border-radius:9px;outline:none;background:#0b131d;color:#eaf1f5;font-size:11px}.sun-ai-form input:focus{border-color:#31976d}.sun-ai-form button{width:39px;border:0;border-radius:9px;background:#21865f;color:white;font-size:16px;cursor:pointer}.sun-ai-form button:disabled{opacity:.45;cursor:not-allowed}.sun-ai-footer{padding:0 12px 10px;background:#111b25;color:#748593;text-align:center;font-size:8px}
 @media(max-width:600px){.sun-ai-launcher{right:13px;bottom:14px;padding:11px 14px}.sun-ai-panel{right:8px;bottom:68px;width:calc(100vw - 16px);height:min(620px,calc(100svh - 88px));border-radius:14px}}
+
+
+/* Asset identity icons used in the market ticker, watchlist and trade ticket. */
+.asset-coin { width:34px; height:34px; border:1px solid rgba(255,255,255,.08); font:800 17px Arial,sans-serif; box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+.asset-btc { background:linear-gradient(145deg,#f9a825,#e58a08); color:#fff; }
+.asset-eth { background:linear-gradient(145deg,#39445b,#171d2b); color:#d9e0f2; font-size:19px; }
+.asset-bnb { background:linear-gradient(145deg,#493d12,#211d0d); color:#f3c943; }
+.asset-sol { background:linear-gradient(145deg,#201b36,#10131e); color:#9c6cff; font-size:22px; }
+.asset-xrp { background:linear-gradient(145deg,#39434d,#1b232b); color:#e8edf2; }
+.asset-doge { background:linear-gradient(145deg,#76602b,#3c321d); color:#f4d477; }
+.asset-ada { background:linear-gradient(145deg,#233c91,#14234e); color:#8bb7ff; }
+.asset-ltc { background:linear-gradient(145deg,#626d78,#333b44); color:#f4f6f8; }
+.asset-xau { background:linear-gradient(145deg,#b88a13,#71520a); color:#ffe38a; }
+.asset-eur { background:radial-gradient(circle at center,#2455b9,#17347a); color:#ffd94d; font-size:18px; }
+.asset-usd-jpy { background:linear-gradient(90deg,#263f8a 0 50%,#f4f4f4 50%); color:#d83939; font-size:13px; letter-spacing:-5px; padding-right:4px; }
+.market-strip { grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; margin:14px 0; }
+.symbol-card { min-height:60px; padding:10px 11px; gap:9px; border-radius:10px; background:linear-gradient(145deg,var(--surface),rgba(255,255,255,.012)); transition:border-color .16s ease,background .16s ease,transform .16s ease; }
+.symbol-card:hover { border-color:#3a8064; transform:translateY(-1px); }
+.symbol-card.active { border-color:#3c8b6c; background:linear-gradient(145deg,#142d25,#121d20); box-shadow:inset 0 0 0 1px rgba(60,139,108,.12); }
+.symbol-card b { font-size:10px; letter-spacing:.01em; }
+.symbol-card small { font-size:10px; font-variant-numeric:tabular-nums; }
+.symbol-card > strong { font-size:10px; font-variant-numeric:tabular-nums; }
+@media(max-width:1100px) { .market-strip { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:760px) { .market-strip { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:12px 0; } .symbol-card { min-height:56px; padding:8px; gap:7px; } .asset-coin { width:30px; height:30px; font-size:15px; } }
+@media(max-width:360px) { .symbol-card { gap:5px; padding:7px 6px; } .symbol-card > strong { font-size:9px; } }
