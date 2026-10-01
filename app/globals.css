@@ -169,3 +169,31 @@ a {
 .sun-login-form-side{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 30px;background:radial-gradient(ellipse at 50% 0%,rgba(35,65,83,.23),transparent 48%),#0b1520}.sun-login-card{width:min(100%,370px);padding:28px;border:1px solid #253746;border-radius:13px;background:#0f1b27;box-shadow:0 14px 40px rgba(0,0,0,.25)}.sun-login-card-brand{font-size:15px}.sun-login-card-brand .sun-brand-mark{width:24px;height:24px;font-size:18px}.sun-login-card-heading{text-align:center;margin:27px 0 20px}.sun-login-card-heading h2{margin:0;color:#edf3f7;font-size:23px;letter-spacing:-.04em}.sun-login-card-heading p{margin:7px 0 0;color:#91a2b0;font-size:11px}.sun-login-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #283744;margin-bottom:21px}.sun-login-tabs>*{padding:11px 5px;text-align:center;color:#94a5b3;font-size:10px}.sun-login-tabs .selected{border-bottom:2px solid #31cf87;color:#5de2a3;font-weight:700}.sun-login-card form{display:flex;flex-direction:column;gap:9px}.sun-login-card form label{margin-top:4px;color:#c9d3dc;font-size:10px}.sun-login-card input{width:100%;padding:12px 13px;border:1px solid #2c3a47;border-radius:6px;outline:none;background:#0b141e;color:#edf3f7;font-size:11px;transition:border-color .15s,box-shadow .15s}.sun-login-card input::placeholder{color:#71808d}.sun-login-card input:focus{border-color:#32c985;box-shadow:0 0 0 3px rgba(50,201,133,.1)}.sun-login-options{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0 8px;font-size:9px}.sun-login-secure{color:#9aabb7}.sun-login-secure span{display:inline-grid;place-items:center;width:13px;height:13px;margin-right:4px;border-radius:3px;background:#1a7651;color:#d9fff0;font-size:9px}.sun-login-options a,.sun-login-legal a,.sun-login-signup a{color:#43d996}.sun-login-submit{width:100%;padding:12px;border:0;border-radius:6px;background:linear-gradient(100deg,#27a66d,#20b875);color:#f5fff9;font-size:11px;font-weight:700;box-shadow:0 7px 20px rgba(23,168,102,.15)}.sun-login-submit:disabled{opacity:.65;cursor:wait}.sun-login-error{margin:2px 0;color:#ff8d8d;font-size:10px;line-height:1.5}.sun-login-signup{margin:21px 0 0;color:#a0afbb;text-align:center;font-size:10px}.sun-login-legal{margin-top:19px;padding-top:15px;border-top:1px solid #24323e;color:#8798a6;text-align:center;font-size:9px;line-height:1.7}.sun-login-legal a{white-space:nowrap}.sun-login-footer{display:flex;justify-content:space-between;gap:10px;width:min(100%,370px);margin-top:15px;color:#718391;font-size:9px}.sun-login-footer span:last-child{display:flex;align-items:center;gap:6px}.sun-login-footer i{width:6px;height:6px}
 @media(max-width:760px){.sun-login-page{padding:0;align-items:flex-start;background:#0b1520}.sun-login-shell{width:100%;min-height:100vh;grid-template-columns:1fr;border:0;border-radius:0;box-shadow:none}.sun-login-visual{min-height:350px;padding:24px 24px 20px}.sun-login-copy{margin-top:50px;margin-bottom:18px}.sun-login-copy h1{font-size:37px;margin:12px 0 8px}.sun-login-description{font-size:11px;max-width:310px}.sun-login-features{gap:12px;margin-bottom:18px}.sun-login-features>div{gap:7px}.sun-feature-icon{flex-basis:28px;height:28px}.sun-login-features strong{font-size:9px}.sun-login-features small{font-size:8px}.sun-login-market-strip{padding:10px 12px}.sun-login-form-side{padding:25px 20px 20px}.sun-login-card{padding:24px;width:min(100%,420px)}.sun-login-footer{width:min(100%,420px)}}
 @media(max-width:380px){.sun-login-visual{min-height:340px;padding:20px}.sun-login-copy h1{font-size:32px}.sun-login-features{gap:10px 8px}.sun-login-market-strip{gap:5px}.sun-login-market-strip strong{font-size:10px}.sun-login-form-side{padding:20px 14px}.sun-login-card{padding:20px}}
+
+/* Signup form shares the scenic login design, with a scrollable mobile layout. */
+.sun-signup-page { align-items:center; }
+.sun-signup-shell { min-height:700px; }
+.sun-signup-form-side { padding-top:24px; padding-bottom:24px; }
+.sun-signup-card { padding:22px 26px; }
+.sun-signup-card .sun-login-card-heading { margin:17px 0 12px; }
+.sun-signup-card .sun-login-card-heading h2 { font-size:21px; }
+.sun-signup-card .sun-login-tabs { margin-bottom:13px; }
+.sun-signup-card form { gap:6px; }
+.sun-signup-card form label { margin-top:3px; }
+.sun-signup-card input:not([type="checkbox"]),.sun-signup-card select { width:100%; padding:10px 12px; border:1px solid #2c3a47; border-radius:6px; outline:none; background:#0b141e; color:#edf3f7; font-size:11px; }
+.sun-signup-card select:invalid { color:#71808d; }
+.sun-signup-card input:focus,.sun-signup-card select:focus { border-color:#32c985; box-shadow:0 0 0 3px rgba(50,201,133,.1); }
+.sun-signup-terms { display:flex!important; align-items:flex-start; gap:8px; margin:8px 0!important; color:#a0afbb!important; font-size:9px!important; line-height:1.5; }
+.sun-signup-terms input { flex:0 0 auto; width:14px; height:14px; margin:0; accent-color:#27b879; }
+.sun-signup-success { margin:2px 0; color:#69dba5; font-size:10px; line-height:1.5; }
+.sun-signup-card .sun-login-signup { margin-top:13px; }
+.sun-signup-card .sun-login-legal { margin-top:12px; padding-top:10px; }
+@media(max-width:760px) {
+ .sun-signup-page { align-items:flex-start; }
+ .sun-signup-shell { min-height:100vh; }
+ .sun-signup-visual { min-height:310px; }
+ .sun-signup-copy { margin-top:35px; }
+ .sun-signup-form-side { padding:22px 20px 20px; }
+ .sun-signup-card { width:min(100%,420px); padding:22px 24px; }
+}
+@media(max-width:380px) { .sun-signup-form-side { padding:18px 14px; }.sun-signup-card { padding:19px; } }
