@@ -119,10 +119,6 @@ export default function ProfilePage() {
         </nav>
         <section className="profile-card">
           <div className="profile-section-title"><span className="profile-section-icon">♙</span><div><h2>Personal information</h2><p>Keep your account details up to date.</p></div></div>
-          <div className="profile-identity profile-edit-identity">
-            <div className="profile-avatar">{initial}</div>
-            <div><h2>{displayName}</h2><p>{user?.email}</p><span className="account-badge">Trading account</span></div>
-          </div>
           <form onSubmit={saveProfile} className="profile-form">
             <label htmlFor="fullName">Full name</label>
             <input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} maxLength={80} placeholder="Enter your full name" />
