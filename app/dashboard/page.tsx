@@ -219,24 +219,27 @@ function InternalPaperOrderBook({ symbol }: { symbol: string }) {
   const [quantity, setQuantity] = useState("0.01");
   const [orders, setOrders] = useState<any[]>([]);
   const [trades, setTrades] = useState<any[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const refresh = async () => {
     const [{ data: orderData, error: orderError }, { data: tradeData, error: tradeError }] = await Promise.all([
-      supabase.from("internal_orders").select("id,side,price,quantity,remaining_quantity,status,created_at").eq("symbol", symbol).in("status", ["open", "partially_filled"]).order("created_at", { ascending: true }).limit(100),
+      supabase.from("internal_orders").select("id,user_id,side,price,quantity,remaining_quantity,status,created_at").eq("symbol", symbol).in("status", ["open", "partially_filled"]).order("created_at", { ascending: true }).limit(100),
       supabase.from("internal_trades").select("id,price,quantity,created_at").eq("symbol", symbol).order("created_at", { ascending: false }).limit(20),
     ]);
-    if (orderError) setMessage("Order book unavailable. Apply the matching-engine SQL and check permissions.");
-    else setOrders(orderData || []);
+    if (orderError) setMessage("Order book unavailable. Check that the SQL is applied and realtime is enabled.");
+    else { setOrders(orderData || []); setMessage(""); }
     if (!tradeError) setTrades(tradeData || []);
   };
   useEffect(() => {
+    let active = true;
+    void supabase.auth.getUser().then(({ data }) => { if (active) setUserId(data.user?.id || null); });
     void refresh();
     const channel = supabase.channel("internal-book-" + symbol)
       .on("postgres_changes", { event: "*", schema: "public", table: "internal_orders" }, () => void refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "internal_trades" }, () => void refresh())
       .subscribe();
-    return () => { void supabase.removeChannel(channel); };
+    return () => { active = false; void supabase.removeChannel(channel); };
   }, [symbol]);
   const submit = async () => {
     const p = Number(price), q = Number(quantity);
@@ -259,31 +262,30 @@ function InternalPaperOrderBook({ symbol }: { symbol: string }) {
   };
   const buys = orders.filter(o => o.side === "buy").sort((a,b) => Number(b.price)-Number(a.price) || new Date(a.created_at).getTime()-new Date(b.created_at).getTime());
   const sells = orders.filter(o => o.side === "sell").sort((a,b) => Number(a.price)-Number(b.price) || new Date(a.created_at).getTime()-new Date(b.created_at).getTime());
-  const cell: React.CSSProperties = { padding: "7px 5px", borderBottom: "1px solid var(--border, #29313d)", fontSize: 12 };
-  return <section className="panel" style={{ marginTop: 16, padding: 16 }}>
-    <div className="panel-title"><h2>SunStrade Paper Order Book</h2><small>Internal simulated market</small></div>
-    <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
-      <button type="button" onClick={() => setSide("buy")} className={side === "buy" ? "buy active" : "buy"}>Buy limit</button>
-      <button type="button" onClick={() => setSide("sell")} className={side === "sell" ? "sell active" : "sell"}>Sell limit</button>
+  const ownOrders = orders.filter(o => o.user_id === userId);
+  return <section className="panel internal-paper-panel">
+    <div className="internal-paper-heading"><div><h2>SunStrade Paper Order Book</h2><small>Internal simulated market · {symbol}</small></div><span className="internal-paper-badge">PAPER</span></div>
+    <div className="internal-paper-side">
+      <button type="button" onClick={() => setSide("buy")} className={side === "buy" ? "active buy" : "buy"}>Buy limit</button>
+      <button type="button" onClick={() => setSide("sell")} className={side === "sell" ? "active sell" : "sell"}>Sell limit</button>
     </div>
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-      <label style={{ fontSize: 12 }}>Limit price (USD)<input type="number" min="0.00000001" step="any" value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" /></label>
-      <label style={{ fontSize: 12 }}>Quantity<input type="number" min="0.00000001" step="any" value={quantity} onChange={e => setQuantity(e.target.value)} /></label>
+    <div className="internal-paper-fields">
+      <label>Limit price (USD)<input type="number" min="0.00000001" step="any" value={price} onChange={e => setPrice(e.target.value)} placeholder="Enter limit price" /></label>
+      <label>Quantity<input type="number" min="0.00000001" step="any" value={quantity} onChange={e => setQuantity(e.target.value)} /></label>
     </div>
-    <button type="button" disabled={busy} onClick={() => void submit()} className={side === "buy" ? "place-order buy" : "place-order sell"} style={{ width: "100%", marginTop: 10 }}>{busy ? "Processing..." : "Place paper limit order"}</button>
-    {message && <p role="status" style={{ fontSize: 12, overflowWrap: "anywhere" }}>{message}</p>}
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
-      <div><strong style={{ color: "#16a34a" }}>Bids · Buy</strong><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Price</th><th style={cell}>Remaining</th></tr></thead><tbody>{buys.slice(0,8).map(o=><tr key={o.id}><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
-      <div><strong style={{ color: "#dc2626" }}>Asks · Sell</strong><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Price</th><th style={cell}>Remaining</th></tr></thead><tbody>{sells.slice(0,8).map(o=><tr key={o.id}><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
+    <button type="button" disabled={busy} onClick={() => void submit()} className={side === "buy" ? "internal-paper-submit buy" : "internal-paper-submit sell"}>{busy ? "Processing..." : "Place paper limit order"}</button>
+    {message && <p role="status" className="internal-paper-message">{message}</p>}
+    <div className="internal-paper-books">
+      <div><h3 className="internal-bid-title">Bids <span>Buy</span></h3><table><thead><tr><th>Price</th><th>Remaining</th></tr></thead><tbody>{buys.slice(0,8).map(o=><tr key={o.id}><td>{formatPrice(Number(o.price))}</td><td>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
+      <div><h3 className="internal-ask-title">Asks <span>Sell</span></h3><table><thead><tr><th>Price</th><th>Remaining</th></tr></thead><tbody>{sells.slice(0,8).map(o=><tr key={o.id}><td>{formatPrice(Number(o.price))}</td><td>{o.remaining_quantity}</td></tr>)}</tbody></table></div>
     </div>
-    <h3 style={{ marginTop: 16, fontSize: 14 }}>Your open orders</h3>
-    {orders.length === 0 ? <p style={{ fontSize: 12 }}>No open orders for {symbol}.</p> : <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={cell}>Side</th><th style={cell}>Limit</th><th style={cell}>Remaining</th><th style={cell}>Action</th></tr></thead><tbody>{orders.map(o=><tr key={o.id}><td style={cell}>{o.side}</td><td style={cell}>{formatPrice(Number(o.price))}</td><td style={cell}>{o.remaining_quantity}</td><td style={cell}><button type="button" disabled={busy} onClick={() => void cancel(o.id)}>Cancel</button></td></tr>)}</tbody></table></div>}
-    <h3 style={{ marginTop: 16, fontSize: 14 }}>Recent internal trades</h3>
-    {trades.length === 0 ? <p style={{ fontSize: 12 }}>No internal trades yet.</p> : trades.slice(0,8).map(t=><div key={t.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 12, padding: "5px 0" }}><span>{formatPrice(Number(t.price))}</span><span>{t.quantity}</span><span>{new Date(t.created_at).toLocaleTimeString()}</span></div>)}
-    <p style={{ fontSize: 11, opacity: .7, marginTop: 10 }}>Only orders placed in SunStrade's internal paper market appear here. This is separate from the external exchange reference book above.</p>
+    <h3 className="internal-paper-subheading">Your open orders</h3>
+    {ownOrders.length === 0 ? <p className="internal-paper-empty">You have no open orders for {symbol}.</p> : <div className="internal-paper-table-wrap"><table><thead><tr><th>Side</th><th>Limit</th><th>Remaining</th><th>Action</th></tr></thead><tbody>{ownOrders.map(o=><tr key={o.id}><td><span className={o.side === "buy" ? "internal-side-buy" : "internal-side-sell"}>{o.side}</span></td><td>{formatPrice(Number(o.price))}</td><td>{o.remaining_quantity}</td><td><button type="button" disabled={busy} onClick={() => void cancel(o.id)} className="internal-cancel">Cancel</button></td></tr>)}</tbody></table></div>}
+    <h3 className="internal-paper-subheading">Recent internal trades</h3>
+    {trades.length === 0 ? <p className="internal-paper-empty">No internal trades yet.</p> : <div className="internal-paper-trades">{trades.slice(0,8).map(t=><div key={t.id}><span>{formatPrice(Number(t.price))}</span><span>{t.quantity}</span><span>{new Date(t.created_at).toLocaleTimeString()}</span></div>)}</div>}
+    <p className="internal-paper-footnote">Only orders placed in SunStrade's internal paper market appear here. External exchange prices and liquidity are separate.</p>
   </section>;
 }
-
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
