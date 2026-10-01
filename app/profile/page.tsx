@@ -84,6 +84,9 @@ export default function ProfilePage() {
 
   const displayName = fullName.trim() || user?.email?.split("@")[0] || "Trader";
   const initial = displayName.charAt(0).toUpperCase();
+  const emailVerified = Boolean(user?.email_confirmed_at);
+  const profileComplete = Boolean(fullName.trim() && user?.email);
+  const joinedDate = user?.created_at ? new Date(user.created_at).toLocaleDateString(undefined, { month: "short", year: "numeric" }) : "—";
 
   if (loading) return <main className="profile-page"><p>Loading profile...</p></main>;
 
@@ -95,13 +98,32 @@ export default function ProfilePage() {
       </header>
       <section className="profile-content">
         <div className="profile-title"><div><p className="eyebrow">ACCOUNT</p><h1>My Profile</h1><p>Manage your personal information.</p></div></div>
+        <section className="profile-hero">
+          <div className="profile-hero-top">
+            <div className="profile-identity">
+              <div className="profile-avatar">{initial}</div>
+              <div><h2>{displayName}</h2><p>{user?.email}</p><span className="account-badge">SunStrade account</span></div>
+            </div>
+            <span className={"profile-verified-badge " + (emailVerified ? "verified" : "unverified")}>{emailVerified ? "✓ Email verified" : "● Email not verified"}</span>
+          </div>
+          <div className="profile-hero-stats">
+            <div><small>Account created</small><strong>{joinedDate}</strong></div>
+            <div><small>Profile status</small><strong>{profileComplete ? "Complete" : "Add your name"}</strong></div>
+            <div><small>Account type</small><strong>Standard</strong></div>
+          </div>
+        </section>
+        <nav className="profile-quick-links" aria-label="Account shortcuts">
+          <Link href="/wallet"><span className="profile-quick-icon">▣</span><span><strong>Wallet</strong><small>Balance & requests</small></span><b>→</b></Link>
+          <Link href="/dashboard"><span className="profile-quick-icon">▦</span><span><strong>Dashboard</strong><small>Markets & trading</small></span><b>→</b></Link>
+          <Link href="/settings"><span className="profile-quick-icon">⚙</span><span><strong>Settings</strong><small>Account preferences</small></span><b>→</b></Link>
+        </nav>
         <section className="profile-card">
-          <div className="profile-identity">
+          <div className="profile-section-title"><span className="profile-section-icon">♙</span><div><h2>Personal information</h2><p>Keep your account details up to date.</p></div></div>
+          <div className="profile-identity profile-edit-identity">
             <div className="profile-avatar">{initial}</div>
             <div><h2>{displayName}</h2><p>{user?.email}</p><span className="account-badge">Trading account</span></div>
           </div>
           <form onSubmit={saveProfile} className="profile-form">
-            <h3>Personal information</h3>
             <label htmlFor="fullName">Full name</label>
             <input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} maxLength={80} placeholder="Enter your full name" />
             <label htmlFor="email">Email address</label>
@@ -113,13 +135,12 @@ export default function ProfilePage() {
           </form>
         </section>
         <section className="profile-card profile-settings-card">
-          <h2>Account preferences</h2>
-          <p className="profile-settings-intro">Choose how Sunraku Trade looks on this device.</p>
+          <div className="profile-section-title"><span className="profile-section-icon">☼</span><div><h2>Account preferences</h2><p>Choose how SunStrade looks on this device.</p></div></div>
           <div className="profile-setting-row"><div><strong>Appearance</strong><small>Select a theme for the dashboard.</small></div><div className="profile-theme-options" role="group" aria-label="Appearance"><button type="button" className={theme === "dark" ? "chosen" : ""} aria-pressed={theme === "dark"} onClick={() => changeTheme("dark")}>☾ Dark</button><button type="button" className={theme === "light" ? "chosen" : ""} aria-pressed={theme === "light"} onClick={() => changeTheme("light")}>☀ Light</button></div></div>
           <p className="profile-settings-note">Your theme preference is saved on this device.</p>
         </section>
         <section className="profile-card profile-signout-card">
-          <h2>Sign out</h2><p>Sign out of your Sunraku Trade account on this device.</p>
+          <div className="profile-section-title"><span className="profile-section-icon danger">↪</span><div><h2>Sign out</h2><p>Sign out of your SunStrade account on this device.</p></div></div>
           {error && <p className="profile-error" role="alert">{error}</p>}
           <button type="button" onClick={signOut} disabled={signingOut}>{signingOut ? "Signing out..." : "Sign out"}</button>
         </section>
