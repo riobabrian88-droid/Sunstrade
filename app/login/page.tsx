@@ -88,13 +88,13 @@ export default function LoginPage() {
               <input id="login-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
               <div className="sun-login-options">
                 <span className="sun-login-secure"><span aria-hidden="true">✓</span> Secure sign in</span>
-                <Link href="/reset-password">Forgot password?</Link>
+                <span className="sun-login-forgot-note">Account help? Contact support.</span>
               </div>
               {error && <p className="sun-login-error" role="alert">{error}</p>}
               <button className="sun-login-submit" type="submit" disabled={loading}>{loading ? "Signing in..." : "Login"}</button>
             </form>
             <p className="sun-login-signup">New to SunStrade? <Link href="/signup">Create an account</Link></p>
-            <div className="sun-login-legal">By continuing, you agree to our <Link href="/terms">Terms of Service</Link> and <Link href="/privacy">Privacy Policy</Link>.</div>
+            <div className="sun-login-legal">By continuing, you agree to the terms and privacy policy of SunStrade.</div>
           </div>
           <div className="sun-login-footer"><span>© {new Date().getFullYear()} SunStrade</span><span><i /> Secure account access</span></div>
         </section>
