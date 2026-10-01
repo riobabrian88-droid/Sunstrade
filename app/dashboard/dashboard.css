@@ -449,3 +449,29 @@
 .internal-paper-books .internal-book-level:focus td { background:rgba(120,145,165,.14); }
 .internal-paper-books .internal-book-level:focus { outline:2px solid #4c9b7a; outline-offset:-2px; }
 .internal-paper-books .internal-book-level:active td { background:rgba(60,170,125,.2); }
+
+/* Branded dashboard loading screen */
+.dashboard-loading{position:relative;isolation:isolate;display:flex;min-height:100svh;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:38px 24px 42px;background:radial-gradient(ellipse at 50% 45%,#0c1a2a 0%,#08111f 54%,#070d18 100%);color:#edf3f8}
+.loading-market-art{position:absolute;z-index:-1;inset:0 0 auto;height:54%;overflow:hidden;opacity:.62;mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.75) 60%,transparent 100%)}
+.loading-chart-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(55,91,110,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(55,91,110,.11) 1px,transparent 1px);background-size:100% 95px,12.5% 100%}
+.loading-chart-line{position:absolute;inset:12% 0 0;width:100%;height:85%;overflow:visible}
+.loading-chart-line path{fill:none;stroke:#078f65;stroke-width:3;opacity:.52;filter:drop-shadow(0 0 5px rgba(18,194,125,.28))}
+.loading-candles{position:absolute;inset:12% 0 0;height:85%;opacity:.3}
+.loading-candles i{position:absolute;bottom:20%;width:9px;min-height:15px;border-radius:1px;background:#0b9b6c;box-shadow:0 -9px 0 -4px #0b9b6c,0 9px 0 -4px #0b9b6c}
+.loading-card{z-index:1;width:min(100%,560px);padding:0;text-align:center}
+.loading-logo{display:grid;width:116px;height:116px;place-items:center;margin:0 auto 30px;border:1px solid rgba(50,212,144,.48);border-radius:30px;background:linear-gradient(145deg,#0c6a50,#07302e);box-shadow:0 0 42px rgba(23,190,128,.13),inset 0 1px 0 rgba(255,255,255,.08);color:#f4fff9;font:800 72px Manrope,Arial,sans-serif}
+.loading-card h1{margin:0;color:#f2f5f8;font:800 clamp(30px,5vw,46px) Manrope,Arial,sans-serif;letter-spacing:-.045em}
+.loading-card h1 span{color:#28c989}
+.loading-card .loading-tagline{max-width:430px;margin:17px auto 0;color:#a8b5c3;font-size:clamp(14px,2.5vw,19px);line-height:1.55}
+.loading-progress{height:10px;width:min(100%,530px);margin:56px auto 0;padding:2px;overflow:hidden;border:1px solid #293748;border-radius:20px;background:#111c2b;box-shadow:0 0 0 1px rgba(255,255,255,.02)}
+.loading-progress span{display:block;width:68%;height:100%;border-radius:20px;background:linear-gradient(90deg,#0e9c69,#35e29b);box-shadow:0 0 12px rgba(46,224,148,.8);animation:loading-shimmer 1.8s ease-in-out infinite alternate}
+.loading-card .loading-status{display:flex;align-items:center;justify-content:center;gap:12px;margin:30px 0 0;color:#aebbc8;font-size:clamp(14px,2.5vw,19px)}
+.loading-shield{display:grid;width:28px;height:30px;place-items:center;border:2px solid #1ba976;border-radius:9px 9px 12px 12px;color:#37d891;font-size:15px;font-weight:800}
+.loading-features{z-index:1;display:grid;width:min(100%,760px);grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(70px,12vh,130px);color:#b7c3cf}
+.loading-features>div{display:flex;min-width:0;flex-direction:column;align-items:center;gap:13px;padding:0 12px;font-size:clamp(12px,2vw,17px);text-align:center}
+.loading-features>div+div{border-left:1px solid #2a3948}
+.loading-feature-icon{display:grid;width:54px;height:54px;place-items:center;border:1px solid #17694f;border-radius:12px;background:rgba(9,32,37,.55);color:#28c989;font-size:27px}
+.loading-data-wave{position:absolute;z-index:-1;right:-8%;bottom:-35px;left:-8%;height:155px;border-radius:50%;background:radial-gradient(ellipse at 50% 0%,rgba(5,151,104,.15),transparent 67%);border-top:1px dotted rgba(20,154,113,.35);transform:rotate(-3deg)}
+@keyframes loading-shimmer{from{width:35%;opacity:.78}to{width:72%;opacity:1}}
+@media(max-width:600px){.dashboard-loading{padding:28px 20px 32px}.loading-market-art{height:48%}.loading-logo{width:86px;height:86px;margin-bottom:23px;border-radius:24px;font-size:55px}.loading-progress{margin-top:40px}.loading-card .loading-status{margin-top:23px}.loading-features{margin-top:clamp(55px,10vh,95px)}.loading-features>div{gap:10px;padding:0 5px}.loading-feature-icon{width:43px;height:43px;font-size:22px}}
+@media(prefers-reduced-motion:reduce){.loading-progress span{animation:none}}
