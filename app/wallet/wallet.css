@@ -1,0 +1,79 @@
+.sun-wallet-page{--wallet-bg:#0b111a;--wallet-panel:#131e2b;--wallet-border:#29394a;--wallet-text:#edf3f7;--wallet-muted:#91a1b1;min-height:100vh;padding:0 0 30px;background:radial-gradient(ellipse at 85% 0%,rgba(42,155,112,.12),transparent 34%),var(--wallet-bg);color:var(--wallet-text);font:14px 'DM Sans',Arial,sans-serif}
+.sun-wallet-page *{box-sizing:border-box}
+.sun-wallet-container{width:min(1040px,92%);margin:0 auto}
+.sun-wallet-header{height:72px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(48,65,82,.8)}
+.sun-wallet-brand{display:flex;align-items:center;gap:11px}
+.sun-wallet-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid #286047;border-radius:12px;background:linear-gradient(145deg,#1b4b3a,#152b2b);color:#83e3b6;font:800 17px Manrope,Arial,sans-serif}
+.sun-wallet-brand>div{display:grid;gap:3px}
+.sun-wallet-brand strong{font:800 16px Manrope,Arial,sans-serif;letter-spacing:-.3px}
+.sun-wallet-brand small{color:#72b99a;font-size:8px;font-weight:800;letter-spacing:.15em}
+.sun-wallet-back{padding:9px 12px;border:1px solid #2b3b4c;border-radius:10px;background:#141f2c;color:#b4c4d0;text-decoration:none;font-size:10px;font-weight:800}
+.sun-wallet-back:hover{border-color:#398d6c;color:#a1ebc5}
+.sun-wallet-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:29px 0 17px}
+.sun-wallet-kicker{margin:0 0 5px;color:#6fc69c;font-size:9px;font-weight:800;letter-spacing:.16em}
+.sun-wallet-title-row h1{margin:0;color:#f0f5f8;font:800 27px Manrope,Arial,sans-serif;letter-spacing:-.7px}
+.sun-wallet-subtitle{margin:5px 0 0;color:var(--wallet-muted);font-size:10px}
+.sun-wallet-demo-badge{flex:none;padding:7px 10px;border:1px solid #5b4a2c;border-radius:20px;background:rgba(178,132,49,.1);color:#e7c477;font-size:8px;font-weight:900;letter-spacing:.08em}
+.sun-wallet-overview{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(240px,.85fr);gap:13px;margin-bottom:14px}
+.sun-wallet-balance-card{position:relative;overflow:hidden;min-height:215px;padding:22px;border:1px solid #2c5747;border-radius:16px;background:radial-gradient(ellipse at 100% 0%,rgba(62,205,145,.2),transparent 42%),linear-gradient(120deg,#173d32,#152b30 58%,#172535);box-shadow:0 12px 28px rgba(0,0,0,.16)}
+.sun-wallet-balance-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b0c4c1;font-size:10px}
+.sun-wallet-live-dot{display:flex;align-items:center;gap:6px;color:#8ee2b7;font-size:8px;font-weight:800}
+.sun-wallet-live-dot:before{content:"";width:6px;height:6px;border-radius:50%;background:#45d69a;box-shadow:0 0 0 3px rgba(69,214,154,.12)}
+.sun-wallet-balance-card>strong{position:relative;z-index:1;display:block;margin:20px 0 4px;color:#f4fbf8;font:800 clamp(27px,4vw,36px) Manrope,Arial,sans-serif;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.sun-wallet-balance-card>small{position:relative;z-index:1;color:#a1b8b2;font-size:9px}
+.sun-wallet-balance-card>p{position:relative;z-index:1;margin:18px 0 0;color:#9bb3ad;font-size:8px;line-height:1.5}
+.sun-wallet-balance-graphic{position:absolute;right:18px;bottom:28px;display:flex;align-items:flex-end;gap:5px;height:68px;opacity:.45;transform:skewY(-18deg)}
+.sun-wallet-balance-graphic span{width:9px;border:1px solid #70dfaa;border-radius:3px;background:linear-gradient(180deg,rgba(95,222,163,.6),rgba(48,151,112,.04))}
+.sun-wallet-balance-graphic span:nth-child(1){height:19%}.sun-wallet-balance-graphic span:nth-child(2){height:33%}.sun-wallet-balance-graphic span:nth-child(3){height:26%}.sun-wallet-balance-graphic span:nth-child(4){height:48%}.sun-wallet-balance-graphic span:nth-child(5){height:41%}.sun-wallet-balance-graphic span:nth-child(6){height:62%}.sun-wallet-balance-graphic span:nth-child(7){height:54%}.sun-wallet-balance-graphic span:nth-child(8){height:80%}.sun-wallet-balance-graphic span:nth-child(9){height:100%}
+.sun-wallet-stat-stack{display:grid;grid-template-columns:1fr;gap:8px}
+.sun-wallet-stat-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 10px;padding:12px 14px;border:1px solid var(--wallet-border);border-radius:12px;background:linear-gradient(145deg,#172333,#131d2b)}
+.sun-wallet-stat-card span{color:#91a1b1;font-size:9px}
+.sun-wallet-stat-card strong{grid-column:2;grid-row:1/3;color:#eaf1f5;font:800 17px Manrope,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.sun-wallet-stat-card small{color:#718496;font-size:8px}
+.sun-wallet-action-card,.sun-wallet-transactions{margin-top:13px;padding:19px;border:1px solid var(--wallet-border);border-radius:15px;background:linear-gradient(145deg,rgba(23,35,50,.97),rgba(17,27,40,.98));box-shadow:0 10px 25px rgba(0,0,0,.1)}
+.sun-wallet-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sun-wallet-section-heading h2{margin:0 0 4px;color:#eaf1f5;font:800 14px Manrope,Arial,sans-serif}
+.sun-wallet-section-heading p{margin:0;color:#8fa0b0;font-size:9px;line-height:1.5}
+.sun-wallet-lock,.sun-wallet-count{flex:none;padding:6px 9px;border:1px solid #2d4650;border-radius:20px;background:#142532;color:#9db5c2;font-size:8px;font-weight:800}
+.sun-wallet-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;padding:4px;border:1px solid #2b3b4b;border-radius:11px;background:#101925}
+.sun-wallet-tabs button{min-height:37px;border:1px solid transparent;border-radius:8px;background:transparent;color:#9eacb9;font-size:10px;font-weight:800;cursor:pointer}
+.sun-wallet-tabs button.active{border-color:#32634e;background:linear-gradient(110deg,#1b4938,#1a372f);color:#a0ebc5}
+.sun-wallet-tabs button[aria-selected="true"]:last-child{border-color:#67434a;background:linear-gradient(110deg,#482630,#39242d);color:#ffabb4}
+.sun-wallet-request-form{max-width:620px}
+.sun-wallet-request-form label{display:block;margin-bottom:7px;color:#dce5eb;font-size:10px;font-weight:800}
+.sun-wallet-request-form label span{color:#7e91a2;font-weight:500}
+.sun-wallet-amount-wrap{display:flex;align-items:center;gap:9px;min-height:47px;padding:0 13px;border:1px solid #2b3b4b;border-radius:10px;background:#101925}
+.sun-wallet-amount-wrap:focus-within{border-color:#398d6c;box-shadow:0 0 0 3px rgba(57,185,130,.08)}
+.sun-wallet-amount-wrap>span{color:#7ce0b0;font-size:17px;font-weight:800}
+.sun-wallet-amount-wrap input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#f0f5f8;font:700 16px Manrope,Arial,sans-serif}
+.sun-wallet-amount-wrap input::placeholder{color:#627386}
+.sun-wallet-hint{margin:8px 0 0;color:#8294a5;font-size:8px;line-height:1.55}
+.sun-wallet-message{margin:10px 0 0;color:#ff9ca8;font-size:9px;line-height:1.5}
+.sun-wallet-message.success{color:#8de3b8}
+.sun-wallet-submit{width:100%;min-height:44px;margin-top:15px;border:0;border-radius:10px;background:linear-gradient(105deg,#159b68,#28c58b);color:#06271b;font-size:10px;font-weight:900;cursor:pointer;box-shadow:0 7px 16px rgba(0,0,0,.13);transition:filter .2s,transform .2s}
+.sun-wallet-submit:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.sun-wallet-submit:disabled{opacity:.6;cursor:wait;transform:none}
+.sun-wallet-demo-note{margin:13px 0 0;padding-top:11px;border-top:1px solid rgba(47,64,81,.75);color:#8496a7;font-size:8px;line-height:1.55}
+.sun-wallet-table-wrap{overflow-x:auto;border:1px solid #29394a;border-radius:10px;background:#101925}
+.sun-wallet-table{width:100%;border-collapse:collapse;text-align:left}
+.sun-wallet-table th{padding:11px 12px;background:#172434;color:#8295a7;font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.sun-wallet-table td{padding:11px 12px;border-top:1px solid #253445;color:#dce5eb;font-size:9px;white-space:nowrap}
+.sun-wallet-table tbody tr:hover{background:rgba(45,174,119,.045)}
+.sun-wallet-tx-icon{display:inline-grid;width:25px;height:25px;place-items:center;margin-right:8px;border-radius:8px;font-size:12px;font-weight:900;vertical-align:middle}
+.sun-wallet-tx-icon.deposit{background:rgba(53,197,139,.12);color:#76dfad}
+.sun-wallet-tx-icon.withdrawal{background:rgba(226,100,119,.12);color:#f08b9a}
+.sun-wallet-tx-type{text-transform:capitalize;font-weight:700}
+.sun-wallet-tx-amount{font-weight:800;font-variant-numeric:tabular-nums}
+.sun-wallet-status{display:inline-block;padding:5px 8px;border:1px solid transparent;border-radius:20px;font-size:8px;font-weight:800;text-transform:capitalize}
+.sun-wallet-status.approved{border-color:#2b5946;background:rgba(38,133,91,.13);color:#8de3b8}
+.sun-wallet-status.pending{border-color:#5b4a2c;background:rgba(178,132,49,.1);color:#e7c477}
+.sun-wallet-status.rejected{border-color:#654047;background:rgba(174,45,65,.12);color:#ff9ca8}
+.sun-wallet-date{color:#91a1b1!important;font-size:8px!important}
+.sun-wallet-empty{display:grid;justify-items:center;gap:6px;padding:30px 12px;border:1px dashed #304153;border-radius:11px;background:rgba(16,25,37,.5);text-align:center}
+.sun-wallet-empty>span{display:grid;width:36px;height:36px;place-items:center;border-radius:11px;background:#1a332d;color:#83dfb2;font-size:18px}
+.sun-wallet-empty strong{color:#dce5eb;font-size:10px}
+.sun-wallet-empty p{margin:0;color:#8294a5;font-size:9px}
+.sun-wallet-footer{display:flex;justify-content:space-between;gap:12px;margin-top:18px;color:#718496;font-size:8px}
+.sun-wallet-loading{padding:30px 0;color:#9aaaba;font-size:12px}
+@media(max-width:650px){.sun-wallet-container{width:92%}.sun-wallet-header{height:63px}.sun-wallet-title-row{align-items:flex-start;margin:23px 0 14px}.sun-wallet-title-row h1{font-size:24px}.sun-wallet-overview{grid-template-columns:1fr;gap:9px}.sun-wallet-balance-card{min-height:190px;padding:17px}.sun-wallet-balance-card>strong{margin-top:17px;font-size:29px}.sun-wallet-stat-stack{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.sun-wallet-stat-card{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;padding:10px 8px}.sun-wallet-stat-card span{font-size:8px;line-height:1.35}.sun-wallet-stat-card strong{font-size:14px}.sun-wallet-stat-card small{font-size:7px;line-height:1.3}.sun-wallet-action-card,.sun-wallet-transactions{padding:14px 12px;border-radius:13px}.sun-wallet-section-heading h2{font-size:13px}.sun-wallet-section-heading p{font-size:8px}.sun-wallet-lock,.sun-wallet-count{font-size:7px;padding:5px 7px}.sun-wallet-table{min-width:560px}.sun-wallet-table th,.sun-wallet-table td{padding:10px 9px}.sun-wallet-footer{flex-direction:column;gap:5px}}
+@media(prefers-reduced-motion:reduce){.sun-wallet-back,.sun-wallet-submit{transition:none}}
