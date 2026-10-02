@@ -1493,7 +1493,11 @@ export default function DashboardPage() {
             </aside>
           </div>
 
-          <section className="panel positions-panel portfolio-panel" id="positions">
+          <section className="panel positions-panel portfolio-panel sun-portfolio-redesign" id="positions">
+            <div className="sun-portfolio-heading">
+              <div><span className="sun-portfolio-kicker">YOUR ACCOUNT</span><h2>Portfolio</h2><p>Review your holdings, performance, and activity.</p></div>
+              <span className="sun-portfolio-mark" aria-hidden="true">▤</span>
+            </div>
             <div className="section-tabs portfolio-tabs">
               <button type="button" className={portfolioView === "portfolio" ? "active" : ""} onClick={() => setPortfolioView("portfolio")}>Portfolio <b>{positions.length}</b></button>
               <button type="button" id="history" className={portfolioView === "history" ? "active" : ""} onClick={() => setPortfolioView("history")}>Trade History <b>{orders.filter((order) => order.status === "filled").length}</b></button>
