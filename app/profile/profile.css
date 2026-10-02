@@ -41,3 +41,77 @@
  .profile-quick-links{grid-template-columns:1fr;gap:8px}
  .profile-quick-links>a{padding:11px 12px}
 }
+
+
+/* SunStrade profile page visual refresh */
+.profile-page{background:radial-gradient(ellipse at 50% -15%,rgba(33,164,112,.13),transparent 38%),#0b1018;color:#eaf1f5}
+.profile-header{position:sticky;top:0;z-index:5;background:rgba(13,19,28,.94);backdrop-filter:blur(14px);border-bottom-color:#202d3b}
+.profile-mark{border:1px solid rgba(74,209,151,.24);box-shadow:0 0 0 4px rgba(43,185,126,.05);font-size:17px}
+.profile-brand{letter-spacing:-.25px}
+.back-link{padding:9px 12px;border:1px solid #2a3947;border-radius:9px;background:#141e2a;transition:background .15s,border-color .15s}
+.back-link:hover{border-color:#398d6c;background:#172b27}
+.profile-content{max-width:850px;margin:30px auto 56px}
+.profile-title{margin-bottom:18px}
+.profile-title h1{font-size:clamp(27px,4vw,34px);letter-spacing:-1px}
+.profile-title>div>p:last-child{font-size:12px}
+.profile-hero{position:relative;margin-bottom:13px;padding:23px 24px 0;border-color:#2d4850;border-radius:17px;background:radial-gradient(ellipse at 100% 0%,rgba(35,192,130,.17),transparent 46%),linear-gradient(145deg,#172a2b 0%,#131f2a 55%,#111a26 100%);box-shadow:0 16px 35px rgba(0,0,0,.18)}
+.profile-hero:after{content:"";position:absolute;right:-54px;bottom:-115px;width:230px;height:230px;border:1px solid rgba(66,196,145,.12);border-radius:50%;pointer-events:none}
+.profile-avatar{width:66px;height:66px;border:1px solid #34765e;background:linear-gradient(145deg,#1b5140,#15352f);color:#a1f0c9;box-shadow:0 0 0 5px rgba(46,186,128,.07);font-size:25px}
+.profile-identity h2{font-size:20px;letter-spacing:-.4px}
+.profile-identity p{font-size:12px;overflow-wrap:anywhere}
+.account-badge{border:1px solid rgba(80,205,151,.18);background:#15372d;color:#8be4b8}
+.profile-verified-badge{padding:8px 11px;font-size:10px}
+.profile-hero-stats{position:relative;z-index:1;border-top-color:#2b4146}
+.profile-hero-stats>div{padding-top:16px;padding-bottom:17px}
+.profile-hero-stats small{font-size:10px}
+.profile-hero-stats strong{font-size:12px}
+.profile-quick-links{gap:10px;margin-bottom:13px}
+.profile-quick-links>a{padding:14px;border-color:#283748;border-radius:13px;background:linear-gradient(145deg,#172333,#121c29);box-shadow:0 5px 15px rgba(0,0,0,.08)}
+.profile-quick-links>a:hover{border-color:#3a9b71;transform:translateY(-2px)}
+.profile-quick-icon{width:37px;height:37px;border:1px solid rgba(82,207,153,.12);border-radius:11px;background:#17372f;color:#7be0ae}
+.profile-quick-links strong{font-size:12px}
+.profile-quick-links small{font-size:9px}
+.profile-card{padding:22px;border-color:#293847;border-radius:14px;background:linear-gradient(145deg,#151f2c,#111a26);box-shadow:0 9px 24px rgba(0,0,0,.12)}
+.profile-section-title{margin-bottom:19px}
+.profile-section-icon{width:37px;height:37px;border:1px solid rgba(82,207,153,.12);border-radius:11px;font-size:18px}
+.profile-section-title h2{font-size:15px;letter-spacing:-.2px}
+.profile-section-title p{font-size:10px;line-height:1.5}
+.profile-form{gap:10px}
+.profile-form label{margin-top:5px;color:#cbd6df;font-size:11px}
+.profile-form input{min-height:46px;padding:12px 14px;border-color:#2a3a4a;border-radius:10px;background:#0e1723;font-size:12px;transition:border-color .15s,box-shadow .15s}
+.profile-form input:focus{border-color:#35b982;box-shadow:0 0 0 3px rgba(53,185,130,.1)}
+.profile-form input[readonly]{background:#121d2a}
+.profile-help{font-size:10px;line-height:1.5}
+.profile-form button{min-height:44px;margin-top:8px;border:1px solid #35bd86;border-radius:10px;background:linear-gradient(100deg,#139c68,#24bd83);color:#061a13;font-size:12px;box-shadow:0 7px 18px rgba(20,166,107,.15);transition:filter .15s,transform .15s}
+.profile-form button:hover:not(:disabled){filter:brightness(1.07);transform:translateY(-1px)}
+.profile-settings-card,.profile-signout-card{margin-top:13px}
+.profile-setting-row{padding:16px 0;border-top-color:#293847}
+.profile-setting-row strong{font-size:12px}
+.profile-setting-row small{font-size:10px}
+.profile-theme-options button{padding:9px 12px;border-radius:9px;background:#101a27;font-size:10px}
+.profile-theme-options button.chosen{border-color:#328d68;background:#17372e;color:#a0eac4;box-shadow:inset 0 0 0 1px rgba(66,196,145,.08)}
+.profile-settings-note{font-size:10px}
+.profile-signout-card{border-color:#49343b;background:linear-gradient(145deg,#1d1b27,#151923)}
+.profile-signout-card button{min-height:40px;padding:10px 16px;border-radius:9px;background:#38252c;font-size:11px;transition:background .15s}
+.profile-signout-card button:hover:not(:disabled){background:#4a2932}
+@media(max-width:600px){
+ .profile-content{margin:23px auto 38px}
+ .profile-hero{padding:18px 16px 0;border-radius:14px}
+ .profile-hero-top{gap:13px}
+ .profile-avatar{width:56px;height:56px;font-size:22px}
+ .profile-identity h2{font-size:17px}
+ .profile-hero-stats small{font-size:8px}
+ .profile-hero-stats strong{font-size:10px}
+ .profile-quick-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .profile-quick-links>a{min-height:88px;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;padding:10px;border-radius:11px}
+ .profile-quick-links>a>span:nth-child(2){width:100%}
+ .profile-quick-links strong{font-size:10px}
+ .profile-quick-links small{font-size:8px;line-height:1.3}
+ .profile-quick-links>a>b{display:none}
+ .profile-quick-icon{width:31px;height:31px;font-size:15px}
+ .profile-card{padding:17px;border-radius:12px}
+ .profile-section-title{gap:9px}
+ .profile-section-icon{width:33px;height:33px}
+ .profile-setting-row{gap:11px}
+}
+@media(prefers-reduced-motion:reduce){.profile-quick-links>a,.profile-form button{transition:none}}
