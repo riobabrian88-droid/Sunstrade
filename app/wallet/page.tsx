@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import "./wallet.css";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
