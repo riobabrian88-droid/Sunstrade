@@ -320,6 +320,8 @@ export default function DashboardPage() {
   const [assets, setAssets] = useState<Asset[]>(fallbackAssets);
   const [watchlistSymbols, setWatchlistSymbols] = useState<string[]>([]);
   const [watchlistOnly, setWatchlistOnly] = useState(false);
+  const [marketSearch, setMarketSearch] = useState("");
+  const [marketCategory, setMarketCategory] = useState<"all" | "crypto" | "forex" | "metals">("all");
   const [watchlistBusy, setWatchlistBusy] = useState<string | null>(null);
   const [priceAlerts, setPriceAlerts] = useState<any[]>([]);
   const [alertTarget, setAlertTarget] = useState("");
@@ -1294,51 +1296,45 @@ export default function DashboardPage() {
             </section>
 
             <aside className="right-column">
-              <section
-                className="panel watchlist"
-                id="watchlist"
-              >
-                <div className="panel-title">
-                  <h2>Market Watch</h2>
+              <section className="panel watchlist sun-markets-panel" id="watchlist">
+                <div className="sun-markets-heading">
+                  <div><span className="sun-markets-kicker">EXPLORE THE MARKET</span><h2>Markets</h2><p>Track prices and follow the assets you care about.</p></div>
+                  <span className="sun-markets-live"><i /> {priceStatus === "Live prices" ? "LIVE" : "UPDATING"}</span>
                 </div>
-
-                <div className="tabs watchlist-tabs">
-                  <button className={!watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(false)}>Markets</button>
-                  <button className={watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(true)}>Watchlist <span>{watchlistSymbols.length}</span></button>
+                <label className="sun-market-search">
+                  <span aria-hidden="true">⌕</span>
+                  <input type="search" value={marketSearch} onChange={(event) => setMarketSearch(event.target.value)} placeholder="Search assets or symbols" aria-label="Search markets" />
+                  {marketSearch && <button type="button" onClick={() => setMarketSearch("")} aria-label="Clear search">×</button>}
+                </label>
+                <div className="sun-market-filters" aria-label="Market category">
+                  {([{key:"all",label:"All assets"},{key:"crypto",label:"Crypto"},{key:"forex",label:"Forex"},{key:"metals",label:"Metals"}] as const).map((item) => <button key={item.key} type="button" className={marketCategory===item.key?"active":""} aria-pressed={marketCategory===item.key} onClick={() => setMarketCategory(item.key)}>{item.label}</button>)}
                 </div>
-
-                {(watchlistOnly ? assets.filter((asset) => watchlistSymbols.includes(asset.symbol)) : assets).map((asset) => {
-                  const change = assetPercentChange(asset);
-
-                  return (
-                    <button
-                      className="watch-row"
-                      key={asset.symbol}
-                      type="button"
-                      onClick={() =>
-                        setSelectedSymbol(asset.symbol)
-                      }
-                    >
+                <div className="sun-market-list-heading"><span>{watchlistOnly ? "YOUR WATCHLIST" : "ASSET"}</span><span>PRICE / 24H</span></div>
+                <div className="tabs watchlist-tabs sun-market-view-tabs">
+                  <button className={!watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(false)}>All markets</button>
+                  <button className={watchlistOnly ? "active" : ""} type="button" onClick={() => setWatchlistOnly(true)}>★ Watchlist <span>{watchlistSymbols.length}</span></button>
+                </div>
+                {(() => {
+                  const filteredAssets = (watchlistOnly ? assets.filter((asset) => watchlistSymbols.includes(asset.symbol)) : assets).filter((asset) => {
+                    const query = marketSearch.trim().toLowerCase();
+                    const matchesSearch = !query || asset.symbol.toLowerCase().includes(query) || asset.name.toLowerCase().includes(query);
+                    const base = asset.symbol.split("/")[0];
+                    const matchesCategory = marketCategory === "all" || (marketCategory === "crypto" ? ["BTC","ETH","BNB","SOL","XRP","DOGE","ADA","LTC"].includes(base) : marketCategory === "forex" ? ["EUR","USD"].includes(base) && asset.symbol !== "XAU/USD" : asset.symbol === "XAU/USD");
+                    return matchesSearch && matchesCategory;
+                  });
+                  return filteredAssets.length ? filteredAssets.map((asset) => {
+                    const change = assetPercentChange(asset);
+                    const selected = selectedSymbol === asset.symbol;
+                    return <button className={"watch-row sun-market-row" + (selected ? " selected" : "")} key={asset.symbol} type="button" onClick={() => setSelectedSymbol(asset.symbol)} aria-pressed={selected}>
                       <AssetIcon symbol={asset.symbol} />
-                      <b>{asset.symbol}</b>
-                      <span>{formatPrice(asset.price)}</span>
-
-                      <strong
-                        className={
-                          change >= 0
-                            ? "positive"
-                            : "negative"
-                        }
-                      >
-                        {change >= 0 ? "+" : ""}
-                        {change.toFixed(2)}%
-                      </strong>
+                      <span className="sun-market-asset-copy"><b>{asset.symbol}</b><small>{asset.name}</small></span>
+                      <span className="sun-market-quote"><b>{formatPrice(asset.price)}</b><small className={change >= 0 ? "positive" : "negative"}>{change >= 0 ? "+" : ""}{change.toFixed(2)}%</small></span>
                       <span className="watch-star" role="button" tabIndex={0} aria-label={watchlistSymbols.includes(asset.symbol) ? "Remove from watchlist" : "Add to watchlist"} title={watchlistSymbols.includes(asset.symbol) ? "Remove from watchlist" : "Add to watchlist"} onClick={(event) => { event.stopPropagation(); void toggleWatchlist(asset.symbol); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); void toggleWatchlist(asset.symbol); } }}>{watchlistBusy === asset.symbol ? "…" : watchlistSymbols.includes(asset.symbol) ? "★" : "☆"}</span>
-                    </button>
-                  );
-                })}
+                    </button>;
+                  }) : <p className="empty-state sun-market-empty">{watchlistOnly ? "Your watchlist is empty or has no matching assets." : "No assets match your search."}</p>;
+                })()}
+                <div className="sun-market-footnote">Select an asset to load its chart and trading panel. Prices update when market data is available.</div>
               </section>
-
               <section className="panel price-alert-panel" id="priceAlerts">
                 <div className="panel-title"><h2>Price Alerts</h2><small>{priceAlerts.filter((alert) => alert.is_active && !alert.is_triggered).length} active</small></div>
                 <p className="alert-current">Current {selectedSymbol}: <strong>{formatPrice(selectedPrice)}</strong></p>
