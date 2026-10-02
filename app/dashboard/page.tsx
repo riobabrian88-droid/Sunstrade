@@ -1089,6 +1089,60 @@ export default function DashboardPage() {
         </aside>
 
         <section className="workspace">
+          <section className="sun-home-mobile" aria-label="SunStrade home">
+            <div className="sun-home-greeting">
+              <div>
+                <span className="sun-home-kicker">YOUR TRADING SPACE</span>
+                <h1>Welcome, {getDisplayName().split(" ")[0]} <span aria-hidden="true">✦</span></h1>
+                <p>Markets move. Stay in control.</p>
+              </div>
+              <a href="/profile" className="sun-home-avatar" aria-label="Open profile">{getInitial()}</a>
+            </div>
+
+            <section className="sun-home-balance">
+              <div className="sun-home-balance-top">
+                <span>Total balance <i aria-hidden="true">◉</i></span>
+                <a href="/wallet">Wallet ↗</a>
+              </div>
+              <strong>{formatMoney(walletBalance)}</strong>
+              <div className="sun-home-balance-foot">
+                <span><small>Equity</small><b>{formatMoney(equity)}</b></span>
+                <span className={todayPL.profit >= 0 ? "positive" : "negative"}><small>Today's P/L</small><b>{todayPL.profit >= 0 ? "+" : ""}{formatMoney(todayPL.profit)}</b></span>
+              </div>
+              <div className="sun-home-actions">
+                <a href="#orderPanel" className="sun-home-primary"><span aria-hidden="true">↗</span> Trade</a>
+                <a href="/wallet" className="sun-home-secondary"><span aria-hidden="true">＋</span> Deposit</a>
+              </div>
+            </section>
+
+            <div className="sun-home-shortcuts" aria-label="Quick actions">
+              <a href="#watchlist"><span className="sun-shortcut-icon violet">☆</span><b>Watchlist</b></a>
+              <a href="#priceAlerts"><span className="sun-shortcut-icon amber">♧</span><b>Price alerts</b></a>
+              <a href="#positions"><span className="sun-shortcut-icon blue">▤</span><b>Portfolio</b></a>
+              <a href="/wallet"><span className="sun-shortcut-icon green">▣</span><b>Wallet</b></a>
+            </div>
+
+            <section className="sun-home-section">
+              <div className="sun-home-section-heading"><div><span>LIVE MARKET</span><h2>Market movers</h2></div><a href="#watchlist">View all <span aria-hidden="true">→</span></a></div>
+              <div className="sun-home-movers">
+                {assets.slice(0, 4).map((asset) => {
+                  const change = assetPercentChange(asset);
+                  return <button type="button" key={asset.symbol} onClick={() => setSelectedSymbol(asset.symbol)} className="sun-home-mover">
+                    <AssetIcon symbol={asset.symbol} />
+                    <span className="sun-home-mover-name"><b>{asset.symbol}</b><small>{asset.name}</small></span>
+                    <span className="sun-home-mover-price"><b>{formatPrice(asset.price)}</b><small className={change >= 0 ? "positive" : "negative"}>{change >= 0 ? "+" : ""}{change.toFixed(2)}%</small></span>
+                  </button>;
+                })}
+              </div>
+            </section>
+
+            <section className="sun-home-portfolio">
+              <div className="sun-home-section-heading"><div><span>YOUR ASSETS</span><h2>Portfolio</h2></div><a href="#positions">Details <span aria-hidden="true">→</span></a></div>
+              <div className="sun-home-portfolio-value"><span>Open positions value</span><strong>{formatMoney(positions.reduce((total, position) => total + position.qty * (assets.find((asset) => asset.symbol === position.symbol)?.price || position.avg_price), 0))}</strong></div>
+              <div className="sun-home-portfolio-bottom"><span>{positions.length} open {positions.length === 1 ? "position" : "positions"}</span><span className={openPL >= 0 ? "positive" : "negative"}>{openPL >= 0 ? "+" : ""}{formatMoney(openPL)} unrealized</span></div>
+            </section>
+          </section>
+
           <section className="dashboard-welcome" aria-label="Dashboard overview">
             <div>
               <span className="eyebrow">TRADING OVERVIEW</span>
