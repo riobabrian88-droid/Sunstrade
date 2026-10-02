@@ -1540,7 +1540,9 @@ export default function DashboardPage() {
             )}
 
             {portfolioView === "history" && (
-              <div className="table-wrap">
+              <div className="sun-activity-view">
+                <div className="sun-activity-heading"><div><span>ACCOUNT ACTIVITY</span><h3>Trade history</h3><p>Your completed orders and execution details.</p></div><b>{orders.filter((order) => order.status === "filled").length} FILLED</b></div>
+                <div className="table-wrap">
                 {orders.filter((order) => order.status === "filled").length === 0 ? <div className="empty-state">Completed trades will appear here after an order is filled.</div> : (
                   <table>
                     <thead><tr><th>Trade ID</th><th>Asset</th><th>Side</th><th>Order type</th><th>Quantity</th><th>Execution price</th><th>Trade value</th><th>Executed at</th></tr></thead>
@@ -1549,11 +1551,14 @@ export default function DashboardPage() {
                     ))}</tbody>
                   </table>
                 )}
+                </div>
               </div>
             )}
 
             {portfolioView === "orders" && (
-              <div className="table-wrap">
+              <div className="sun-activity-view">
+                <div className="sun-activity-heading"><div><span>ORDER MANAGEMENT</span><h3>All orders</h3><p>Review submitted orders and their latest status.</p></div><b>{orders.length} TOTAL</b></div>
+                <div className="table-wrap">
                 {orders.length === 0 ? <div className="empty-state">No orders have been placed yet.</div> : (
                   <table>
                     <thead><tr><th>Order ID</th><th>Asset</th><th>Side</th><th>Type</th><th>Quantity</th><th>Status</th><th>Trigger price</th><th>Fill price</th><th>Created</th></tr></thead>
@@ -1562,6 +1567,7 @@ export default function DashboardPage() {
                     ))}</tbody>
                   </table>
                 )}
+                </div>
               </div>
             )}
           </section>
