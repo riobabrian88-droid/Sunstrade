@@ -750,3 +750,59 @@
  .sun-activity-view th { padding:10px; }
  .sun-activity-view td { padding:11px 10px; }
 }
+
+
+/* Unified premium styling for live market data panels */
+.order-book-panel,.recent-trades-panel,.market-depth-panel,.market-stats-panel {
+  padding:16px; border:1px solid #29394a; border-radius:14px;
+  background:radial-gradient(ellipse at 100% 0%,rgba(39,150,111,.07),transparent 38%),linear-gradient(150deg,#172231,#121b28);
+  box-shadow:0 8px 22px rgba(0,0,0,.12);
+}
+.order-book-heading,.recent-trades-heading,.market-depth-heading,.market-stats-heading { margin-bottom:13px; }
+.order-book-heading h2,.recent-trades-heading h2,.market-depth-heading h2,.market-stats-heading h2 {
+  margin:0; color:#edf3f7; font:800 15px Manrope,Arial,sans-serif; letter-spacing:-.25px;
+}
+.order-book-heading small,.recent-trades-heading small,.market-depth-heading small,.market-stats-heading small {
+  display:block; margin-top:5px; color:#8798a9; font-size:9px;
+}
+.order-book-heading .book-live,.recent-trades-heading .book-live,.market-depth-heading .book-live,.market-stats-heading .book-live,
+.order-book-heading .book-status,.recent-trades-heading .book-status,.market-depth-heading .book-status,.market-stats-heading .book-status {
+  flex:none; padding:6px 8px; border:1px solid #2a4d42; border-radius:20px; background:#153329; color:#8de2b7; font-size:8px; font-weight:800; white-space:nowrap;
+}
+.order-book-heading .book-status,.recent-trades-heading .book-status,.market-depth-heading .book-status,.market-stats-heading .book-status { border-color:#354353; background:#1a2635; color:#9baab8; }
+.book-column-head { padding:8px 9px; border-radius:7px 7px 0 0; background:#1b2939; color:#899aab; font-size:8px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.book-row { position:relative; min-height:29px; padding:5px 9px; border-bottom:1px solid rgba(47,62,79,.55); color:#cbd6df; font-size:9px; font-variant-numeric:tabular-nums; }
+.book-row .book-depth { opacity:.12; }
+.book-row.ask .book-depth { background:#ed6477; }
+.book-row.bid .book-depth { background:#35c58b; }
+.book-row .book-price { font-weight:800; }
+.book-spread { display:flex; align-items:center; justify-content:center; gap:8px; min-height:38px; margin:5px 0; border:1px solid #2b3c4b; border-radius:8px; background:#101a27; }
+.book-spread strong { color:#eaf2f6; font-size:12px; font-variant-numeric:tabular-nums; }
+.book-spread span { color:#8b9aaa; font-size:8px; }
+.book-footnote { margin-top:11px; padding-top:9px; border-top:1px solid rgba(49,65,81,.65); color:#77899a; font-size:8px; line-height:1.55; }
+.recent-trades-columns { padding:9px 8px; border-radius:7px 7px 0 0; background:#1b2939; color:#899aab; font-size:8px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.recent-trade-row { min-height:33px; border-top-color:rgba(47,62,79,.65); color:#d4dfe7; }
+.recent-trade-row strong { padding:3px 5px; border-radius:5px; background:rgba(53,197,139,.09); }
+.recent-trade-row strong.trade-sell { background:rgba(232,100,119,.09); }
+.market-stats-grid { gap:8px; }
+.market-stat { padding:11px; border:1px solid #2a3949; border-radius:10px; background:linear-gradient(145deg,#1a2838,#152131); }
+.market-stat>span { color:#8fa0b0; font-size:8px; font-weight:700; }
+.market-stat>strong { color:#eaf1f5; font-size:13px; }
+.market-stat>small { color:#7d90a1; }
+.depth-legend { gap:10px; margin-bottom:10px; }
+.depth-legend>span { padding:6px 8px; border:1px solid #2b3a49; border-radius:8px; background:#111c29; color:#a6b4c0; font-size:8px; }
+.market-depth-chart { display:block; width:100%; padding:5px 3px; border:1px solid #283849; border-radius:10px; background:linear-gradient(180deg,#111c29,#131e2b); }
+.depth-axis-caption { margin-top:7px; color:#8798a8; font-size:8px; }
+@media(max-width:760px) {
+ .order-book-panel,.recent-trades-panel,.market-depth-panel,.market-stats-panel { padding:13px 12px; border-radius:13px; }
+ .order-book-heading h2,.recent-trades-heading h2,.market-depth-heading h2,.market-stats-heading h2 { font-size:14px; }
+ .order-book-heading small,.recent-trades-heading small,.market-depth-heading small,.market-stats-heading small { font-size:8px; }
+ .book-column-head { padding:8px 6px; }
+ .book-row { min-height:30px; padding:6px; }
+ .recent-trades-columns,.recent-trade-row { gap:4px; font-size:8px; }
+ .recent-trades-columns { padding:8px 5px; }
+ .recent-trade-row { min-height:32px; padding:5px; }
+ .market-stat { padding:10px; }
+ .market-stat>strong { font-size:12px; }
+ .depth-legend { flex-wrap:wrap; }
+}
