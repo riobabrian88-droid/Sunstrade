@@ -518,3 +518,68 @@
 @media(max-width:1100px) { .market-strip { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(max-width:760px) { .market-strip { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:12px 0; } .symbol-card { min-height:56px; padding:8px; gap:7px; } .asset-coin { width:30px; height:30px; font-size:15px; } }
 @media(max-width:360px) { .symbol-card { gap:5px; padding:7px 6px; } .symbol-card > strong { font-size:9px; } }
+
+
+/* SunStrade mobile Home experience */
+.sun-home-mobile { display:none; }
+@media(max-width:760px) {
+  .sun-home-mobile { display:grid; gap:18px; margin:0 0 20px; }
+  .workspace { padding:17px 14px 30px; }
+  .dashboard-welcome,.stats-grid,.market-strip { display:none; }
+  .sun-home-greeting { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:2px 1px 0; }
+  .sun-home-greeting h1 { margin:5px 0 3px; color:#f4f7fa; font:800 23px Manrope,Arial,sans-serif; letter-spacing:-.7px; }
+  .sun-home-greeting h1 span { color:#36d49a; font-size:17px; }
+  .sun-home-greeting p { margin:0; color:#91a0b1; font-size:11px; }
+  .sun-home-kicker,.sun-home-section-heading>div>span { color:#6f8294; font-size:8px; font-weight:800; letter-spacing:.13em; }
+  .sun-home-avatar { display:grid; width:39px; height:39px; flex:none; place-items:center; border:1px solid #315344; border-radius:50%; background:linear-gradient(145deg,#1c4939,#142b2c); color:#9af0c8; font:800 14px Manrope,Arial,sans-serif; box-shadow:0 0 0 4px rgba(48,196,133,.06); }
+  .sun-home-balance { position:relative; overflow:hidden; padding:17px; border:1px solid #275541; border-radius:17px; background:radial-gradient(ellipse at 95% 0%,rgba(24,183,119,.22),transparent 42%),linear-gradient(135deg,#142b2a 0%,#12202a 58%,#101a29 100%); box-shadow:0 12px 30px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.04); }
+  .sun-home-balance:after { content:""; position:absolute; width:180px; height:180px; right:-95px; bottom:-120px; border:1px solid rgba(56,213,151,.17); border-radius:50%; box-shadow:0 0 0 17px rgba(56,213,151,.025),0 0 0 36px rgba(56,213,151,.02); pointer-events:none; }
+  .sun-home-balance-top { display:flex; align-items:center; justify-content:space-between; color:#aab9c4; font-size:10px; }
+  .sun-home-balance-top i { margin-left:5px; color:#6f9a89; font-style:normal; }
+  .sun-home-balance-top a { color:#8fe2bc; font-size:9px; font-weight:700; }
+  .sun-home-balance>strong { display:block; margin:8px 0 15px; color:#f5faf8; font:800 clamp(27px,7vw,34px) Manrope,Arial,sans-serif; letter-spacing:-1.1px; font-variant-numeric:tabular-nums; }
+  .sun-home-balance-foot { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:11px 0 13px; border-top:1px solid rgba(177,208,195,.13); }
+  .sun-home-balance-foot>span { display:grid; gap:4px; min-width:0; }
+  .sun-home-balance-foot small { color:#82969f; font-size:8px; }
+  .sun-home-balance-foot b { color:#dce9e6; font-size:11px; font-variant-numeric:tabular-nums; }
+  .sun-home-balance-foot .positive b,.sun-home-balance-foot .negative b { color:inherit; }
+  .sun-home-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; position:relative; z-index:1; }
+  .sun-home-actions a { display:flex; min-height:42px; align-items:center; justify-content:center; gap:7px; border-radius:10px; font-size:11px; font-weight:800; }
+  .sun-home-primary { background:linear-gradient(110deg,#19a86e,#27ce8e); color:#071b13!important; box-shadow:0 5px 16px rgba(26,187,123,.15); }
+  .sun-home-secondary { border:1px solid #354b51; background:rgba(255,255,255,.045); color:#e1ebe9!important; }
+  .sun-home-primary span,.sun-home-secondary span { font-size:15px; }
+  .sun-home-shortcuts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+  .sun-home-shortcuts a { display:grid; justify-items:center; gap:8px; min-width:0; padding:11px 3px 9px; border:1px solid #202d3b; border-radius:12px; background:linear-gradient(145deg,#172232,#131d2b); }
+  .sun-shortcut-icon { display:grid; width:38px; height:38px; place-items:center; border-radius:12px; background:#20283b; font-size:21px; }
+  .sun-shortcut-icon.violet { color:#b49aff; background:#28223e; }.sun-shortcut-icon.amber { color:#f6c56b; background:#342b20; }.sun-shortcut-icon.blue { color:#80b8ff; background:#1d2d43; }.sun-shortcut-icon.green { color:#6ee0ae; background:#1b342e; }
+  .sun-home-shortcuts b { color:#c7d2dc; font-size:8px; font-weight:600; text-align:center; white-space:nowrap; }
+  .sun-home-section,.sun-home-portfolio { min-width:0; }
+  .sun-home-section-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 1px 10px; }
+  .sun-home-section-heading h2 { margin:4px 0 0; color:#eef3f7; font:800 17px Manrope,Arial,sans-serif; letter-spacing:-.35px; }
+  .sun-home-section-heading>a { color:#5cdaa0; font-size:9px; font-weight:700; white-space:nowrap; }
+  .sun-home-section-heading>a span { margin-left:3px; font-size:13px; }
+  .sun-home-movers { overflow:hidden; border:1px solid #243141; border-radius:13px; background:#141e2c; }
+  .sun-home-mover { display:flex; width:100%; align-items:center; gap:9px; min-width:0; padding:11px 12px; border:0; border-bottom:1px solid #243141; background:transparent; color:inherit; text-align:left; }
+  .sun-home-mover:last-child { border-bottom:0; }
+  .sun-home-mover .asset-coin { width:32px; height:32px; font-size:15px; }
+  .sun-home-mover-name,.sun-home-mover-price { display:grid; gap:4px; min-width:0; }
+  .sun-home-mover-name { flex:1; }
+  .sun-home-mover-name b { color:#e4ebf0; font-size:10px; }
+  .sun-home-mover-name small { overflow:hidden; color:#7f91a2; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+  .sun-home-mover-price { justify-items:end; }
+  .sun-home-mover-price b { color:#e5edf2; font-size:10px; font-variant-numeric:tabular-nums; }
+  .sun-home-mover-price small { font-size:9px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .sun-home-portfolio { padding:14px; border:1px solid #253344; border-radius:14px; background:linear-gradient(145deg,#172335,#121c2a); }
+  .sun-home-portfolio .sun-home-section-heading { margin:0 0 12px; }
+  .sun-home-portfolio-value { display:grid; gap:5px; }
+  .sun-home-portfolio-value>span { color:#8799aa; font-size:9px; }
+  .sun-home-portfolio-value>strong { color:#f1f5f8; font:800 21px Manrope,Arial,sans-serif; font-variant-numeric:tabular-nums; }
+  .sun-home-portfolio-bottom { display:flex; justify-content:space-between; flex-wrap:wrap; gap:7px; margin-top:12px; padding-top:10px; border-top:1px solid #293747; color:#91a1b1; font-size:8px; }
+  .sun-home-portfolio-bottom .positive,.sun-home-portfolio-bottom .negative { font-weight:700; }
+}
+@media(max-width:360px) {
+  .sun-home-balance { padding:14px; }
+  .sun-home-shortcuts { gap:5px; }
+  .sun-home-shortcuts a { padding-inline:1px; }
+  .sun-home-shortcuts b { font-size:7px; }
+}
