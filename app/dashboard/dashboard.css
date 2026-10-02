@@ -724,3 +724,29 @@
  .sun-trade-redesign .buy-sell button { min-height:42px; }
  .sun-trade-redesign .place-order { min-height:48px; }
 }
+
+
+/* Trade history and all-orders section refresh */
+.sun-activity-view { margin-top:15px; padding:14px; border:1px solid #263747; border-radius:13px; background:linear-gradient(145deg,rgba(21,34,49,.72),rgba(14,24,37,.72)); }
+.sun-activity-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:13px; }
+.sun-activity-heading span { color:#70a28e; font-size:8px; font-weight:800; letter-spacing:.13em; }
+.sun-activity-heading h3 { margin:4px 0 3px; color:var(--text); font-size:15px; font-weight:800; letter-spacing:-.3px; }
+.sun-activity-heading p { margin:0; color:var(--muted); font-size:9px; line-height:1.45; }
+.sun-activity-heading>b { flex:none; padding:7px 9px; border:1px solid #2a4d42; border-radius:20px; background:#173329; color:#8ce0b6; font-size:8px; letter-spacing:.05em; }
+.sun-activity-view .table-wrap { border:1px solid #263747; border-radius:10px; background:#101a28; }
+.sun-activity-view table { width:100%; border-collapse:collapse; }
+.sun-activity-view th { padding:11px 12px; background:#152232; color:#8295a7; font-size:8px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; }
+.sun-activity-view td { padding:12px; border-top:1px solid #253445; color:#dce5eb; font-size:9px; white-space:nowrap; }
+.sun-activity-view tbody tr:hover { background:rgba(45,174,119,.055); }
+.sun-activity-view .empty-state { margin:0; border:0; border-radius:10px; background:transparent; color:#91a1af; font-size:10px; }
+@media(max-width:600px) {
+ .sun-activity-view { margin-top:12px; padding:10px; border-radius:11px; }
+ .sun-activity-heading { align-items:flex-start; margin-bottom:10px; }
+ .sun-activity-heading h3 { font-size:14px; }
+ .sun-activity-heading p { max-width:220px; }
+ .sun-activity-heading>b { padding:6px 7px; font-size:7px; }
+ .sun-activity-view .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+ .sun-activity-view table { min-width:720px; }
+ .sun-activity-view th { padding:10px; }
+ .sun-activity-view td { padding:11px 10px; }
+}
