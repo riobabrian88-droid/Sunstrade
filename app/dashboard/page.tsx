@@ -1357,9 +1357,18 @@ export default function DashboardPage() {
               </section>
 
               <section
-                className="panel order-panel"
+                className="panel order-panel sun-trade-redesign"
                 id="orderPanel"
               >
+                <div className="sun-trade-heading">
+                  <div><span className="sun-trade-kicker">TRADE DESK</span><h2>Place an order</h2><p>Choose an asset and review your order details.</p></div>
+                  <span className="sun-trade-status"><i /> ACCOUNT ORDER</span>
+                </div>
+                <div className="sun-trade-market-price">
+                  <span>Selected market</span>
+                  <strong>{formatPrice(selectedPrice)}</strong>
+                  <small>{selectedSymbol} · {priceStatus}</small>
+                </div>
                 <div className="order-symbol">
                   <AssetIcon symbol={selectedSymbol} />
 
