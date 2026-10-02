@@ -583,3 +583,54 @@
   .sun-home-shortcuts a { padding-inline:1px; }
   .sun-home-shortcuts b { font-size:7px; }
 }
+
+
+/* Markets screen refresh */
+.sun-markets-panel { padding:18px; }
+.sun-markets-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; }
+.sun-markets-heading h2 { margin:4px 0 3px; color:var(--text); font:800 22px Manrope,Arial,sans-serif; letter-spacing:-.6px; }
+.sun-markets-heading p { margin:0; color:var(--muted); font-size:10px; }
+.sun-markets-kicker { color:#6e9c8a; font-size:8px; font-weight:800; letter-spacing:.14em; }
+.sun-markets-live { display:flex; align-items:center; gap:6px; padding:6px 8px; border:1px solid rgba(57,185,130,.22); border-radius:20px; background:rgba(57,185,130,.07); color:#65d9a3; font-size:8px; font-weight:800; letter-spacing:.06em; }
+.sun-markets-live i { width:6px; height:6px; border-radius:50%; background:#39c98b; box-shadow:0 0 0 3px rgba(57,201,139,.12); }
+.sun-market-search { display:flex; align-items:center; gap:9px; min-height:42px; padding:0 12px; border:1px solid var(--border); border-radius:11px; background:#101925; color:#8c9aaa; }
+.sun-market-search>span { font-size:21px; line-height:1; }
+.sun-market-search input { width:100%; min-width:0; border:0; outline:0; background:transparent; color:var(--text); font-size:11px; }
+.sun-market-search input::placeholder { color:#718092; }
+.sun-market-search button { border:0; background:transparent; color:#9aa8b5; font-size:19px; }
+.sun-market-filters { display:flex; gap:7px; overflow-x:auto; padding:12px 0 13px; scrollbar-width:none; }
+.sun-market-filters::-webkit-scrollbar { display:none; }
+.sun-market-filters button { flex:none; padding:8px 13px; border:1px solid #293645; border-radius:20px; background:#172231; color:#9cabb9; font-size:9px; font-weight:700; }
+.sun-market-filters button.active { border-color:#287b58; background:linear-gradient(110deg,#174b39,#18392f); color:#9aefc5; }
+.sun-market-list-heading { display:flex; align-items:center; justify-content:space-between; padding:0 4px 8px; color:#718294; font-size:8px; font-weight:800; letter-spacing:.1em; }
+.sun-market-view-tabs { display:none; }
+.sun-markets-panel .watch-row.sun-market-row { display:flex; align-items:center; gap:10px; width:100%; min-height:61px; padding:10px 7px; border:0; border-top:1px solid #253242; border-radius:0; background:transparent; text-align:left; }
+.sun-markets-panel .watch-row.sun-market-row:hover,.sun-markets-panel .watch-row.sun-market-row.selected { background:rgba(53,193,133,.055); }
+.sun-markets-panel .watch-row.sun-market-row.selected { box-shadow:inset 2px 0 #35c58b; }
+.sun-market-asset-copy,.sun-market-quote { display:grid; gap:4px; min-width:0; }
+.sun-market-asset-copy { flex:1; }
+.sun-market-asset-copy b { color:#e5edf3; font-size:10px; font-weight:800; }
+.sun-market-asset-copy small { overflow:hidden; color:#7f90a1; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+.sun-market-quote { justify-items:end; margin-left:auto; }
+.sun-market-quote b { color:#e5edf3; font-size:10px; font-variant-numeric:tabular-nums; }
+.sun-market-quote small { font-size:9px; font-weight:800; font-variant-numeric:tabular-nums; }
+.sun-markets-panel .watch-star { display:grid; flex:none; width:25px; height:25px; place-items:center; margin-left:2px; border-radius:8px; color:#8192a2; font-size:16px; }
+.sun-markets-panel .watch-star:hover { background:#263342; color:#f5c65e; }
+.sun-market-empty { padding:25px 8px; text-align:center; }
+.sun-market-footnote { margin-top:12px; padding-top:10px; border-top:1px solid #253242; color:#718294; font-size:8px; line-height:1.5; }
+@media(max-width:760px) {
+  .sun-markets-panel { padding:16px 13px; border:1px solid #243344; border-radius:15px; background:linear-gradient(160deg,#151f2e,#111a28); }
+  .sun-markets-heading { margin-bottom:13px; }
+  .sun-markets-heading h2 { font-size:21px; }
+  .sun-markets-heading p { max-width:250px; font-size:9px; line-height:1.5; }
+  .sun-market-search { min-height:43px; border-color:#2b3949; border-radius:12px; background:#101827; }
+  .sun-market-filters { margin-right:-2px; padding:11px 0 12px; }
+  .sun-market-filters button { padding:8px 12px; font-size:9px; }
+  .sun-market-list-heading { padding:0 3px 8px; }
+  .sun-markets-panel .watch-row.sun-market-row { min-height:65px; gap:9px; padding:10px 3px; }
+  .sun-markets-panel .watch-row.sun-market-row .asset-coin { width:36px; height:36px; flex:none; }
+  .sun-market-asset-copy b,.sun-market-quote b { font-size:10px; }
+  .sun-market-asset-copy small { font-size:8px; }
+  .sun-market-quote small { font-size:9px; }
+  .sun-markets-panel .watch-star { width:27px; height:27px; }
+}
