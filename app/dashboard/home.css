@@ -1,0 +1,129 @@
+:root { --home-bg:#0b111a; --home-panel:#121a25; --home-panel-2:#151f2d; --home-border:#243242; --home-text:#eef4f7; --home-muted:#7f91a3; --home-green:#39ca8d; }
+
+.sun-home-page {
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 88% -5%, rgba(55,196,138,.12), transparent 28%),
+    radial-gradient(circle at 0 20%, rgba(70,92,151,.09), transparent 25%),
+    var(--home-bg);
+  color:var(--home-text);
+  padding:18px 18px 92px;
+  font-family:Manrope,Arial,sans-serif;
+}
+
+.sun-home-header { display:flex; align-items:center; justify-content:space-between; gap:14px; max-width:760px; margin:0 auto 26px; }
+.sun-home-brand { display:flex; align-items:center; gap:10px; color:var(--home-text); text-decoration:none; }
+.sun-home-brand-mark { display:grid; width:38px; height:38px; place-items:center; border:1px solid #2b4c42; border-radius:12px; background:linear-gradient(145deg,#17392f,#142232); color:#55d59b; }
+.sun-home-brand-mark svg { width:25px; height:25px; }
+.sun-home-brand strong { display:block; font-size:16px; letter-spacing:-.35px; }
+.sun-home-brand small { display:block; margin-top:2px; color:var(--home-muted); font-size:8px; }
+.sun-home-header-actions { display:flex; align-items:center; gap:9px; }
+.sun-home-icon-btn,.sun-home-profile { position:relative; display:grid; width:38px; height:38px; place-items:center; border:1px solid var(--home-border); border-radius:12px; background:#111a26; color:#b8c6d1; text-decoration:none; }
+.sun-home-icon-btn { cursor:pointer; font-size:16px; }
+.sun-home-icon-btn span { position:absolute; top:-5px; right:-4px; min-width:16px; height:16px; padding:0 4px; border-radius:10px; background:#df5369; color:#fff; font-size:8px; font-weight:800; display:grid; place-items:center; }
+.sun-home-profile { background:linear-gradient(145deg,#285d49,#19352f); color:#b7f1d5; font-size:12px; font-weight:800; }
+
+.sun-home-topline { max-width:760px; margin:0 auto 15px; }
+.sun-home-eyebrow { color:#6ca68f; font-size:8px; font-weight:800; letter-spacing:.14em; }
+.sun-home-topline h1 { margin:6px 0 5px; font-size:25px; letter-spacing:-.8px; }
+.sun-home-topline p { max-width:500px; margin:0; color:var(--home-muted); font-size:10px; line-height:1.55; }
+
+.sun-home-equity { max-width:760px; margin:0 auto; padding:17px; border:1px solid #2a3d4d; border-radius:18px; background:linear-gradient(145deg,#172635,#111b28 72%); box-shadow:0 16px 35px rgba(0,0,0,.18); }
+.sun-home-equity-head { display:flex; justify-content:space-between; gap:10px; }
+.sun-home-equity-head span { display:block; color:#a7b6c2; font-size:10px; font-weight:700; }
+.sun-home-equity-head small { display:block; margin-top:3px; color:#708395; font-size:8px; }
+.sun-home-equity-head a { color:#78dfae; font-size:9px; font-weight:800; text-decoration:none; }
+.sun-home-equity > strong { display:block; margin:14px 0 13px; color:#f4f8fa; font-size:30px; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
+.sun-home-equity-meta { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.sun-home-equity-meta span { padding:10px; border:1px solid #293a49; border-radius:10px; background:rgba(9,17,27,.4); }
+.sun-home-equity-meta small,.sun-home-equity-meta b { display:block; }
+.sun-home-equity-meta small { color:#758799; font-size:8px; }
+.sun-home-equity-meta b { margin-top:4px; color:#dfe8ed; font-size:11px; font-variant-numeric:tabular-nums; }
+.sun-home-equity-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
+.sun-home-equity-actions a { min-height:42px; display:grid; place-items:center; border-radius:10px; text-decoration:none; font-size:10px; font-weight:800; }
+.sun-home-trade-btn { background:linear-gradient(105deg,#159a67,#31ca8f); color:#05251a; }
+.sun-home-deposit-btn { border:1px solid #315141; background:#14251f; color:#9be8c4; }
+
+.sun-home-shortcuts { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; max-width:760px; margin:12px auto; }
+.sun-home-shortcuts a { min-width:0; padding:12px 7px; border:1px solid var(--home-border); border-radius:13px; background:#111a26; color:var(--home-text); text-align:center; text-decoration:none; transition:.18s ease; }
+.sun-home-shortcuts a:hover { transform:translateY(-1px); border-color:#315244; }
+.shortcut-icon { display:grid; width:32px; height:32px; place-items:center; margin:0 auto 7px; border-radius:10px; font-size:15px; }
+.shortcut-icon.violet { background:#292244; color:#c0a9ff; }
+.shortcut-icon.amber { background:#3d311e; color:#f0c46b; }
+.shortcut-icon.blue { background:#1d3049; color:#83b9ff; }
+.shortcut-icon.green { background:#17372d; color:#7fe1b0; }
+.sun-home-shortcuts b { display:block; font-size:8px; }
+.sun-home-shortcuts small { display:block; margin-top:3px; color:#738698; font-size:7px; }
+
+.sun-home-promo { display:flex; align-items:center; justify-content:space-between; gap:14px; max-width:760px; margin:12px auto 20px; padding:15px 16px; border:1px solid #315144; border-radius:15px; background:linear-gradient(110deg,#17382e,#142333 72%); }
+.sun-home-promo span:first-child { color:#75dca9; font-size:8px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.sun-home-promo h2 { margin:5px 0 4px; font-size:15px; }
+.sun-home-promo p { max-width:470px; margin:0; color:#8092a3; font-size:8px; line-height:1.5; }
+.sun-home-promo-mark { display:grid; flex:none; width:40px; height:40px; place-items:center; border-radius:13px; background:#1c4939; color:#84e5b6; font-size:20px; }
+
+.sun-home-section,.sun-home-portfolio-card { max-width:760px; margin:0 auto 14px; padding:15px; border:1px solid var(--home-border); border-radius:15px; background:linear-gradient(150deg,#131e2b,#101925); }
+.sun-home-section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.sun-home-section-head span:first-child { color:#679983; font-size:8px; font-weight:800; letter-spacing:.13em; }
+.sun-home-section-head h2 { margin:4px 0 0; font-size:16px; letter-spacing:-.35px; }
+.sun-home-section-head a { color:#7be0af; font-size:8px; font-weight:800; text-decoration:none; white-space:nowrap; }
+.sun-home-movers { display:grid; gap:0; }
+.sun-home-mover { display:flex; align-items:center; gap:9px; min-height:57px; padding:9px 2px; border-top:1px solid #223141; color:var(--home-text); text-decoration:none; }
+.sun-home-mover:first-child { border-top:0; }
+.home-asset-icon { display:grid; flex:none; width:34px; height:34px; place-items:center; border-radius:11px; background:#1c2938; color:#aebdca; font-size:14px; font-weight:800; }
+.asset-btc { background:#3b2c1c; color:#f0b75e; }
+.asset-eth { background:#27283f; color:#aeb5ff; }
+.asset-sol { background:#203735; color:#8ee4d0; }
+.asset-xrp { background:#29333e; color:#c6d2dc; }
+.asset-bnb { background:#3b321d; color:#f0c66b; }
+.sun-home-mover-copy { flex:1; min-width:0; }
+.sun-home-mover-copy b,.sun-home-mover-copy small,.sun-home-mover-quote b,.sun-home-mover-quote small { display:block; }
+.sun-home-mover-copy b { font-size:10px; }
+.sun-home-mover-copy small { overflow:hidden; margin-top:3px; color:#738596; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+.sun-home-mover-quote { text-align:right; }
+.sun-home-mover-quote b { font-size:10px; font-variant-numeric:tabular-nums; }
+.sun-home-mover-quote small { margin-top:3px; font-size:8px; font-weight:800; font-variant-numeric:tabular-nums; }
+
+.sun-home-portfolio-card { padding-bottom:13px; }
+.sun-home-portfolio-main { padding:12px; border:1px solid #273747; border-radius:11px; background:#111a27; }
+.sun-home-portfolio-main span,.sun-home-portfolio-main strong { display:block; }
+.sun-home-portfolio-main span { color:#8192a2; font-size:8px; }
+.sun-home-portfolio-main strong { margin-top:5px; font-size:20px; font-variant-numeric:tabular-nums; }
+.sun-home-portfolio-foot { display:flex; justify-content:space-between; gap:10px; margin-top:10px; color:#7d8e9f; font-size:8px; }
+
+.positive { color:#4bd598 !important; }
+.negative { color:#ef687a !important; }
+
+.sun-home-bottom-nav { position:fixed; left:50%; bottom:10px; z-index:30; display:grid; grid-template-columns:repeat(5,1fr); width:min(720px,calc(100% - 20px)); transform:translateX(-50%); padding:6px; border:1px solid #2b3b4b; border-radius:17px; background:rgba(14,23,35,.94); box-shadow:0 15px 38px rgba(0,0,0,.38); backdrop-filter:blur(16px); }
+.sun-home-bottom-nav a { display:grid; place-items:center; gap:3px; min-height:46px; border-radius:11px; color:#718496; text-decoration:none; }
+.sun-home-bottom-nav a span { font-size:15px; }
+.sun-home-bottom-nav a b { font-size:7px; font-weight:800; }
+.sun-home-bottom-nav a.active { background:#17372d; color:#8be5b8; }
+
+.home-loading { min-height:100vh; display:grid; place-items:center; align-content:center; gap:10px; background:var(--home-bg); color:#9aabba; font-family:Manrope,Arial,sans-serif; }
+.home-loading-mark { display:grid; width:50px; height:50px; place-items:center; border:1px solid #315444; border-radius:15px; background:#16362d; color:#83e3b5; font-size:22px; font-weight:800; }
+.home-loading p { margin:0; font-size:10px; }
+
+@media (min-width:900px) {
+  .sun-home-page { padding-left:30px; padding-right:30px; }
+  .sun-home-equity { padding:21px; }
+  .sun-home-movers { grid-template-columns:1fr 1fr; column-gap:20px; }
+  .sun-home-mover:nth-child(2) { border-top:0; }
+}
+@media (max-width:560px) {
+  .sun-home-page { padding:15px 12px 86px; }
+  .sun-home-header { margin-bottom:21px; }
+  .sun-home-brand small { display:none; }
+  .sun-home-topline h1 { font-size:23px; }
+  .sun-home-topline p { font-size:9px; }
+  .sun-home-equity { padding:14px; border-radius:16px; }
+  .sun-home-equity > strong { font-size:27px; }
+  .sun-home-shortcuts { gap:6px; }
+  .sun-home-shortcuts a { padding:10px 4px; }
+  .shortcut-icon { width:29px; height:29px; }
+  .sun-home-shortcuts b { font-size:7px; }
+  .sun-home-shortcuts small { display:none; }
+  .sun-home-promo { padding:13px; }
+  .sun-home-section,.sun-home-portfolio-card { padding:13px; border-radius:14px; }
+  .sun-home-portfolio-foot { flex-direction:column; gap:4px; }
+  .sun-home-bottom-nav { width:calc(100% - 16px); bottom:8px; }
+}
