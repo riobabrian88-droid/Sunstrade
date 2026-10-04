@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sunraku Trade",
-  description: "Sunraku Trade trading platform"
+  title: "SunStrade",
+  description: "SunStrade trading platform"
 };
 
 export default function RootLayout({
