@@ -86,11 +86,13 @@ export default function MarketsPage(){
   <section className="markets-list-card">
    <div className="markets-list-head"><div><span>MARKET WATCH</span><h2>{category==="All"?"All markets":category}</h2></div><small>{filtered.length} assets</small></div>
    <div className="markets-list-columns"><span>ASSET</span><span>PRICE / 24H</span></div>
-   <div className="markets-list">{filtered.length?filtered.map(a=>{const c=change(a),positive=c>=0,saved=watchlist.includes(a.symbol);return <Link href={"/trade?symbol="+encodeURIComponent(a.symbol)} className="market-row" key={a.symbol}>
-    <button type="button" className={"market-star "+(saved?"saved":"")} aria-label={saved?"Remove "+a.symbol+" from watchlist":"Add "+a.symbol+" to watchlist"} onClick={e=>{e.preventDefault();e.stopPropagation();void toggle(a.symbol)}}>{saved?"★":"☆"}</button>
-    <AssetIcon symbol={a.symbol}/><span className="market-name"><b>{a.symbol}</b><small>{a.name}</small></span>
-    <Spark positive={positive}/><span className="market-quote"><b>{money(a.price)}</b><small className={positive?"positive":"negative"}>{positive?"+":""}{c.toFixed(2)}%</small></span>
-   </Link>)}:<div className="markets-empty"><strong>No markets found</strong><span>Try another search or category.</span></div>}</div>
+   <div className="markets-list">{filtered.length ? filtered.map(a=>{const c=change(a),positive=c>=0,saved=watchlist.includes(a.symbol);return (
+    <Link href={"/trade?symbol="+encodeURIComponent(a.symbol)} className="market-row" key={a.symbol}>
+      <button type="button" className={"market-star "+(saved?"saved":"")} aria-label={saved?"Remove "+a.symbol+" from watchlist":"Add "+a.symbol+" to watchlist"} onClick={e=>{e.preventDefault();e.stopPropagation();void toggle(a.symbol)}}>{saved?"★":"☆"}</button>
+      <AssetIcon symbol={a.symbol}/><span className="market-name"><b>{a.symbol}</b><small>{a.name}</small></span>
+      <Spark positive={positive}/><span className="market-quote"><b>{money(a.price)}</b><small className={positive?"positive":"negative"}>{positive?"+":""}{c.toFixed(2)}%</small></span>
+    </Link>
+  );}) : <div className="markets-empty"><strong>No markets found</strong><span>Try another search or category.</span></div>}</div>
   </section>
 
   <p className="markets-note">Prices update automatically. Crypto prices use the platform's live market feed; other instruments use the latest available database price.</p>
