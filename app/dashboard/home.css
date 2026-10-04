@@ -110,7 +110,7 @@
   .sun-home-mover:nth-child(2) { border-top:0; }
 }
 @media (max-width:560px) {
-  .sun-home-page { padding:15px 12px 86px; }
+  .sun-home-page { padding:15px 12px 140px; }
   .sun-home-header { margin-bottom:21px; }
   .sun-home-brand small { display:none; }
   .sun-home-topline h1 { font-size:23px; }
