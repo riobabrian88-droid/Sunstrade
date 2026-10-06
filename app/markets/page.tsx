@@ -65,7 +65,9 @@ export default function MarketsPage(){
   else{const {error}=await supabase.from("user_watchlist").insert({user_id:user.id,symbol});if(!error)setWatchlist(x=>[...x,symbol])}
  }
 
- if(loading)return <main className="markets-loading"><div>S</div><p>Loading markets…</p></main>;
+ if(loading)return <main className="markets-loading">
+  <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="" href="/dashboard"><span>⌂</span>Home</Link><Link className="active" href="/markets"><span>◉</span>Markets</Link><Link className="" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
+  <div className="desktop-main"><div>S</div><p>Loading markets…</p></main>;
 
  return <main className="sun-markets-page">
   <header className="markets-header">
@@ -96,6 +98,8 @@ export default function MarketsPage(){
   </section>
 
   <p className="markets-note">Prices update automatically. Crypto prices use the platform's live market feed; other instruments use the latest available database price.</p>
+
+  </div>
 
   <nav className="sun-markets-bottom-nav" aria-label="Primary navigation"><Link href="/dashboard"><span>⌂</span><b>Home</b></Link><Link className="active" href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
