@@ -147,3 +147,12 @@
   .sun-home-bottom-nav{display:none!important}
 }
 @media (min-width:1200px){.desktop-main{padding-left:48px;padding-right:48px}}
+
+@media(min-width:900px){
+  .sun-home-page>.desktop-main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.65fr);gap:18px;align-items:start}
+  .sun-home-header,.sun-home-topline,.sun-home-equity,.sun-home-shortcuts,.sun-home-promo,.sun-home-section{width:100%;max-width:none}
+  .sun-home-header,.sun-home-topline,.sun-home-equity{grid-column:1 / -1}
+  .sun-home-shortcuts{grid-column:1}
+  .sun-home-promo{grid-column:2}
+  .sun-home-section{grid-column:1 / -1}
+}
