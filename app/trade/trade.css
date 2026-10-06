@@ -68,3 +68,53 @@
   .trade-ticket{grid-column:2;grid-row:1;align-self:start;position:sticky;top:24px}
   .trade-records{grid-column:1 / -1}
 }
+/* Final desktop Trade terminal polish */
+@media (min-width:900px){
+  .sun-trade-page>.desktop-main{padding-bottom:56px}
+  .trade-mobile-header{padding:0 2px;margin-bottom:22px}
+  .trade-heading{margin-bottom:18px}
+  .trade-heading h1{font-size:36px;line-height:1.05}
+  .trade-heading p{font-size:11px}
+  .trade-instrument{margin-bottom:14px}
+  .trade-price{padding-top:5px}
+  .trade-price b{font-size:32px}
+  .trade-main-grid{grid-template-columns:minmax(0,1fr) minmax(370px,410px);gap:22px}
+  .trade-chart-card{min-width:0;min-height:520px;border-radius:18px}
+  .trade-chart-top{padding:13px 16px 4px;font-size:8px}
+  .trade-chart-card .candle-chart{margin:0 14px}
+  .sun-trade-page .candle-timeframes{padding:12px 4px 8px}
+  .sun-trade-page .candle-indicators{padding:4px 4px 11px}
+  .sun-trade-page .candle-chart-area,.trade-chart-card .candle-chart-area{height:400px}
+  .trade-tools button{min-height:58px;font-size:14px}
+  .trade-tools span{font-size:8px}
+  .trade-ticket{margin-top:0;padding:18px;border-radius:18px;min-height:390px;box-sizing:border-box}
+  .trade-side-toggle{grid-template-columns:minmax(0,1fr) 82px minmax(0,1fr);gap:8px}
+  .trade-side-toggle>button{min-height:68px;font-size:10px}
+  .trade-side-toggle>button strong{font-size:15px}
+  .trade-side-toggle>div b{font-size:14px}
+  .trade-ticket-row{grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:14px}
+  .trade-ticket-row label{font-size:9px}
+  .trade-ticket-row input{padding:12px;font-size:14px}
+  .trade-presets{gap:5px}
+  .trade-presets button{min-width:42px;padding:9px 7px;font-size:8px}
+  .trade-summary{margin:14px 0;gap:8px;font-size:9px}
+  .trade-summary b{font-size:10px}
+  .trade-submit{padding:15px;font-size:11px}
+  .trade-demo{font-size:8px}
+  .trade-message{font-size:9px}
+  .trade-records{margin-top:22px;min-height:230px;border-radius:18px}
+  .trade-tabs button{padding:15px 8px;font-size:9px}
+  .trade-record-row{padding:14px 16px}
+  .trade-record-row b{font-size:10px}
+  .trade-record-row small{font-size:8px}
+  .trade-record-row>strong{font-size:10px}
+  .trade-empty{padding:52px;font-size:10px}
+}
+@media (min-width:1200px){
+  .trade-main-grid{grid-template-columns:minmax(0,1fr) 400px}
+  .trade-chart-card .candle-chart-area,.sun-trade-page .candle-chart-area{height:440px}
+}
+@media (min-width:1500px){
+  .trade-main-grid{grid-template-columns:minmax(0,1fr) 420px}
+  .trade-chart-card .candle-chart-area,.sun-trade-page .candle-chart-area{height:470px}
+}
