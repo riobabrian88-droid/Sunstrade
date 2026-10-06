@@ -137,10 +137,6 @@ export default function TradePage(){
   </section>
 
   </div>
-
-
-
-  </div>
   <nav className="sun-trade-bottom-nav"><Link href="/dashboard"><span>⌂</span><b>Home</b></Link><Link href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade" className="active"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
 }
