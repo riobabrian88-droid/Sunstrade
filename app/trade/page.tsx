@@ -28,7 +28,7 @@ const change=(a:Asset)=>a.change_24h??(a.prev_close&&a.price?((a.price-a.prev_cl
 function Coin({symbol}:{symbol:string}){const b=symbol.split("/")[0];return <span className={"trade-coin coin-"+b.toLowerCase()}>{icons[b]||b[0]}</span>}
 
 export default function TradePage(){
- const [assets,setAssets]=useState<Asset[]>(fallback),[selected,setSelected]=useState("BTC/USD"),[user,setUser]=useState<any>(null),[balance,setBalance]=useState(0),[positions,setPositions]=useState<Position[]>([]),[orders,setOrders]=useState<Order[]>([]),[side,setSide]=useState<"buy"|"sell">("buy"),[qty,setQty]=useState("0.01"),[tab,setTab]=useState<"positions"|"orders"|"history">("positions"),[loading,setLoading]=useState(true),[submitting,setSubmitting]=useState(false),[message,setMessage]=useState(""),[showMarkets,setShowMarkets]=useState(false);
+ const [assets,setAssets]=useState<Asset[]>(fallback),[selected,setSelected]=useState("BTC/USD"),[user,setUser]=useState<any>(null),[balance,setBalance]=useState(0),[positions,setPositions]=useState<Position[]>([]),[orders,setOrders]=useState<Order[]>([]),[side,setSide]=useState<"buy"|"sell">("buy"),[qty,setQty]=useState("0.01"),[tab,setTab]=useState<"positions"|"orders"|"history">("positions"),[loading,setLoading]=useState(true),[submitting,setSubmitting]=useState(false),[message,setMessage]=useState(""),[showMarkets,setShowMarkets]=useState(false),[chartCommand,setChartCommand]=useState<"indicators"|"draw"|"more"|null>(null),[showCompare,setShowCompare]=useState(false);
 
  const current=assets.find(a=>a.symbol===selected)||fallback[0];
  const c=change(current);
@@ -87,8 +87,8 @@ export default function TradePage(){
 
   <section className="trade-chart-card">
    <div className="trade-chart-top"><span>LIVE · BINANCE REFERENCE</span><small>{selected}</small></div>
-   <CandleChart symbol={selected}/>
-   <div className="trade-tools"><button>◈<span>Indicators</span></button><button>╱<span>Draw</span></button><button>◌<span>Compare</span></button><button>•••<span>More</span></button></div>
+   <CandleChart symbol={selected} command={chartCommand} onCommandHandled={()=>setChartCommand(null)}/>
+   <div className="trade-tools"><button onClick={()=>setChartCommand("indicators")}>◈<span>Indicators</span></button><button onClick={()=>setChartCommand("draw")}>╱<span>Draw</span></button><button onClick={()=>setShowCompare(v=>!v)}>◌<span>Compare</span></button><button onClick={()=>setChartCommand("more")}>•••<span>More</span></button></div>{showCompare&&<div className="trade-tool-panel"><strong>Compare markets</strong><div>{assets.filter(a=>a.symbol!==selected).slice(0,6).map(a=><button key={a.symbol} onClick={()=>{setSelected(a.symbol);setShowCompare(false)}}>{a.symbol}</button>)}</div></div>}{chartCommand==="indicators"&&<div className="trade-tool-panel"><strong>Indicators</strong><span>Use the indicator controls above the chart.</span></div>}{chartCommand==="more"&&<div className="trade-tool-panel"><strong>Chart tools</strong><span>Pinch/drag to inspect the chart or use Draw for trend lines.</span></div>
   </section>
 
   <section className="trade-ticket">
