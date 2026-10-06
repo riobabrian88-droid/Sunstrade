@@ -34,7 +34,9 @@ const symbols: Record<string, string> = {
   "LTC/USD": "LTCUSDT",
 };
 
-export default function CandleChart({ symbol }: { symbol: string }) {
+export type CandleChartCommand = "indicators" | "draw" | "more" | null;
+
+export default function CandleChart({ symbol, command = null, onCommandHandled }: { symbol: string; command?: CandleChartCommand; onCommandHandled?: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ReturnType<typeof createChart> | null>(null);
   const candleSeriesRef = useRef<any>(null);
@@ -53,6 +55,15 @@ export default function CandleChart({ symbol }: { symbol: string }) {
   const [error, setError] = useState("");
   const [showSma, setShowSma] = useState(false);
   const [showRsi, setShowRsi] = useState(false);
+
+  useEffect(() => {
+    if (!command) return;
+    if (command === "draw") {
+      pendingPoint.current = null;
+      setDrawingMode((value) => !value);
+    }
+    onCommandHandled?.();
+  }, [command, onCommandHandled]);
 
   const smaData = useMemo<LineData<UTCTimestamp>[]>(() => {
     const period = 20;
