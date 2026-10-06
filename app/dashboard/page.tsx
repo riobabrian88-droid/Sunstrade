@@ -117,10 +117,6 @@ export default function DashboardPage(){
   </section>
 
   </div>
-
-
-
-  </div>
   <nav className="sun-home-bottom-nav" aria-label="Primary navigation"><Link className="active" href="/dashboard"><span>⌂</span><b>Home</b></Link><Link href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
 }
