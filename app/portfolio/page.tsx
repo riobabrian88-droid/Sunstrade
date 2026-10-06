@@ -25,10 +25,6 @@ export default function PortfolioPage(){
   <section className="portfolio-card"><div className="portfolio-card-head"><div><span>ASSET ALLOCATION</span><h2>Where your equity is</h2></div></div><div className="allocation-row"><span><i className="dot crypto"/>Positions</span><b>{equity?((market/equity)*100).toFixed(1):"0"}%</b><div><i style={{width:`${equity?Math.min(100,market/equity*100):0}%`}}/></div></div><div className="allocation-row"><span><i className="dot cash"/>Cash</span><b>{equity?((balance/equity)*100).toFixed(1):"100"}%</b><div><i style={{width:`${equity?Math.min(100,balance/equity*100):100}%`}}/></div></div></section>
   <section className="portfolio-card"><div className="portfolio-tabs"><button className={tab==="positions"?"active":""} onClick={()=>setTab("positions")}>Positions <b>{positions.length}</b></button><button className={tab==="orders"?"active":""} onClick={()=>setTab("orders")}>Orders <b>{orders.length}</b></button><button className={tab==="history"?"active":""} onClick={()=>setTab("history")}>History <b>{orders.filter(o=>o.status==="filled").length}</b></button></div>{tab==="positions"?<div className="portfolio-list-note">Live positions are calculated from your simulated account and current market reference prices.</div>:<div>{orders.filter(o=>tab==="orders"?o.status!=="filled":o.status==="filled").slice(0,12).map((o,i)=><div className="portfolio-order" key={i}><span><b>{o.side.toUpperCase()} {o.symbol}</b><small>{o.qty} units · {o.status}</small></span><em>{o.filled_price?money(Number(o.filled_price)*Number(o.qty)):"Pending"}<small>{new Date(o.filled_at||o.created_at).toLocaleDateString()}</small></em></div>)}</div>}</section>
   </div>
-
-
-
-  </div>
   <nav className="portfolio-nav"><Link href="/dashboard"><span>⌂</span><b>Home</b></Link><Link href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade"><span>↗</span><b>Trade</b></Link><Link className="active" href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
 }
