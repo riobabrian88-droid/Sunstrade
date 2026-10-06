@@ -96,7 +96,7 @@ export default function DashboardPage(){
 
   <section className="sun-home-shortcuts">
    <Link href="/markets"><i className="violet">☆</i><b>Watchlist</b><small>Track assets</small></Link>
-   <Link href="/alerts"><i className="amber">♧</i><b>Alerts</b><small>Price levels</small></Link>
+   <Link href="/dashboard"><i className="amber">♧</i><b>Alerts</b><small>Price levels</small></Link>
    <Link href="/portfolio"><i className="blue">▤</i><b>Portfolio</b><small>Positions</small></Link>
    <Link href="/wallet"><i className="green">▣</i><b>Wallet</b><small>Funds</small></Link>
   </section>
