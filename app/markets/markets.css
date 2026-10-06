@@ -37,3 +37,12 @@
 @media (min-width:1200px){
   .desktop-main{padding-left:48px;padding-right:48px}
 }
+
+@media(min-width:900px){
+  .markets-header,.markets-intro,.markets-search,.markets-categories,.markets-watch-card,.markets-watch-strip,.markets-list-card,.markets-note{width:100%;max-width:none}
+  .markets-header{margin-bottom:28px}
+  .markets-intro h1{font-size:32px}
+  .markets-search{max-width:none}
+  .markets-list-card{padding:20px}
+  .market-row{min-height:72px}
+}
