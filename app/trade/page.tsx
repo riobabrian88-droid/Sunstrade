@@ -87,6 +87,7 @@ export default function TradePage(){
 
   {showMarkets&&<div className="trade-market-menu">{assets.map(a=><button key={a.symbol} className={a.symbol===selected?"active":""} onClick={()=>{setSelected(a.symbol);setShowMarkets(false)}}><Coin symbol={a.symbol}/><span><b>{a.symbol}</b><small>{a.name}</small></span><strong>{price(a.price)}</strong></button>)}</div>}
 
+  <div className="trade-main-grid">
   <section className="trade-chart-card">
    <div className="trade-chart-top"><span>LIVE · BINANCE REFERENCE</span><small>{selected}</small></div>
    <CandleChart symbol={selected} command={chartCommand} onCommandHandled={()=>setChartCommand(null)}/>
@@ -128,6 +129,8 @@ export default function TradePage(){
    <p className="trade-demo">Paper trading · Orders use SunStrade's simulated account and current market reference price.</p>
    {message&&<div className="trade-message">{message}</div>}
   </section>
+
+  </div>
 
   <section className="trade-records">
    <div className="trade-tabs">{([["positions","Positions",positions.length],["orders","Orders",orders.filter(o=>o.status!=="filled").length],["history","History",orders.filter(o=>o.status==="filled").length]] as const).map(([key,label,count])=><button key={key} className={tab===key?"active":""} onClick={()=>setTab(key)}>{label}<b>{count}</b></button>)}</div>
