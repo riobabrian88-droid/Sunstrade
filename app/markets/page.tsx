@@ -70,7 +70,7 @@ export default function MarketsPage(){
  return <main className="sun-markets-page">
   <header className="markets-header">
    <Link href="/dashboard" className="markets-brand"><span className="markets-brand-mark">↗</span><strong>Markets</strong></Link>
-   <div className="markets-header-actions"><span className="markets-live"><i/> {status}</span><Link href={user?"/profile":"/login"} className="markets-avatar">{user?"S":"↪"}</Link></div>
+   <div className="markets-header-actions"><span className="markets-live"><i/> {status}</span><Link href={user?"/profile":"/login"} className="markets-avatar">{user?((user.user_metadata?.full_name||user.email||"S")[0]?.toUpperCase()||"S"):"↪"}</Link></div>
   </header>
 
   <section className="markets-intro"><span>DISCOVER THE MARKET</span><h1>Markets</h1><p>Track the assets you care about and move quickly when the market changes.</p></section>
