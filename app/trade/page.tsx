@@ -88,7 +88,34 @@ export default function TradePage(){
   <section className="trade-chart-card">
    <div className="trade-chart-top"><span>LIVE · BINANCE REFERENCE</span><small>{selected}</small></div>
    <CandleChart symbol={selected} command={chartCommand} onCommandHandled={()=>setChartCommand(null)}/>
-   <div className="trade-tools"><button onClick={()=>setChartCommand("indicators")}>◈<span>Indicators</span></button><button onClick={()=>setChartCommand("draw")}>╱<span>Draw</span></button><button onClick={()=>setShowCompare(v=>!v)}>◌<span>Compare</span></button><button onClick={()=>setChartCommand("more")}>•••<span>More</span></button></div>{showCompare&&<div className="trade-tool-panel"><strong>Compare markets</strong><div>{assets.filter(a=>a.symbol!==selected).slice(0,6).map(a=><button key={a.symbol} onClick={()=>{setSelected(a.symbol);setShowCompare(false)}}>{a.symbol}</button>)}</div></div>}{chartCommand==="indicators"&&<div className="trade-tool-panel"><strong>Indicators</strong><span>Use the indicator controls above the chart.</span></div>}{chartCommand==="more"&&<div className="trade-tool-panel"><strong>Chart tools</strong><span>Pinch/drag to inspect the chart or use Draw for trend lines.</span></div>
+   <div className="trade-tools">
+    <button onClick={() => setChartCommand("indicators")}>◈<span>Indicators</span></button>
+    <button onClick={() => setChartCommand("draw")}>╱<span>Draw</span></button>
+    <button onClick={() => setShowCompare(v => !v)}>◌<span>Compare</span></button>
+    <button onClick={() => setChartCommand("more")}>•••<span>More</span></button>
+   </div>
+   {showCompare && (
+    <div className="trade-tool-panel">
+     <strong>Compare markets</strong>
+     <div>
+      {assets.filter(a => a.symbol !== selected).slice(0, 6).map(a => (
+       <button key={a.symbol} onClick={() => { setSelected(a.symbol); setShowCompare(false); }}>{a.symbol}</button>
+      ))}
+     </div>
+    </div>
+   )}
+   {chartCommand === "indicators" && (
+    <div className="trade-tool-panel">
+     <strong>Indicators</strong>
+     <span>Use the indicator controls above the chart.</span>
+    </div>
+   )}
+   {chartCommand === "more" && (
+    <div className="trade-tool-panel">
+     <strong>Chart tools</strong>
+     <span>Pinch/drag to inspect the chart or use Draw for trend lines.</span>
+    </div>
+   )}
   </section>
 
   <section className="trade-ticket">
