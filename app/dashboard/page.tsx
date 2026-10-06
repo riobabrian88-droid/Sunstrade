@@ -77,11 +77,11 @@ export default function DashboardPage(){
  const name=profile?.full_name||profile?.username||user?.user_metadata?.full_name||user?.email?.split("@")[0]||"Trader";
  const first=name.split(" ")[0];
 
- if(loading)return <main className="home-loading">
-  <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="active" href="/dashboard"><span>⌂</span>Home</Link><Link className="" href="/markets"><span>◉</span>Markets</Link><Link className="" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
-  <div className="desktop-main"><div>S</div><p>Loading your trading space…</p></main>;
+ if(loading)return <main className="home-loading"><div>S</div><p>Loading your trading space…</p></main>;
 
  return <main className="sun-home-page">
+  <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="active" href="/dashboard"><span>⌂</span>Home</Link><Link className="" href="/markets"><span>◉</span>Markets</Link><Link className="" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
+  <div className="desktop-main">
   <header className="sun-home-header">
    <Link href="/dashboard" className="sun-home-brand"><span className="sun-home-brand-mark"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M5 29V18l7-5v8l8-12 5 4 10-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/><path d="M26 4h9v9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></span><span><strong>SunStrade</strong><small>Read the candles, not the noise.</small></span></Link>
    <div className="sun-home-header-actions"><button className="sun-home-icon-btn" type="button" aria-label="Notifications">♧{unread>0&&<span>{unread>9?"9+":unread}</span>}</button><Link href="/profile" className="sun-home-profile">{first[0]?.toUpperCase()}</Link></div>
@@ -118,6 +118,9 @@ export default function DashboardPage(){
 
   </div>
 
+
+
+  </div>
   <nav className="sun-home-bottom-nav" aria-label="Primary navigation"><Link className="active" href="/dashboard"><span>⌂</span><b>Home</b></Link><Link href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
 }
