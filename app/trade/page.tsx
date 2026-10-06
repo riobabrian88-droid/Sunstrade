@@ -70,7 +70,9 @@ export default function TradePage(){
   setSubmitting(false);
  };
 
- if(loading)return <main className="trade-loading"><div>S</div><p>Loading Trade…</p></main>;
+ if(loading)return <main className="trade-loading">
+  <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="" href="/dashboard"><span>⌂</span>Home</Link><Link className="" href="/markets"><span>◉</span>Markets</Link><Link className="active" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
+  <div className="desktop-main"><div>S</div><p>Loading Trade…</p></main>;
 
  return <main className="sun-trade-page">
   <header className="trade-mobile-header"><Link href="/dashboard" className="trade-back">‹</Link><div><span>TRADE</span><strong>SunStrade</strong></div><Link href="/profile" className="trade-profile">{((user?.user_metadata?.full_name||user?.email||"S")[0]?.toUpperCase()||"S")}</Link></header>
@@ -133,6 +135,8 @@ export default function TradePage(){
    {tab==="orders"&&(orders.filter(o=>o.status!=="filled").length?<div className="trade-record-list">{orders.filter(o=>o.status!=="filled").map((o,i)=><div className="trade-record-row" key={o.id||i}><Coin symbol={o.symbol}/><span><b>{o.side.toUpperCase()} · {o.symbol}</b><small>{o.qty} lots · {o.status}</small></span><strong>{price(Number(o.filled_price||0))}</strong></div>)}</div>:<div className="trade-empty">No active orders.</div>)}
    {tab==="history"&&(orders.filter(o=>o.status==="filled").length?<div className="trade-record-list">{orders.filter(o=>o.status==="filled").slice(0,10).map((o,i)=><div className="trade-record-row" key={o.id||i}><Coin symbol={o.symbol}/><span><b>{o.side.toUpperCase()} · {o.symbol}</b><small>{new Date(o.filled_at||o.created_at).toLocaleString()}</small></span><strong className={o.side==="buy"?"positive":"negative"}>{o.side==="buy"?"+":"−"} {price(Number(o.filled_price||0))}</strong></div>)}</div>:<div className="trade-empty">No completed trades yet.</div>)}
   </section>
+
+  </div>
 
   <nav className="sun-trade-bottom-nav"><Link href="/dashboard"><span>⌂</span><b>Home</b></Link><Link href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade" className="active"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
