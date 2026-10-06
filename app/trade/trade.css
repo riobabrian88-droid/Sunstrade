@@ -27,3 +27,5 @@
  .sun-trade-page .candle-timeframes button{min-width:38px}
  .sun-trade-page .candle-indicators button{min-height:28px}
 }
+
+.trade-tool-panel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 11px;border-top:1px solid var(--tborder);background:#0a131d;color:#8295a5;font-size:8px}.trade-tool-panel strong{color:#dbe5ea;font-size:8px}.trade-tool-panel>div{display:flex;gap:5px;flex-wrap:wrap}.trade-tool-panel button{padding:5px 8px;border:1px solid #2b4050;border-radius:7px;background:#12202c;color:#91dcb7;font-size:8px}.trade-tools button:active{background:#16372c;color:#8ce5b7;transform:scale(.97)}
