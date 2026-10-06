@@ -58,3 +58,26 @@
   .sun-more-page{padding-left:310px;padding-right:60px}
   .more-main{max-width:1260px}
 }
+
+/* Strong desktop breakpoint: use the full laptop viewport */
+@media (min-width:700px){
+  .sun-more-page{max-width:none !important;width:100% !important;margin:0 !important;min-height:100vh;box-sizing:border-box;padding:30px 40px 40px 285px !important;display:block}
+  .more-sidebar{display:flex !important;position:fixed;left:20px;top:20px;bottom:20px;width:235px;z-index:50;box-sizing:border-box;flex-direction:column;padding:24px 15px;border:1px solid #29404e;border-radius:22px;background:#0b1622;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+  .more-main{width:100% !important;max-width:1240px !important;margin:0 auto !important}
+  .more-header,.more-profile,.more-pro,.more-section,.more-trust{width:100% !important;max-width:none !important;margin-left:0 !important;margin-right:0 !important}
+  .more-header{padding:0 0 18px;margin-bottom:18px}
+  .more-profile{margin-bottom:16px}
+  .more-pro{min-height:180px;margin-bottom:18px}
+  .more-desktop-columns{display:grid}
+  .more-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .more-nav{display:none !important}
+}
+@media (min-width:1000px){
+  .more-main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start}
+  .more-header{grid-column:1 / -1}
+  .more-profile{grid-column:1 / -1}
+  .more-pro{grid-column:1 / -1}
+  .more-section:nth-of-type(3){grid-column:1}
+  .more-section:nth-of-type(4){grid-column:2}
+  .more-trust{grid-column:1 / -1}
+}
