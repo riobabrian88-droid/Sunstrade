@@ -63,8 +63,8 @@
 @media(min-width:900px){
   .trade-mobile-header,.trade-heading,.trade-instrument,.trade-chart-card,.trade-ticket,.trade-records,.trade-market-menu{width:100%;max-width:none}
   .trade-heading h1{font-size:32px}
-  .trade-main-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(340px,.7fr);gap:18px;align-items:start}
-  .trade-chart-card{grid-column:1}
-  .trade-ticket{grid-column:2;grid-row:2}
+  .trade-main-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(340px,.72fr);gap:18px;align-items:start}
+  .trade-chart-card{grid-column:1;grid-row:1}
+  .trade-ticket{grid-column:2;grid-row:1;align-self:start;position:sticky;top:24px}
   .trade-records{grid-column:1 / -1}
 }
