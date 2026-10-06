@@ -100,10 +100,6 @@ export default function MarketsPage(){
   <p className="markets-note">Prices update automatically. Crypto prices use the platform's live market feed; other instruments use the latest available database price.</p>
 
   </div>
-
-
-
-  </div>
   <nav className="sun-markets-bottom-nav" aria-label="Primary navigation"><Link href="/dashboard"><span>⌂</span><b>Home</b></Link><Link className="active" href="/markets"><span>◉</span><b>Markets</b></Link><Link href="/trade"><span>↗</span><b>Trade</b></Link><Link href="/portfolio"><span>▤</span><b>Portfolio</b></Link><Link href="/more"><span>☰</span><b>More</b></Link></nav>
  </main>;
 }
