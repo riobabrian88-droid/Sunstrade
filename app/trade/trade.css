@@ -29,3 +29,9 @@
 }
 
 .trade-tool-panel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 11px;border-top:1px solid var(--tborder);background:#0a131d;color:#8295a5;font-size:8px}.trade-tool-panel strong{color:#dbe5ea;font-size:8px}.trade-tool-panel>div{display:flex;gap:5px;flex-wrap:wrap}.trade-tool-panel button{padding:5px 8px;border:1px solid #2b4050;border-radius:7px;background:#12202c;color:#91dcb7;font-size:8px}.trade-tools button:active{background:#16372c;color:#8ce5b7;transform:scale(.97)}
+
+/* SunStrade shared visual system */
+.sun-trade-page{background:radial-gradient(circle at 88% -5%,rgba(55,196,138,.12),transparent 28%),#0b111a}
+.sun-trade-bottom-nav{height:58px;box-sizing:border-box;padding:5px;border-radius:17px;background:rgba(14,23,35,.94);border:1px solid #2b3b4b}
+.sun-trade-bottom-nav a{min-height:46px;border-radius:11px}
+@media(min-width:900px){.sun-trade-page{padding-top:24px}}
