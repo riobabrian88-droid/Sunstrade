@@ -73,7 +73,7 @@ export default function TradePage(){
  if(loading)return <main className="trade-loading"><div>S</div><p>Loading Trade…</p></main>;
 
  return <main className="sun-trade-page">
-  <header className="trade-mobile-header"><Link href="/dashboard" className="trade-back">‹</Link><div><span>TRADE</span><strong>SunStrade</strong></div><Link href="/profile" className="trade-profile">S</Link></header>
+  <header className="trade-mobile-header"><Link href="/dashboard" className="trade-back">‹</Link><div><span>TRADE</span><strong>SunStrade</strong></div><Link href="/profile" className="trade-profile">{((user?.user_metadata?.full_name||user?.email||"S")[0]?.toUpperCase()||"S")}</Link></header>
 
   <section className="trade-heading"><div><span>EXECUTION DESK</span><h1>Trade</h1><p>Execute paper trades with live market pricing.</p></div><button className="trade-settings" onClick={()=>setShowMarkets(v=>!v)} aria-label="Choose market">☷</button></section>
 
