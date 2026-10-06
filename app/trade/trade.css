@@ -59,3 +59,12 @@
 @media (min-width:1200px){
   .desktop-main{padding-left:48px;padding-right:48px}
 }
+
+@media(min-width:900px){
+  .trade-mobile-header,.trade-heading,.trade-instrument,.trade-chart-card,.trade-ticket,.trade-records,.trade-market-menu{width:100%;max-width:none}
+  .trade-heading h1{font-size:32px}
+  .trade-main-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(340px,.7fr);gap:18px;align-items:start}
+  .trade-chart-card{grid-column:1}
+  .trade-ticket{grid-column:2;grid-row:2}
+  .trade-records{grid-column:1 / -1}
+}
