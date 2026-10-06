@@ -10,6 +10,8 @@ export default function MorePage(){
  if(loading)return <main className="more-loading"><div>S</div><p>Loading SunStrade…</p></main>;
  const initial=name.charAt(0).toUpperCase();
  return <main className="sun-more-page">
+  <aside className="more-sidebar"><div className="more-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="active" href="/more"><span>☰</span>More</Link><Link href="/dashboard"><span>⌂</span>Home</Link><Link href="/markets"><span>◉</span>Markets</Link><Link href="/trade"><span>↗</span>Trade</Link><Link href="/portfolio"><span>▤</span>Portfolio</Link><Link href="/wallet"><span>▣</span>Wallet</Link></nav><div className="more-sidebar-footer"><span>●</span> Markets live</div></aside>
+  <div className="more-main">
   <header className="more-header"><div><span>ACCOUNT</span><h1>More</h1></div><div className="more-header-actions"><Link href="/profile">◉</Link><Link href="/settings">⚙</Link></div></header>
   <section className="more-profile"><div className="more-avatar">{initial}</div><div className="more-profile-copy"><strong>{name}</strong><small>{user?.email}</small><span>{verified?"✓ Verified account":"Verify your email"}</span></div><Link href="/profile">›</Link></section>
   <section className="more-pro"><div><span>SUNSTRADE PRO</span><h2>Unlock more trading power.</h2><p>Advanced tools, lower fees and exclusive benefits as the platform grows.</p><button type="button">Upgrade Now</button></div><div className="more-pro-art">♛</div></section>
