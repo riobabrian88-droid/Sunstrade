@@ -31,3 +31,16 @@
 @media (min-width:1200px){
   .desktop-main{padding-left:48px;padding-right:48px}
 }
+
+@media(min-width:900px){
+  .portfolio-header,.portfolio-hero,.portfolio-stats,.portfolio-card{width:100%;max-width:none}
+  .portfolio-header{grid-template-columns:44px 1fr 44px;text-align:left}
+  .portfolio-header>div{text-align:left}
+  .portfolio-hero>strong{font-size:46px}
+  .portfolio-stats{grid-template-columns:repeat(4,1fr)}
+  .sun-portfolio-page>.desktop-main{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(360px,.8fr);gap:18px}
+  .portfolio-header,.portfolio-hero,.portfolio-stats{grid-column:1 / -1}
+  .portfolio-card:nth-of-type(1){grid-column:1}
+  .portfolio-card:nth-of-type(2){grid-column:2}
+  .portfolio-card:nth-of-type(3){grid-column:1 / -1}
+}
