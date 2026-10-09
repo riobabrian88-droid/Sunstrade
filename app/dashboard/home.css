@@ -201,3 +201,16 @@
   .sun-home-shortcuts a{min-height:100px}
   .sun-home-promo{min-height:145px}
 }
+
+
+/* Global visual refinement — dashboard */
+.sun-home-page{background-color:#080f17;background-image:radial-gradient(ellipse at 82% 0%,rgba(55,196,138,.13),transparent 32%),radial-gradient(ellipse at 4% 35%,rgba(73,108,170,.07),transparent 28%);background-attachment:scroll}
+.sun-home-equity,.sun-home-section,.sun-home-portfolio-card,.sun-home-promo{box-shadow:0 14px 38px rgba(0,0,0,.14);transition:border-color .18s ease,transform .18s ease}
+.sun-home-section,.sun-home-portfolio-card{border-color:#263746}
+.sun-home-equity{border-color:#315044}
+.sun-home-shortcuts a:focus-visible,.sun-home-header a:focus-visible,.sun-home-section a:focus-visible{outline:2px solid #63d9a2;outline-offset:3px}
+.sun-home-mover:hover{background:rgba(255,255,255,.015)}
+.sun-home-bottom-nav{bottom:max(8px,env(safe-area-inset-bottom,0px))}
+@media(min-width:900px){.sun-home-page{padding-top:28px}.sun-home-header{margin-bottom:30px}.sun-home-topline h1{font-size:30px}.sun-home-equity,.sun-home-section,.sun-home-portfolio-card{border-radius:20px}.sun-home-section{padding:20px}.sun-home-shortcuts{gap:12px}.sun-home-shortcuts a{padding:16px 10px}}
+@media(max-width:560px){.sun-home-page{padding-left:12px;padding-right:12px;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}.sun-home-equity{padding:15px}.sun-home-equity>strong{font-size:clamp(25px,7vw,30px)}.sun-home-shortcuts{gap:6px}.sun-home-shortcuts a{padding:10px 4px}.sun-home-promo{padding:13px}.sun-home-section{padding:13px}}
+@media(prefers-reduced-motion:reduce){.sun-home-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
