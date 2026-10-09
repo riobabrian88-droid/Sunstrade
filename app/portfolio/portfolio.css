@@ -56,3 +56,12 @@
 @media(min-width:900px){.sun-portfolio-page{padding-top:28px}.portfolio-hero,.portfolio-card{border-radius:21px}.portfolio-card{padding:22px}.portfolio-header h1{font-size:30px}}
 @media(max-width:560px){.sun-portfolio-page{padding-left:12px;padding-right:12px;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}.portfolio-hero{padding:17px}.portfolio-hero>strong{font-size:clamp(28px,8vw,39px)}.portfolio-card{padding:14px}}
 @media(prefers-reduced-motion:reduce){.sun-portfolio-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Final consistency pass — portfolio */
+.sun-portfolio-page a,.sun-portfolio-page button{-webkit-tap-highlight-color:transparent}
+.sun-portfolio-page a:focus-visible,.sun-portfolio-page button:focus-visible{outline:2px solid #65dda7;outline-offset:3px}
+.portfolio-hero,.portfolio-card,.portfolio-stats>div{box-shadow:0 12px 30px rgba(0,0,0,.12);transition:border-color .16s ease}
+.portfolio-card:hover{border-color:#344c5b}
+@media(min-width:900px){.sun-portfolio-page{padding-top:26px}.portfolio-hero,.portfolio-card{border-radius:18px}.portfolio-stats>div{border-radius:14px}}
+@media(max-width:560px){.sun-portfolio-page{padding-left:12px;padding-right:12px}.portfolio-hero{padding:17px;border-radius:16px}.portfolio-hero>strong{font-size:clamp(28px,8vw,39px)}.portfolio-card{padding:14px;border-radius:15px}.portfolio-stats{gap:8px}.portfolio-stats div{padding:12px}}
+@media(prefers-reduced-motion:reduce){.sun-portfolio-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
