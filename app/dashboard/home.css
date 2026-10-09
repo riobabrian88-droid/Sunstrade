@@ -156,3 +156,48 @@
   .sun-home-promo{grid-column:2}
   .sun-home-section{grid-column:1 / -1}
 }
+/* Home desktop finish — balance the dashboard like the SunStrade master design */
+@media (min-width:900px){
+  .sun-home-page{padding-top:28px}
+  .sun-home-header{max-width:none;margin-bottom:8px;padding:0 2px}
+  .sun-home-topline{margin-bottom:2px;padding:4px 2px 8px}
+  .sun-home-topline h1{font-size:32px;letter-spacing:-1px}
+  .sun-home-topline p{font-size:11px;max-width:650px}
+  .sun-home-equity{grid-column:1!important;grid-row:3;padding:24px;border-radius:20px;min-height:225px;box-sizing:border-box}
+  .sun-home-equity>strong{font-size:38px;margin:17px 0}
+  .sun-home-equity-actions a:first-child{background:#172632;border:1px solid #2c3d4b;color:#d8e6ed}
+  .sun-home-equity-actions a:last-child{background:linear-gradient(105deg,#159a67,#31ca8f);color:#05251a}
+  .sun-home-shortcuts{grid-column:2!important;grid-row:3;align-self:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0}
+  .sun-home-shortcuts a{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:94px;padding:15px;border-radius:15px;text-align:left;background:linear-gradient(145deg,#141f2c,#101923)}
+  .sun-home-shortcuts i{display:grid;place-items:center;width:34px;height:34px;margin-bottom:9px;border-radius:10px;font-style:normal;font-size:18px}
+  .sun-home-shortcuts .violet{background:#292244;color:#c0a9ff}
+  .sun-home-shortcuts .amber{background:#3d311e;color:#f0c46b}
+  .sun-home-shortcuts .blue{background:#1d3049;color:#83b9ff}
+  .sun-home-shortcuts .green{background:#17372d;color:#7fe1b0}
+  .sun-home-shortcuts b{font-size:10px}
+  .sun-home-shortcuts small{font-size:8px}
+  .sun-home-promo{grid-column:1/-1;grid-row:4;min-height:130px;margin:0;padding:23px 26px;border-radius:18px;background:radial-gradient(circle at 90% 20%,rgba(91,81,203,.35),transparent 34%),linear-gradient(110deg,#172e37,#1b1c3c 72%,#281747);border-color:#34385b}
+  .sun-home-promo h2{font-size:22px}
+  .sun-home-promo p{font-size:10px;max-width:620px}
+  .sun-home-promo>b{display:grid;place-items:center;width:76px;height:76px;flex:none;border-radius:22px;background:linear-gradient(145deg,#40306b,#1c4939);color:#b8f4d6;font-size:36px;box-shadow:0 12px 35px rgba(0,0,0,.25)}
+  .sun-home-section{margin:0;max-width:none;padding:20px;border-radius:18px}
+  .sun-home-section-head h2{font-size:20px}
+  .sun-home-section-head span:first-child{font-size:9px}
+  .sun-home-section-head a{font-size:10px}
+  .sun-home-movers{grid-template-columns:1fr;column-gap:0}
+  .sun-home-mover:nth-child(2){border-top:1px solid #223141}
+  .sun-home-mover{min-height:68px;padding:11px 2px}
+  .sun-home-mover-copy b,.sun-home-mover-quote b{font-size:11px}
+  .sun-home-mover-copy small,.sun-home-mover-quote small{font-size:9px}
+  .sun-home-portfolio-card{grid-column:2!important;grid-row:5;align-self:stretch}
+  .sun-home-section:not(.sun-home-portfolio-card){grid-column:1!important;grid-row:5}
+  .sun-home-portfolio-main{padding:18px}
+  .sun-home-portfolio-main strong{font-size:27px}
+  .sun-home-portfolio-foot{flex-direction:column;align-items:flex-start;font-size:9px}
+}
+@media(min-width:1200px){
+  .sun-home-page>.desktop-main{grid-template-columns:minmax(0,1.25fr) minmax(360px,.75fr);gap:20px}
+  .sun-home-equity{min-height:240px}
+  .sun-home-shortcuts a{min-height:100px}
+  .sun-home-promo{min-height:145px}
+}
