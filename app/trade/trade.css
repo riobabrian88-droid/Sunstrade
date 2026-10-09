@@ -329,3 +329,61 @@
 @media(min-width:900px){.sun-trade-page{padding-top:26px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:18px}.sun-trade-page .candle-chart-area{height:340px}}
 @media(max-width:560px){.sun-trade-page{padding-left:12px;padding-right:12px}.trade-heading h1{font-size:25px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:14px}.trade-ticket{padding:9px}.trade-side-toggle>button{min-height:48px}}
 @media(prefers-reduced-motion:reduce){.sun-trade-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Fix narrow-screen chart overflow: keep every plot inside the trade workspace */
+.sun-trade-page,
+.sun-trade-page > .desktop-main,
+.sun-trade-page .trade-main-grid,
+.sun-trade-page .trade-chart-card,
+.sun-trade-page .candle-chart,
+.sun-trade-page .candle-subchart {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.sun-trade-page .trade-chart-card {
+  overflow: hidden;
+}
+.sun-trade-page .candle-oscillator {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 104px;
+  box-sizing: border-box;
+}
+.sun-trade-page .candle-volume-area {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.sun-trade-page .candle-chart-area {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+@media (max-width: 899px) {
+  .sun-trade-page .trade-main-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .sun-trade-page .trade-chart-card,
+  .sun-trade-page .trade-ticket,
+  .sun-trade-page .trade-records {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .sun-trade-page .candle-oscillator {
+    height: 92px;
+  }
+  .sun-trade-page .candle-subchart {
+    overflow: hidden;
+  }
+}
