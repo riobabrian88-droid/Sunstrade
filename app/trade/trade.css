@@ -319,3 +319,13 @@
 @media(min-width:900px){.sun-trade-page{padding-top:28px}.trade-heading h1{font-size:32px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:20px}.trade-ticket{padding:16px}.trade-chart-card .candle-chart-area{height:340px}}
 @media(max-width:560px){.sun-trade-page{padding-left:12px;padding-right:12px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:15px}}
 @media(prefers-reduced-motion:reduce){.sun-trade-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Final consistency pass — trade workspace */
+.sun-trade-page a,.sun-trade-page button{-webkit-tap-highlight-color:transparent}
+.sun-trade-page a:focus-visible,.sun-trade-page button:focus-visible,.sun-trade-page input:focus-visible{outline:2px solid #65dda7;outline-offset:3px}
+.trade-chart-card,.trade-ticket,.trade-records{box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.trade-selector,.trade-star,.trade-settings,.trade-ticket-row input,.trade-presets button,.trade-side-toggle>button{transition:border-color .16s ease,background .16s ease}
+.trade-ticket-row input:focus-visible{border-color:#48c991}
+@media(min-width:900px){.sun-trade-page{padding-top:26px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:18px}.sun-trade-page .candle-chart-area{height:340px}}
+@media(max-width:560px){.sun-trade-page{padding-left:12px;padding-right:12px}.trade-heading h1{font-size:25px}.trade-chart-card,.trade-ticket,.trade-records{border-radius:14px}.trade-ticket{padding:9px}.trade-side-toggle>button{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.sun-trade-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
