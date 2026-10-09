@@ -60,6 +60,49 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
   const [showSma, setShowSma] = useState(false);
   const [showRsi, setShowRsi] = useState(false);
 
+
+  const oscillatorGraphs = useMemo(() => {
+    const closes = candles.map((item) => item.close);
+    const ema = (values: number[], period: number) => {
+      if (!values.length) return [];
+      const alpha = 2 / (period + 1);
+      const result = [values[0]];
+      for (let i = 1; i < values.length; i += 1) result.push(values[i] * alpha + result[i - 1] * (1 - alpha));
+      return result;
+    };
+    const fast = ema(closes, 12);
+    const slow = ema(closes, 26);
+    const line = fast.map((value, i) => value - (slow[i] ?? value));
+    const signal = ema(line, 9);
+    const changes = closes.slice(1).map((value, i) => value - closes[i]);
+    let gain = 0, loss = 0;
+    for (const change of changes.slice(0, 14)) { gain += Math.max(change, 0); loss += Math.max(-change, 0); }
+    let avgGain = gain / 14, avgLoss = loss / 14;
+    const rsiValues: number[] = [];
+    if (changes.length >= 14) {
+      rsiValues.push(avgLoss === 0 ? 100 : 100 - 100 / (1 + avgGain / avgLoss));
+      for (const change of changes.slice(14)) {
+        avgGain = (avgGain * 13 + Math.max(change, 0)) / 14;
+        avgLoss = (avgLoss * 13 + Math.max(-change, 0)) / 14;
+        rsiValues.push(avgLoss === 0 ? 100 : 100 - 100 / (1 + avgGain / avgLoss));
+      }
+    }
+    const points = (values: number[], min: number, max: number) => values.map((value, i) => {
+      const x = values.length < 2 ? 0 : i / (values.length - 1) * 1000;
+      const y = 180 - ((value - min) / (max - min || 1)) * 160;
+      return x.toFixed(1) + "," + Math.max(8, Math.min(172, y)).toFixed(1);
+    }).join(" ");
+    const macdMax = Math.max(0.000001, ...line.map(Math.abs), ...signal.map(Math.abs));
+    const hist = line.map((value, i) => value - (signal[i] ?? value));
+    const histMax = Math.max(0.000001, ...hist.map(Math.abs));
+    return {
+      rsiPoints: points(rsiValues, 0, 100),
+      macdPoints: points(line, -macdMax, macdMax),
+      signalPoints: points(signal, -macdMax, macdMax),
+      histogram: hist.map((value, i) => ({ value, x: hist.length < 2 ? 0 : i / (hist.length - 1) * 1000, height: Math.max(1, Math.abs(value) / histMax * 70) })),
+    };
+  }, [candles]);
+
   useEffect(() => {
     if (!command) return;
     if (command === "draw") {
@@ -325,14 +368,8 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
       <div className="candle-subchart-heading"><strong>Volume</strong><span>Traded volume per candle</span></div>
       <div className="candle-volume-area" ref={volumeContainerRef} />
       {drawingMode && <div className="candle-message">Trend line: tap two points on the chart to draw a line.</div>}
-      {showMacd && <div className="rsi-panel"><span>MACD (12, 26, 9)</span><strong>{macd ? macd.value.toFixed(4) : "Calculating…"}</strong><span>Signal: {macd ? macd.signal.toFixed(4) : "—"}</span><span>Histogram: {macd ? macd.histogram.toFixed(4) : "—"}</span></div>}
-      {showRsi && (
-        <div className="rsi-panel">
-          <span>RSI (14)</span>
-          <strong className={rsi !== null && rsi >= 70 ? "negative" : rsi !== null && rsi <= 30 ? "positive" : ""}>{rsi === null ? "Calculating…" : rsi.toFixed(2)}</strong>
-          <small>Above 70: overbought · Below 30: oversold</small>
-        </div>
-      )}
+      {showMacd && <section className="candle-subchart"><div className="candle-subchart-heading"><strong>MACD (12, 26, 9)</strong><span>Momentum · green positive / red negative</span></div><svg className="candle-oscillator" viewBox="0 0 1000 180" preserveAspectRatio="none" role="img" aria-label="MACD line, signal line and histogram"><line x1="0" y1="90" x2="1000" y2="90" stroke="#394655" strokeDasharray="5 5" />{oscillatorGraphs.histogram.map((bar, i) => <rect key={i} x={bar.x} y={bar.value >= 0 ? 90 - bar.height : 90} width={Math.max(1, 1000 / oscillatorGraphs.histogram.length)} height={bar.height} fill={bar.value >= 0 ? "#39b982" : "#e36d6d"} opacity=".65" />)}<polyline points={oscillatorGraphs.macdPoints} fill="none" stroke="#60a5fa" strokeWidth="2" vectorEffect="non-scaling-stroke" /><polyline points={oscillatorGraphs.signalPoints} fill="none" stroke="#e6b75d" strokeWidth="2" vectorEffect="non-scaling-stroke" /></svg></section>}
+      {showRsi && <section className="candle-subchart"><div className="candle-subchart-heading"><strong>RSI (14)</strong><span>{rsi === null ? "Calculating…" : "Current " + rsi.toFixed(1)} · 30–70 levels</span></div><svg className="candle-oscillator" viewBox="0 0 1000 180" preserveAspectRatio="none" role="img" aria-label="Relative strength index graph"><rect x="0" y="68" width="1000" height="64" fill="rgba(57,185,130,.07)" /><line x1="0" y1="68" x2="1000" y2="68" stroke="#e36d6d" strokeDasharray="5 5" /><line x1="0" y1="132" x2="1000" y2="132" stroke="#39b982" strokeDasharray="5 5" /><polyline points={oscillatorGraphs.rsiPoints} fill="none" stroke="#a78bfa" strokeWidth="2" vectorEffect="non-scaling-stroke" /></svg></section>}
       {loading && <div className="candle-message">Loading candles…</div>}
       {!loading && error && <div className="candle-message">{error}</div>}
     </div>
