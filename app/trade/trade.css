@@ -259,3 +259,49 @@
     margin-inline:-1px;
   }
 }
+
+
+/* Ensure the mobile trade workspace can scroll beyond fixed navigation */
+.sun-trade-page {
+  padding-bottom: calc(145px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-bottom: 170px;
+}
+.sun-trade-page .trade-chart-card {
+  overflow:visible;
+}
+.sun-trade-page .candle-chart {
+  min-width:0;
+}
+.sun-trade-page .candle-subchart {
+  margin-bottom:12px;
+}
+.sun-trade-page .candle-oscillator {
+  height:104px;
+}
+.sun-trade-page .candle-volume-area {
+  height:64px;
+}
+.sun-trade-bottom-nav {
+  bottom: max(10px, env(safe-area-inset-bottom, 0px));
+}
+@media (max-width:520px) {
+  .sun-trade-page {
+    padding-bottom: calc(190px + env(safe-area-inset-bottom, 0px));
+  }
+  .sun-trade-page .candle-chart-area {
+    height:230px;
+  }
+  .sun-trade-page .candle-oscillator {
+    height:92px;
+  }
+  .sun-trade-page .candle-volume-area {
+    height:58px;
+  }
+  .sun-trade-page .candle-subchart {
+    margin-top:8px;
+    margin-bottom:10px;
+  }
+  .sun-trade-page .candle-subchart-heading {
+    padding:8px 10px;
+  }
+}
