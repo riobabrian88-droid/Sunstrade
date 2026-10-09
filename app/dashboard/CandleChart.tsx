@@ -6,12 +6,13 @@ import {
   ColorType,
   createChart,
   LineSeries,
+  HistogramSeries,
   type CandlestickData,
   type LineData,
   type UTCTimestamp,
 } from "lightweight-charts";
 
-type Candle = CandlestickData<UTCTimestamp>;
+type Candle = CandlestickData<UTCTimestamp> & { volume: number };
 
 const intervals = [
   { label: "1m", value: "1m" },
@@ -44,6 +45,9 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
   const upperBandRef = useRef<any>(null);
   const lowerBandRef = useRef<any>(null);
   const macdSeriesRef = useRef<any>(null);
+  const volumeContainerRef = useRef<HTMLDivElement>(null);
+  const volumeChartRef = useRef<ReturnType<typeof createChart> | null>(null);
+  const volumeSeriesRef = useRef<any>(null);
   const [showBollinger, setShowBollinger] = useState(false);
   const [showMacd, setShowMacd] = useState(false);
   const [drawingMode, setDrawingMode] = useState(false);
@@ -187,6 +191,24 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
   }, []);
 
   useEffect(() => {
+    const container = volumeContainerRef.current;
+    if (!container) return;
+    const chart = createChart(container, { width: container.clientWidth, height: container.clientHeight || 90, layout: { background: { type: ColorType.Solid, color: "#151b23" }, textColor: "#8493a1", fontFamily: "DM Sans, Arial, sans-serif", fontSize: 10 }, grid: { vertLines: { color: "#202a33" }, horzLines: { color: "#202a33" } }, rightPriceScale: { borderColor: "#2a3440" }, timeScale: { borderColor: "#2a3440", timeVisible: true, secondsVisible: false } });
+    volumeChartRef.current = chart;
+    volumeSeriesRef.current = chart.addSeries(HistogramSeries, { priceFormat: { type: "volume" }, priceScaleId: "" });
+    chart.priceScale("").applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } });
+    const observer = new ResizeObserver(() => chart.applyOptions({ width: container.clientWidth }));
+    observer.observe(container);
+    return () => { observer.disconnect(); chart.remove(); volumeChartRef.current = null; volumeSeriesRef.current = null; };
+  }, []);
+
+  useEffect(() => {
+    if (!volumeSeriesRef.current || !volumeChartRef.current) return;
+    volumeSeriesRef.current.setData(candles.map((candle) => ({ time: candle.time, value: candle.volume, color: candle.close >= candle.open ? "rgba(57,185,130,0.65)" : "rgba(227,109,109,0.65)" })));
+    volumeChartRef.current.timeScale().fitContent();
+  }, [candles]);
+
+  useEffect(() => {
     if (!candleSeriesRef.current || !chartRef.current) return;
     if (candles.length) {
       candleSeriesRef.current.setData(candles);
@@ -248,6 +270,7 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
           high: Number(row[2]),
           low: Number(row[3]),
           close: Number(row[4]),
+          volume: Number(row[5]),
         }));
         if (active) {
           setCandles(parsed);
@@ -299,6 +322,8 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
           {drawings.map((line, index) => <line key={index} x1={`${line.x1 / (containerRef.current?.clientWidth || 1000) * 1000}`} y1={`${line.y1 / (containerRef.current?.clientHeight || 360) * 360}`} x2={`${line.x2 / (containerRef.current?.clientWidth || 1000) * 1000}`} y2={`${line.y2 / (containerRef.current?.clientHeight || 360) * 360}`} stroke="#e6b75d" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />)}
         </svg>
       </div>
+      <div className="candle-subchart-heading"><strong>Volume</strong><span>Traded volume per candle</span></div>
+      <div className="candle-volume-area" ref={volumeContainerRef} />
       {drawingMode && <div className="candle-message">Trend line: tap two points on the chart to draw a line.</div>}
       {showMacd && <div className="rsi-panel"><span>MACD (12, 26, 9)</span><strong>{macd ? macd.value.toFixed(4) : "Calculating…"}</strong><span>Signal: {macd ? macd.signal.toFixed(4) : "—"}</span><span>Histogram: {macd ? macd.histogram.toFixed(4) : "—"}</span></div>}
       {showRsi && (
