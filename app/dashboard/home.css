@@ -264,3 +264,13 @@
 @keyframes sun-launch-dots{from{opacity:.3;transform:translateY(0)}to{opacity:1;transform:translateY(-3px)}}
 @media(max-width:420px){.sun-launch-screen{padding:18px 14px max(18px,env(safe-area-inset-bottom,0px))}.sun-launch-brand small{display:none}.sun-launch-bottom{padding:12px}.sun-launch-bottom-icon{width:38px;height:38px}.sun-launch-bottom p{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.sun-launch-screen *{animation:none!important}}
+
+/* Minimal branded loading state: no promotional copy or busy messaging. */
+.sun-launch-screen{display:grid;min-height:100svh;place-items:center;padding:24px;background:#080f17;color:#eef4f7}
+.sun-launch-screen:before{background:radial-gradient(ellipse at center,rgba(55,196,138,.08),transparent 38%)}
+.sun-launch-center{display:flex;flex:none;align-items:center;justify-content:center;gap:18px;width:auto;margin:0;padding:0}
+.sun-launch-logo.large{width:54px;height:54px;border-radius:16px;font-size:30px;box-shadow:none}
+.sun-launch-bars{display:flex;align-items:center;gap:4px;height:30px}
+.sun-launch-bars i{display:block;width:4px;height:12px;border-radius:4px;background:#39ca8d;animation:sun-launch-bars .7s ease-in-out infinite alternate}
+.sun-launch-bars i:nth-child(2){height:22px;animation-delay:.15s}.sun-launch-bars i:nth-child(3){height:17px;animation-delay:.3s}.sun-launch-bars i:nth-child(4){height:26px;animation-delay:.45s}
+@media(prefers-reduced-motion:reduce){.sun-launch-bars i{animation:none!important}}
