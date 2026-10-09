@@ -238,7 +238,7 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
       }
 
       try {
-        const url = `https://api.binance.com/api/v3/klines?symbol=${pair}&interval=${timeframe}&limit=300`;
+        const url = `https://api.binance.com/api/v3/klines?symbol=${pair}&interval=${timeframe}&limit=150`;
         const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) throw new Error("Market candle data is unavailable.");
         const rows = await response.json();
@@ -262,7 +262,7 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
 
     setLoading(true);
     loadCandles();
-    const timer = window.setInterval(loadCandles, 15000);
+    const timer = window.setInterval(loadCandles, 30000);
     return () => {
       active = false;
       window.clearInterval(timer);
@@ -284,7 +284,7 @@ export default function CandleChart({ symbol, command = null, onCommandHandled }
             </button>
           ))}
         </div>
-        <span className="candle-source">Live market data · 15s refresh</span>
+        <span className="candle-source">Live market data · 30s refresh</span>
       </div>
       <div className="candle-indicators" aria-label="Chart indicators">
         <button type="button" className={showSma ? "active" : ""} onClick={() => setShowSma((value) => !value)}>SMA 20</button>
