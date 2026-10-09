@@ -214,3 +214,13 @@
 @media(min-width:900px){.sun-home-page{padding-top:28px}.sun-home-header{margin-bottom:30px}.sun-home-topline h1{font-size:30px}.sun-home-equity,.sun-home-section,.sun-home-portfolio-card{border-radius:20px}.sun-home-section{padding:20px}.sun-home-shortcuts{gap:12px}.sun-home-shortcuts a{padding:16px 10px}}
 @media(max-width:560px){.sun-home-page{padding-left:12px;padding-right:12px;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}.sun-home-equity{padding:15px}.sun-home-equity>strong{font-size:clamp(25px,7vw,30px)}.sun-home-shortcuts{gap:6px}.sun-home-shortcuts a{padding:10px 4px}.sun-home-promo{padding:13px}.sun-home-section{padding:13px}}
 @media(prefers-reduced-motion:reduce){.sun-home-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Final consistency pass — dashboard */
+.sun-home-page a,.sun-home-page button{ -webkit-tap-highlight-color:transparent }
+.sun-home-page a:focus-visible,.sun-home-page button:focus-visible{outline:2px solid #65dda7;outline-offset:3px}
+.sun-home-equity,.sun-home-section,.sun-home-portfolio-card,.sun-home-promo{transition:border-color .18s ease,box-shadow .18s ease}
+.sun-home-equity:hover,.sun-home-section:hover,.sun-home-portfolio-card:hover{border-color:#344c5b}
+.sun-home-mover:focus-visible{outline:2px solid #65dda7;outline-offset:-2px;border-radius:10px}
+@media(min-width:900px){.sun-home-page{padding-top:26px}.sun-home-header{margin-bottom:24px}.sun-home-topline{margin-bottom:20px}.sun-home-equity{border-radius:20px}.sun-home-section,.sun-home-portfolio-card{border-radius:18px}}
+@media(max-width:560px){.sun-home-page{padding-left:12px;padding-right:12px}.sun-home-topline h1{line-height:1.18}.sun-home-equity{padding:15px;border-radius:16px}.sun-home-equity>strong{font-size:clamp(25px,7vw,30px)}.sun-home-shortcuts{gap:7px}.sun-home-shortcuts a{padding:10px 4px}.sun-home-promo{padding:13px;border-radius:14px}.sun-home-section,.sun-home-portfolio-card{padding:13px;border-radius:14px}}
+@media(prefers-reduced-motion:reduce){.sun-home-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
