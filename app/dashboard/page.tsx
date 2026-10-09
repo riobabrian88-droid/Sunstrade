@@ -86,20 +86,11 @@ export default function DashboardPage(){
  const name=profile?.full_name||profile?.username||user?.user_metadata?.full_name||user?.email?.split("@")[0]||"Trader";
  const first=name.split(" ")[0];
 
- if(loading)return <main className="sun-launch-screen">
-  <header className="sun-launch-header">
-   <Link href="/dashboard" className="sun-launch-brand"><span className="sun-launch-logo">S</span><span><strong>SunStrade</strong><small>Read the candles, not the noise.</small></span></Link>
-   <span className="sun-launch-status"><i/> SECURE SESSION</span>
-  </header>
-  <section className="sun-launch-center" role="status" aria-live="polite">
-   <div className="sun-launch-orbit"><span className="sun-launch-logo large">S</span><i/><i/><i/></div>
-   <span className="sun-launch-kicker">YOUR MARKETS. YOUR MOMENT.</span>
-   <h1>Getting your dashboard ready</h1>
-   <p>Securing your session and preparing your market workspace.</p>
-   <div className="sun-launch-progress"><span/></div>
-   <small className="sun-launch-progress-label">Connecting securely…</small>
-  </section>
-  <aside className="sun-launch-bottom"><span className="sun-launch-bottom-icon">↗</span><div><strong>Your market workspace</strong><p>Prices, portfolio and trading tools will appear as soon as your session is ready.</p></div><span className="sun-launch-dots"><i/><i/><i/></span></aside>
+ if(loading)return <main className="sun-launch-screen" role="status" aria-label="Loading SunStrade">
+  <div className="sun-launch-center">
+   <span className="sun-launch-logo large">S</span>
+   <span className="sun-launch-bars" aria-hidden="true"><i/><i/><i/><i/></span>
+  </div>
  </main>;
 
  return <main className="sun-home-page">
