@@ -172,3 +172,90 @@
   .trade-main-grid{grid-template-columns:minmax(0,1fr) 410px;gap:24px}
   .trade-chart-card .candle-chart-area,.sun-trade-page .candle-chart-area{height:440px}
 }
+
+
+/* Mobile chart polish: clearer indicator headers and compact, scrollable controls */
+.sun-trade-page .candle-subchart-heading {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  justify-content:space-between;
+  column-gap:12px;
+  row-gap:3px;
+  padding:10px 11px;
+  line-height:1.35;
+  border-bottom:1px solid #263342;
+}
+.sun-trade-page .candle-subchart-heading strong {
+  display:block;
+  flex:0 0 auto;
+  color:#e7eef4;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.01em;
+}
+.sun-trade-page .candle-subchart-heading span {
+  display:block;
+  flex:1 1 130px;
+  min-width:0;
+  color:#8fa1b1;
+  font-size:9px;
+  line-height:1.4;
+  text-align:right;
+}
+.sun-trade-page > .desktop-main .candle-chart > .candle-subchart-heading {
+  margin-top:8px;
+  border:1px solid #263747;
+  border-radius:9px 9px 0 0;
+  background:#111c28;
+}
+.sun-trade-page .candle-volume-area {
+  height:76px;
+  overflow:hidden;
+  border:1px solid #263747;
+  border-top:0;
+  border-radius:0 0 9px 9px;
+  background:#101923;
+}
+.sun-trade-page .candle-subchart {
+  margin-top:10px;
+  border-color:#263747;
+  border-radius:10px;
+}
+.sun-trade-page .candle-oscillator {
+  height:116px;
+}
+.sun-trade-page .candle-indicators {
+  scroll-padding-inline:12px;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:10px;
+}
+.sun-trade-page .candle-indicators button {
+  white-space:nowrap;
+}
+.sun-trade-page .candle-timeframes {
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+@media (max-width:520px) {
+  .sun-trade-page .candle-subchart-heading {
+    padding:9px 10px;
+  }
+  .sun-trade-page .candle-subchart-heading span {
+    flex-basis:100%;
+    text-align:left;
+  }
+  .sun-trade-page .candle-volume-area {
+    height:68px;
+  }
+  .sun-trade-page .candle-oscillator {
+    height:105px;
+  }
+  .sun-trade-page .candle-chart-area {
+    height:245px;
+  }
+  .sun-trade-page .candle-indicators {
+    margin-inline:-1px;
+  }
+}
