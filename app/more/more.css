@@ -105,3 +105,16 @@
 @media (min-width:1200px){
   .desktop-main{padding-left:48px;padding-right:48px}
 }
+
+
+/* Global visual refinement — more */
+.sun-more-page{background-color:#080f17;background-image:radial-gradient(ellipse at 82% 0%,rgba(55,196,138,.13),transparent 32%),radial-gradient(ellipse at 4% 35%,rgba(73,108,170,.07),transparent 28%)}
+.more-profile,.more-pro,.more-section,.more-trust{border-color:#263746;box-shadow:0 14px 38px rgba(0,0,0,.13)}
+.more-profile,.more-pro,.more-section,.more-trust{border-radius:19px}
+.more-grid a,.more-list a,.more-list button{transition:background .16s ease,border-color .16s ease}
+.more-grid a:hover,.more-list a:hover,.more-list button:hover{background:#101d29;border-color:#315244}
+.more-header-actions a:focus-visible,.more-grid a:focus-visible,.more-list a:focus-visible,.more-list button:focus-visible{outline:2px solid #63d9a2;outline-offset:3px}
+.more-nav{bottom:max(8px,env(safe-area-inset-bottom,0px))}
+@media(min-width:900px){.sun-more-page{padding-top:28px}.more-section,.more-trust{border-radius:21px}.more-section{padding:24px}.more-grid a{min-height:104px}}
+@media(max-width:560px){.sun-more-page{padding-left:12px;padding-right:12px;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}.more-profile,.more-pro,.more-section,.more-trust{border-radius:15px}.more-section{padding:14px}}
+@media(prefers-reduced-motion:reduce){.sun-more-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
