@@ -53,7 +53,21 @@ export default function TradePage(){
   try{const r=await fetch("/api/prices",{cache:"no-store"});if(!r.ok)throw 0;const d=await r.json();setAssets(cur=>cur.map(a=>({...a,price:typeof d[a.symbol]==="number"?d[a.symbol]:a.price,change_24h:typeof d.changes?.[a.symbol]==="number"?d.changes[a.symbol]:a.change_24h})))}catch{}
  };
 
- useEffect(()=>{let active=true;(async()=>{const {data:{session}}=await supabase.auth.getSession();if(!session?.user){window.location.href="/login";return}setUser(session.user);await load(session.user.id);await live();if(active)setLoading(false)})();return()=>{active=false}},[]);
+ useEffect(()=>{let active=true;(async()=>{
+  try{
+   const {data:{session}}=await supabase.auth.getSession();
+   if(!active)return;
+   if(!session?.user){window.location.href="/login";return}
+   setUser(session.user);
+   // Show the trading workspace first; account data and prices can hydrate in the background.
+   setLoading(false);
+   void load(session.user.id).catch((error)=>console.error("Trade account data failed:",error));
+   void live().catch((error)=>console.error("Trade live prices failed:",error));
+  }catch(error){
+   console.error("Trade startup failed:",error);
+   if(active)setLoading(false);
+  }
+ })();return()=>{active=false}},[]);
  useEffect(()=>{const i=window.setInterval(()=>void live(),15000);return()=>window.clearInterval(i)},[]);
  useEffect(()=>{if(!user)return;const ch=supabase.channel("sunstrade-trade").on("postgres_changes",{event:"*",schema:"public",table:"orders",filter:`user_id=eq.${user.id}`},()=>void load(user.id)).on("postgres_changes",{event:"*",schema:"public",table:"positions",filter:`user_id=eq.${user.id}`},()=>void load(user.id)).on("postgres_changes",{event:"*",schema:"public",table:"wallets",filter:`user_id=eq.${user.id}`},()=>void load(user.id)).subscribe();return()=>{void supabase.removeChannel(ch)}},[user]);
 
