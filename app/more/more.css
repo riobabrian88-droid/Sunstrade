@@ -118,3 +118,14 @@
 @media(min-width:900px){.sun-more-page{padding-top:28px}.more-section,.more-trust{border-radius:21px}.more-section{padding:24px}.more-grid a{min-height:104px}}
 @media(max-width:560px){.sun-more-page{padding-left:12px;padding-right:12px;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}.more-profile,.more-pro,.more-section,.more-trust{border-radius:15px}.more-section{padding:14px}}
 @media(prefers-reduced-motion:reduce){.sun-more-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Final consistency pass — more and account settings */
+.sun-more-page a,.sun-more-page button{-webkit-tap-highlight-color:transparent}
+.sun-more-page a:focus-visible,.sun-more-page button:focus-visible{outline:2px solid #65dda7;outline-offset:3px}
+.more-profile,.more-pro,.more-section,.more-trust{box-shadow:0 12px 30px rgba(0,0,0,.12);transition:border-color .16s ease}
+.more-section:hover,.more-profile:hover{border-color:#344c5b}
+.more-grid a,.more-list a,.more-list button{transition:background .16s ease,border-color .16s ease}
+.more-grid a:hover,.more-list a:hover,.more-list button:hover{background:#122130}
+@media(min-width:900px){.sun-more-page{padding-top:26px}.more-section,.more-trust{border-radius:18px}}
+@media(max-width:560px){.sun-more-page{padding-left:12px;padding-right:12px}.more-profile{border-radius:15px}.more-section,.more-trust{padding:14px;border-radius:15px}.more-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.more-grid a{min-height:78px}}
+@media(prefers-reduced-motion:reduce){.sun-more-page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
