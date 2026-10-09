@@ -387,3 +387,12 @@
     overflow: hidden;
   }
 }
+
+/* Minimal exchange-style trade loading state. */
+.trade-loading{display:flex;min-height:100svh;align-items:center;justify-content:center;gap:15px;background:radial-gradient(ellipse at center,rgba(57,202,141,.07),transparent 38%),#070d14;color:var(--ttext)}
+.trade-loading div{width:50px;height:50px;border-radius:15px;box-shadow:none}
+.trade-loading-bars{display:flex;align-items:center;gap:4px;height:28px}
+.trade-loading-bars i{display:block;width:4px;height:12px;border-radius:5px;background:var(--tgreen);animation:trade-loading-pulse .7s ease-in-out infinite alternate}
+.trade-loading-bars i:nth-child(2){height:21px;animation-delay:.15s}.trade-loading-bars i:nth-child(3){height:16px;animation-delay:.3s}.trade-loading-bars i:nth-child(4){height:25px;animation-delay:.45s}
+@keyframes trade-loading-pulse{from{opacity:.4;transform:scaleY(.65)}to{opacity:1;transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.trade-loading-bars i{animation:none!important}}
