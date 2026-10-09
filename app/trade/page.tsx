@@ -84,7 +84,7 @@ export default function TradePage(){
   setSubmitting(false);
  };
 
- if(loading)return <main className="trade-loading"><div>S</div><p>Loading Trade…</p></main>;
+ if(loading)return <main className="trade-loading" role="status" aria-label="Loading SunStrade"><div>S</div><span className="trade-loading-bars" aria-hidden="true"><i/><i/><i/><i/></span></main>;
 
  return <main className="sun-trade-page">
   <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="" href="/dashboard"><span>⌂</span>Home</Link><Link className="" href="/markets"><span>◉</span>Markets</Link><Link className="active" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
