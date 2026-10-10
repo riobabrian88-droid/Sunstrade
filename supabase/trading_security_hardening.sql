@@ -88,17 +88,23 @@ GRANT SELECT ON TABLE
   public.trades
   TO authenticated;
 
--- Harden the execution boundary: only authenticated sessions can place paper
--- orders; only the server service role can process all users' pending orders.
-REVOKE ALL ON FUNCTION public.place_order(text, text, text, numeric, numeric)
-  FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.place_order(text, text, text, numeric, numeric)
-  TO authenticated;
+-- Harden the execution boundary. The market-order RPC is required; pending
+-- processing exists only when the optional limit/stop-order SQL was installed.
+DO $
+BEGIN
+  IF to_regprocedure('public.place_order(text,text,text,numeric,numeric)') IS NULL THEN
+    RAISE EXCEPTION 'Expected public.place_order(text,text,text,numeric,numeric) was not found; stop and verify the deployed trading SQL.';
+  END IF;
 
-REVOKE ALL ON FUNCTION public.process_pending_orders()
-  FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.process_pending_orders()
-  TO service_role;
+  EXECUTE 'REVOKE ALL ON FUNCTION public.place_order(text, text, text, numeric, numeric) FROM PUBLIC, anon';
+  EXECUTE 'GRANT EXECUTE ON FUNCTION public.place_order(text, text, text, numeric, numeric) TO authenticated';
+
+  IF to_regprocedure('public.process_pending_orders()') IS NOT NULL THEN
+    EXECUTE 'REVOKE ALL ON FUNCTION public.process_pending_orders() FROM PUBLIC, anon, authenticated';
+    EXECUTE 'GRANT EXECUTE ON FUNCTION public.process_pending_orders() TO service_role';
+  END IF;
+END
+$;
 
 COMMIT;
 
