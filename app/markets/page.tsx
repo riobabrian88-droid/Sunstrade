@@ -65,7 +65,7 @@ export default function MarketsPage(){
   else{const {error}=await supabase.from("user_watchlist").insert({user_id:user.id,symbol});if(!error)setWatchlist(x=>[...x,symbol])}
  }
 
- if(loading)return <main className="markets-loading"><div>S</div><p>Loading markets…</p></main>;
+ if(loading)return <main className="markets-loading" role="status" aria-label="Loading SunStrade"><div>S</div><span className="sun-page-loading-bars" aria-hidden="true"><i/><i/><i/><i/></span></main>;
 
  return <main className="sun-markets-page">
   <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link className="" href="/dashboard"><span>⌂</span>Home</Link><Link className="active" href="/markets"><span>◉</span>Markets</Link><Link className="" href="/trade"><span>↗</span>Trade</Link><Link className="" href="/portfolio"><span>▤</span>Portfolio</Link><Link className="" href="/more"><span>☰</span>More</Link><Link className="" href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
