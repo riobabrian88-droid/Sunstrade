@@ -88,6 +88,18 @@ GRANT SELECT ON TABLE
   public.trades
   TO authenticated;
 
+-- Harden the execution boundary: only authenticated sessions can place paper
+-- orders; only the server service role can process all users' pending orders.
+REVOKE ALL ON FUNCTION public.place_order(text, text, text, numeric, numeric)
+  FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.place_order(text, text, text, numeric, numeric)
+  TO authenticated;
+
+REVOKE ALL ON FUNCTION public.process_pending_orders()
+  FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.process_pending_orders()
+  TO service_role;
+
 COMMIT;
 
 -- Post-apply checks:
