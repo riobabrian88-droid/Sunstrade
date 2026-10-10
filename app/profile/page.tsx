@@ -70,12 +70,12 @@ export default function ProfilePage() {
     setSaving(true);
     setError("");
     setMessage("");
+    // Update only the user-editable field. The security migration removes
+    // table-wide profile writes and grants UPDATE only on full_name.
     const { error: saveError } = await supabase
       .from("profiles")
-      .upsert({
-        id: user.id,
-        full_name: fullName.trim()
-      }, { onConflict: "id" });
+      .update({ full_name: fullName.trim() })
+      .eq("id", user.id);
     if (saveError) setError(saveError.message);
     else setMessage("Profile updated successfully.");
     setSaving(false);
