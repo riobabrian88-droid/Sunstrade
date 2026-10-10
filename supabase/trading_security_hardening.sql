@@ -10,6 +10,24 @@
 
 BEGIN;
 
+-- Do not revoke client write privileges if the deployment's wallet-review RPC
+-- is missing or is not SECURITY DEFINER; that would break approvals or force
+-- clients to retain direct write access. Inspect and secure this RPC first.
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_proc p
+    JOIN pg_namespace n ON n.oid = p.pronamespace
+    WHERE n.nspname = 'public'
+      AND p.proname = 'review_wallet_transaction'
+      AND p.prosecdef = true
+  ) THEN
+    RAISE EXCEPTION 'A SECURITY DEFINER public.review_wallet_transaction function was not found. Verify the live wallet approval RPC before applying this hardening migration.';
+  END IF;
+END
+$;
+
 -- Remove table-level client writes, including grants that may have been given
 -- directly or through PUBLIC.
 REVOKE INSERT, UPDATE, DELETE ON TABLE public.profiles
