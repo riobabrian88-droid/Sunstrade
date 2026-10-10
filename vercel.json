@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/price-alerts",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/volatility",
+      "schedule": "15 0 * * *"
     }
   ]
 }
