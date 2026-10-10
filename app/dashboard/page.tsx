@@ -61,13 +61,13 @@ export default function DashboardPage(){
  useEffect(()=>{let mounted=true;(async()=>{
   const {data:{session}}=await supabase.auth.getSession();if(!mounted)return;
   if(!session?.user){window.location.href="/login";return}
-  const {data:account}=await supabase.from("profiles").select("is_suspended").eq("id",session.user.id).maybeSingle();
-  if(account?.is_suspended){await supabase.auth.signOut();window.location.href="/login";return}
+  // Reveal the dashboard shell immediately, matching the Trade page startup.
+  // Keep the suspension check ahead of all account-data requests.
   setUser(session.user);
-  // Render the dashboard shell as soon as the authenticated account check passes.
-  // Account data and live prices can arrive independently; neither should hold the
-  // entire page behind the full-screen loading state.
-  if(mounted)setLoading(false);
+  setLoading(false);
+  const {data:account}=await supabase.from("profiles").select("is_suspended").eq("id",session.user.id).maybeSingle();
+  if(!mounted)return;
+  if(account?.is_suspended){await supabase.auth.signOut();window.location.href="/login";return}
   void load(session.user.id).catch((error)=>console.error("Dashboard data load failed:",error));
   void live().catch((error)=>console.error("Live prices failed:",error));
  })().catch((error)=>{
