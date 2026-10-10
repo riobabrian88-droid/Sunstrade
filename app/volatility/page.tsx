@@ -8,7 +8,8 @@ const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env
 type Metric = { symbol: string; price: number; volatility_pct: number; atr_14: number; atr_pct: number; calculated_at: string };
 type Alert = { id: number; symbol: string; threshold_pct: number; condition: "above" | "below"; is_active: boolean; created_at: string };
 const money = (n: number) => new Intl.NumberFormat("en-US", { maximumFractionDigits: n < 10 ? 4 : 2 }).format(n);
-function level(n: number) { return n < 35 ? "Low" : n < 70 ? "Medium" : "High"; }
+function level(n: number) { return n < 25 ? "Low" : n < 50 ? "Moderate" : n < 75 ? "High" : "Extreme"; }
+function levelColor(n: number) { return n < 25 ? "#34d399" : n < 50 ? "#a3e635" : n < 75 ? "#fbbf24" : "#fb7185"; }
 
 export default function VolatilityPage() {
   const [metrics, setMetrics] = useState<Metric[]>([]);
@@ -64,10 +65,11 @@ export default function VolatilityPage() {
         {[{title:"Tracked assets",value:String(metrics.length),note:"Crypto pairs with candle data"},{title:"Highest volatility",value:sorted[0] ? sorted[0].symbol : "—",note:sorted[0] ? sorted[0].volatility_pct.toFixed(2)+"% annualized" : "Awaiting data"},{title:"Active alerts",value:String(alerts.filter(a=>a.is_active).length),note:"Your configured thresholds"}].map(card => <div key={card.title} style={{ background:"#121a2e", border:"1px solid #26334f", borderRadius:16, padding:20 }}><div style={{ color:"#9eaccb", fontSize:13 }}>{card.title}</div><div style={{ fontSize:27, fontWeight:700, margin:"10px 0" }}>{card.value}</div><div style={{ color:"#9eaccb", fontSize:13 }}>{card.note}</div></div>)}
       </section>
       <section style={{ background:"#121a2e", border:"1px solid #26334f", borderRadius:16, padding:20, marginBottom:24 }}>
-        <h2 style={{ marginTop:0, fontSize:20 }}>Volatility heatmap</h2><p style={{ color:"#9eaccb", fontSize:13 }}>Annualized standard deviation of daily log returns. Labels are relative guideposts, not trading signals.</p>
+        <h2 style={{ marginTop:0, fontSize:20 }}>Volatility heatmap</h2><p style={{ color:"#9eaccb", fontSize:13 }}>Annualized standard deviation of daily log returns. Risk bands are guideposts, not predictions or trading signals.</p>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, margin:"12px 0 18px" }}>{[{label:"Low",range:"< 25%",color:"#34d399"},{label:"Moderate",range:"25–49.99%",color:"#a3e635"},{label:"High",range:"50–74.99%",color:"#fbbf24"},{label:"Extreme",range:"≥ 75%",color:"#fb7185"}].map(item => <span key={item.label} style={{ display:"inline-flex", alignItems:"center", gap:7, border:"1px solid #2b3855", background:"#0e1527", borderRadius:999, padding:"7px 10px", fontSize:12, color:item.color }}><span style={{ width:8, height:8, borderRadius:"50%", background:item.color }} />{item.label}<span style={{ color:"#9eaccb" }}>{item.range}</span></span>)}</div>
         {sorted.length === 0 ? <p style={{ color:"#9eaccb" }}>No metrics yet. Run the scheduled volatility job after applying the SQL migration.</p> : <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:10 }}>{sorted.map(m => {
           const pct = Math.min(100, m.volatility_pct);
-          const color = m.volatility_pct < 35 ? "#34d399" : m.volatility_pct < 70 ? "#fbbf24" : "#fb7185";
+          const color = levelColor(m.volatility_pct);
           return <div key={m.symbol} style={{ border:"1px solid #2b3855", borderRadius:12, padding:14, background:"#0e1527" }}><div style={{ display:"flex", justifyContent:"space-between", gap:8 }}><strong>{m.symbol}</strong><span style={{ color, fontSize:12 }}>{level(m.volatility_pct)}</span></div><div style={{ fontSize:24, fontWeight:700, margin:"12px 0 4px" }}>{m.volatility_pct.toFixed(2)}%</div><div style={{ height:7, borderRadius:8, background:"#27324b", overflow:"hidden" }}><div style={{ height:"100%", width:pct+"%", background:color, borderRadius:8 }} /></div><div style={{ display:"flex", justifyContent:"space-between", color:"#9eaccb", fontSize:12, marginTop:12 }}><span>Price {money(m.price)}</span><span>ATR {money(m.atr_14)}</span></div><div style={{ color:"#9eaccb", fontSize:12, marginTop:5 }}>ATR / price: {m.atr_pct.toFixed(2)}%</div></div>;
         })}</div>}
       </section>
