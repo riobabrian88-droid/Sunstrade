@@ -56,6 +56,21 @@ Recommended: separate public price reads from privileged price updates/order pro
 7. Confirm no live exchange credentials, real payment rails, or real-money execution paths are enabled.
 8. Obtain an independent security review and legal/compliance review before any real-money launch.
 
+
+## Hardening changes added to the repository
+
+The following changes have been committed during this review:
+
+- `app/profile/page.tsx` now updates only `full_name`; it no longer uses an upsert that also requires profile insert permission.
+- `supabase/trading_security_hardening.sql` revokes client write privileges for profile rows and trading ledger tables, grants authenticated users only column-level update on `profiles.full_name`, tightens the profile row policy, and restricts `place_order` and `process_pending_orders` execution to intended roles.
+- These changes are **not active in Supabase just because they exist in GitHub**. The SQL must be reviewed and applied to a staging database first, then tested. Only after validation should it be applied to the production Supabase project.
+
+The profile finding remains open until the SQL has been applied and a normal authenticated test user is shown to be unable to edit privileged profile fields. The direct-write controls likewise remain unverified against the live database.
+
+## Review outcome so far
+
+No database connection or live Supabase project access was available for this review. We have not run concurrent order tests, balance reconciliation, penetration tests, or verified the deployed Vercel environment. The public `GET /api/prices` route still performs privileged asset updates and invokes pending-order processing; it remains an open issue to separate read-only market quotes from secret-protected scheduled processing before any real-money consideration.
+
 ## Limitations
 
 This report is based on source files in GitHub only. It does not prove which SQL scripts have been run in Supabase, inspect production environment variables, execute tests against the database, or verify the deployed Vercel build. Findings should be closed only after the live configuration and tests are independently checked.
