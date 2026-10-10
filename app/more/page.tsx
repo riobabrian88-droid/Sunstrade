@@ -7,7 +7,7 @@ import "./more.css";
 export default function MorePage(){
  const [user,setUser]=useState<any>(null),[name,setName]=useState("Trader"),[verified,setVerified]=useState(false),[loading,setLoading]=useState(true);
  useEffect(()=>{let active=true;(async()=>{const {data:{session}}=await supabase.auth.getSession();if(!active)return;if(!session?.user){window.location.href="/login";return}const u=session.user;setUser(u);setName(u.user_metadata?.full_name||u.email?.split("@")[0]||"Trader");setVerified(Boolean(u.email_confirmed_at));const {data}=await supabase.from("profiles").select("full_name").eq("id",u.id).maybeSingle();if(active&&data?.full_name)setName(data.full_name);setLoading(false)})();return()=>{active=false}},[]);
- if(loading)return <main className="more-loading"><div>S</div><p>Loading SunStrade…</p></main>;
+ if(loading)return <main className="more-loading" role="status" aria-label="Loading SunStrade"><div>S</div><span className="sun-page-loading-bars" aria-hidden="true"><i/><i/><i/><i/></span></main>;
  const initial=name.charAt(0).toUpperCase();
  return <main className="sun-more-page">
   <aside className="desktop-sidebar"><div className="desktop-brand"><strong>Sun<span>Strade</span></strong><small>Trading platform</small></div><nav><Link href="/dashboard"><span>⌂</span>Home</Link><Link href="/markets"><span>◉</span>Markets</Link><Link href="/trade"><span>↗</span>Trade</Link><Link href="/portfolio"><span>▤</span>Portfolio</Link><Link className="active" href="/more"><span>☰</span>More</Link><Link href="/wallet"><span>▣</span>Wallet</Link></nav><div className="desktop-sidebar-footer"><span>●</span> Markets live</div></aside>
