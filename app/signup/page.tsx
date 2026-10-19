@@ -35,7 +35,7 @@ export default function SignupPage() {
     });
     if (signupError) { setError(signupError.message); setLoading(false); return; }
     if (data.session) { router.push("/dashboard"); return; }
-    setMessage("Account created successfully. Please check your email to confirm your account.");
+    setMessage("Your account was created, but this Supabase project is still requiring email confirmation. To enable instant dashboard access, turn off Confirm email in Supabase Authentication settings for this project, then try again.");
     setLoading(false);
   }
 
