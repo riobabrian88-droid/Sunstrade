@@ -33,7 +33,22 @@ export default function SignupPage() {
       email, password,
       options: { data: { full_name: name, country, terms_accepted_at: new Date().toISOString() } }
     });
-    if (signupError) { setError(signupError.message); setLoading(false); return; }
+    if (signupError) {
+      const detail = signupError.message.toLowerCase();
+      const duplicateEmail =
+        detail.includes("already registered") ||
+        detail.includes("already been registered") ||
+        detail.includes("user already exists") ||
+        detail.includes("email address is already") ||
+        detail.includes("duplicate key");
+      setError(
+        duplicateEmail
+          ? "This email is already registered. Please log in instead."
+          : signupError.message
+      );
+      setLoading(false);
+      return;
+    }
     if (data.session) { router.push("/dashboard"); return; }
     setMessage("Your account was created, but this Supabase project is still requiring email confirmation. To enable instant dashboard access, turn off Confirm email in Supabase Authentication settings for this project, then try again.");
     setLoading(false);
