@@ -13,7 +13,7 @@ BEGIN;
 -- Do not revoke client write privileges if the deployment's wallet-review RPC
 -- is missing or is not SECURITY DEFINER; that would break approvals or force
 -- clients to retain direct write access. Inspect and secure this RPC first.
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1
@@ -26,7 +26,7 @@ BEGIN
     RAISE EXCEPTION 'A SECURITY DEFINER public.review_wallet_transaction function was not found. Verify the live wallet approval RPC before applying this hardening migration.';
   END IF;
 END
-$;
+$$;
 
 -- Remove table-level client writes, including grants that may have been given
 -- directly or through PUBLIC.
@@ -108,7 +108,7 @@ GRANT SELECT ON TABLE
 
 -- Harden the execution boundary. The market-order RPC is required; pending
 -- processing exists only when the optional limit/stop-order SQL was installed.
-DO $
+DO $$
 BEGIN
   IF to_regprocedure('public.place_order(text,text,text,numeric,numeric)') IS NULL THEN
     RAISE EXCEPTION 'Expected public.place_order(text,text,text,numeric,numeric) was not found; stop and verify the deployed trading SQL.';
@@ -122,7 +122,7 @@ BEGIN
     EXECUTE 'GRANT EXECUTE ON FUNCTION public.process_pending_orders() TO service_role';
   END IF;
 END
-$;
+$$;
 
 COMMIT;
 
