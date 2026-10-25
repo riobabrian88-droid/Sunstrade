@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
@@ -27,17 +26,21 @@ type Ticker24h = {
   priceChangePercent?: string;
 };
 
-async function getMarketTicker(pair: string): Promise<{ price: number; change: number } | null> {
+async function getMarketTicker(
+  pair: string
+): Promise<{ price: number; change: number } | null> {
   for (const host of marketHosts) {
     try {
       const response = await fetch(
         `${host}/api/v3/ticker/24hr?symbol=${pair}`,
-        { cache: "no-store" }
+        { next: { revalidate: 15 } }
       );
       if (!response.ok) continue;
+
       const data: Ticker24h = await response.json();
       const price = Number(data.lastPrice);
       const change = Number(data.priceChangePercent);
+
       if (Number.isFinite(price) && price > 0 && Number.isFinite(change)) {
         return { price, change };
       }
@@ -45,6 +48,7 @@ async function getMarketTicker(pair: string): Promise<{ price: number; change: n
       // Try the next public market-data endpoint.
     }
   }
+
   return null;
 }
 
@@ -58,7 +62,8 @@ export async function GET() {
     );
 
     const available = entries.filter(
-      (entry): entry is readonly [string, { price: number; change: number }] => entry !== null
+      (entry): entry is readonly [string, { price: number; change: number }] =>
+        entry !== null
     );
 
     if (available.length === 0) {
@@ -69,50 +74,27 @@ export async function GET() {
       );
     }
 
-    const prices = Object.fromEntries(available.map(([symbol, ticker]) => [symbol, ticker.price]));
-    const changes = Object.fromEntries(available.map(([symbol, ticker]) => [symbol, ticker.change]));
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !serviceRoleKey) {
-      console.error("Missing Supabase server environment variables");
-      return NextResponse.json(
-        { error: "Price service is not configured" },
-        { status: 500 }
-      );
-    }
-
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
-    const results = await Promise.all(
-      Object.entries(prices).map(([symbol, price]) =>
-        supabase
-          .from("assets")
-          .update({ price, updated_at: new Date().toISOString() })
-          .eq("symbol", symbol)
-          .select("symbol")
-      )
+    const prices = Object.fromEntries(
+      available.map(([symbol, ticker]) => [symbol, ticker.price])
+    );
+    const changes = Object.fromEntries(
+      available.map(([symbol, ticker]) => [symbol, ticker.change])
     );
 
-    for (const result of results) {
-      if (result.error) {
-        console.error("Price update failed:", result.error.message);
+    // This public endpoint only returns market quotes. Database writes and
+    // pending-order execution belong in the CRON_SECRET-protected route.
+    return NextResponse.json(
+      {
+        ...prices,
+        changes,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=15, stale-while-revalidate=30",
+        },
       }
-    }
-
-    // Check pending Limit/Stop orders against the freshly updated prices.
-    const { data: executedCount, error: executionError } = await supabase.rpc(
-      "process_pending_orders"
     );
-    if (executionError) {
-      // Price delivery should remain available even if order processing needs attention.
-      console.error("Pending order processing failed:", executionError.message);
-    }
-
-    return NextResponse.json({
-      ...prices,
-      changes,
-      updatedAt: new Date().toISOString(),
-    });
   } catch (error) {
     console.error("Price service error:", error);
     return NextResponse.json(
