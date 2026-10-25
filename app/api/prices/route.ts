@@ -30,7 +30,7 @@ const twelveDataSymbols = [
   "USD/CHF",
   "USD/CAD",
   "NZD/USD",
-  "EUR/GBP",
+  "XAU/USD",
 ];
 
 const marketHosts = [
