@@ -21,16 +21,16 @@ const cryptoSymbols: Record<string, string> = {
 };
 
 const twelveDataSymbols = [
-  // Start with six high-priority instruments to stay within the free plan's
-  // eight API-credit-per-minute limit. Expand only after verifying coverage.
+  // Keep at or below the Basic plan's eight API-credit-per-minute limit.
+  // XAG/USD is temporarily excluded because it did not return a usable quote.
   "EUR/USD",
   "GBP/USD",
   "USD/JPY",
   "AUD/USD",
   "USD/CHF",
   "USD/CAD",
-  "XAU/USD",
-  "XAG/USD",
+  "NZD/USD",
+  "EUR/GBP",
 ];
 
 const marketHosts = [
