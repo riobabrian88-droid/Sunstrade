@@ -27,6 +27,8 @@ const twelveDataSymbols = [
   "GBP/USD",
   "USD/JPY",
   "AUD/USD",
+  "USD/CHF",
+  "USD/CAD",
   "XAU/USD",
   "XAG/USD",
 ];
