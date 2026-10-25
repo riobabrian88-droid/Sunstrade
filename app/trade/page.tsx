@@ -78,7 +78,7 @@ export default function TradePage(){
   if(side==="sell"&&amount>availableSell){setMessage("You do not have enough of this position to sell.");return}
   if(side==="buy"&&orderValue>balance){setMessage("Insufficient cash balance for this order.");return}
   setSubmitting(true);setMessage("");
-  const {error}=await supabase.rpc("place_order",{p_symbol:selected,p_side:side,p_order_type:"market",p_qty:amount,p_limit_price:null});
+  const {error}=await supabase.rpc("place_paper_market_order",{p_symbol:selected,p_side:side,p_qty:amount});
   if(error)setMessage(error.message||"Order could not be placed.");
   else {setMessage(`${side==="buy"?"Buy":"Sell"} order placed for ${amount} ${selected}.`);await load(user.id)}
   setSubmitting(false);
