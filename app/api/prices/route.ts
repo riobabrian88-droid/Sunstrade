@@ -22,15 +22,15 @@ const cryptoSymbols: Record<string, string> = {
 
 const twelveDataSymbols = [
   // Keep at or below the Basic plan's eight API-credit-per-minute limit.
-  // Test silver while retaining the main forex pairs and gold.
+  // Silver is excluded until a usable quote can be confirmed.
   "EUR/USD",
   "GBP/USD",
   "USD/JPY",
   "AUD/USD",
   "USD/CHF",
   "USD/CAD",
+  "NZD/USD",
   "XAU/USD",
-  "XAG/USD",
 ];
 
 const marketHosts = [
