@@ -18,15 +18,39 @@ const fallback:Asset[]=[
  {symbol:"DOGE/USD",name:"Dogecoin",price:0,prev_close:null},
  {symbol:"ADA/USD",name:"Cardano",price:0,prev_close:null},
  {symbol:"LTC/USD",name:"Litecoin",price:0,prev_close:null},
+ {symbol:"AVAX/USD",name:"Avalanche",price:0,prev_close:null},
+ {symbol:"LINK/USD",name:"Chainlink",price:0,prev_close:null},
+ {symbol:"DOT/USD",name:"Polkadot",price:0,prev_close:null},
+ {symbol:"TRX/USD",name:"TRON",price:0,prev_close:null},
+ {symbol:"BCH/USD",name:"Bitcoin Cash",price:0,prev_close:null},
+ {symbol:"SHIB/USD",name:"Shiba Inu",price:0,prev_close:null},
+ {symbol:"TON/USD",name:"Toncoin",price:0,prev_close:null},
  {symbol:"XAU/USD",name:"Gold",price:0,prev_close:null},
+ {symbol:"XAG/USD",name:"Silver",price:0,prev_close:null},
+ {symbol:"WTI/USD",name:"WTI Crude Oil",price:0,prev_close:null},
+ {symbol:"BRENT/USD",name:"Brent Crude Oil",price:0,prev_close:null},
  {symbol:"EUR/USD",name:"Euro",price:0,prev_close:null},
  {symbol:"USD/JPY",name:"US Dollar / Japanese Yen",price:0,prev_close:null},
+ {symbol:"GBP/USD",name:"British Pound / US Dollar",price:0,prev_close:null},
+ {symbol:"USD/CHF",name:"US Dollar / Swiss Franc",price:0,prev_close:null},
+ {symbol:"AUD/USD",name:"Australian Dollar / US Dollar",price:0,prev_close:null},
+ {symbol:"USD/CAD",name:"US Dollar / Canadian Dollar",price:0,prev_close:null},
+ {symbol:"NZD/USD",name:"New Zealand Dollar / US Dollar",price:0,prev_close:null},
+ {symbol:"EUR/GBP",name:"Euro / British Pound",price:0,prev_close:null},
+ {symbol:"SPX",name:"S&P 500 Index",price:0,prev_close:null},
+ {symbol:"NDX",name:"Nasdaq 100 Index",price:0,prev_close:null},
+ {symbol:"DJI",name:"Dow Jones Industrial Average",price:0,prev_close:null},
+ {symbol:"FTSE",name:"FTSE 100 Index",price:0,prev_close:null},
+ {symbol:"DAX",name:"DAX Index",price:0,prev_close:null},
+ {symbol:"N225",name:"Nikkei 225 Index",price:0,prev_close:null},
 ];
 
-const crypto=["BTC","ETH","BNB","SOL","XRP","DOGE","ADA","LTC"];
+const crypto=["BTC","ETH","BNB","SOL","XRP","DOGE","ADA","LTC","AVAX","LINK","DOT","TRX","BCH","SHIB","TON"];
+const forex=["EUR/USD","USD/JPY","GBP/USD","USD/CHF","AUD/USD","USD/CAD","NZD/USD","EUR/GBP"];
+const indices=["SPX","NDX","DJI","FTSE","DAX","N225"];
 const money=(n:number)=>!Number.isFinite(n)||n<=0?"—":n<10?n.toFixed(4):new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
 const change=(a:Asset)=>typeof a.change_24h==="number"&&Number.isFinite(a.change_24h)?a.change_24h:a.prev_close&&a.price?((a.price-a.prev_close)/a.prev_close)*100:0;
-const categoryOf=(s:string)=>crypto.includes(s.split("/")[0])?"Crypto":s==="XAU/USD"?"Commodities":s==="EUR/USD"||s==="USD/JPY"?"Forex":"Indices";
+const categoryOf=(s:string)=>crypto.includes(s.split("/")[0])?"Crypto":forex.includes(s)?"Forex":["XAU/USD","XAG/USD","WTI/USD","BRENT/USD"].includes(s)?"Commodities":indices.includes(s)?"Indices":"Indices";
 
 function AssetIcon({symbol}:{symbol:string}){const b=symbol.split("/")[0];const m:Record<string,string>={BTC:"₿",ETH:"◆",BNB:"◆",SOL:"≋",XRP:"✕",DOGE:"Ð",ADA:"●",LTC:"Ł",XAU:"Au",EUR:"€",USD:"$"};return <span className={"market-asset-icon asset-"+b.toLowerCase()}>{m[b]||b[0]}</span>}
 
