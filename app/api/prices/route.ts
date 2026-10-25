@@ -21,24 +21,14 @@ const cryptoSymbols: Record<string, string> = {
 };
 
 const twelveDataSymbols = [
+  // Start with six high-priority instruments to stay within the free plan's
+  // eight API-credit-per-minute limit. Expand only after verifying coverage.
   "EUR/USD",
   "GBP/USD",
   "USD/JPY",
-  "USD/CHF",
   "AUD/USD",
-  "USD/CAD",
-  "NZD/USD",
-  "EUR/GBP",
   "XAU/USD",
   "XAG/USD",
-  "WTI/USD",
-  "BRENT/USD",
-  "SPX",
-  "NDX",
-  "DJI",
-  "FTSE",
-  "DAX",
-  "N225",
 ];
 
 const marketHosts = [
@@ -92,7 +82,7 @@ async function getTwelveDataQuotes(): Promise<Record<string, { price: number; ch
     url.searchParams.set("apikey", apiKey);
 
     const response = await fetch(url.toString(), {
-      next: { revalidate: 60 },
+      next: { revalidate: 300 },
       headers: { Accept: "application/json" },
     });
     if (!response.ok) {
@@ -167,7 +157,7 @@ export async function GET() {
       { ...prices, changes, updatedAt: new Date().toISOString() },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
         },
       }
     );
