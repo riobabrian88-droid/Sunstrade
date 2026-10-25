@@ -57,7 +57,7 @@ function AssetIcon({symbol}:{symbol:string}){const b=symbol.split("/")[0];const 
 function Spark({positive}:{positive:boolean}){return <svg className={"market-spark "+(positive?"up":"down")} viewBox="0 0 70 28" fill="none" aria-hidden="true"><path d={positive?"M2 23 L12 20 L20 21 L30 13 L39 16 L48 8 L58 11 L68 3":"M2 5 L12 8 L20 6 L30 14 L39 11 L48 20 L58 17 L68 25"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d={positive?"M2 23 L12 20 L20 21 L30 13 L39 16 L48 8 L58 11 L68 3":"M2 5 L12 8 L20 6 L30 14 L39 11 L48 20 L58 17 L68 25"} stroke="currentColor" strokeOpacity=".12" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/></svg>}
 
 export default function MarketsPage(){
- const [assets,setAssets]=useState<Asset[]>(fallback),[query,setQuery]=useState(""),[category,setCategory]=useState("All"),[watchlist,setWatchlist]=useState<string[]>([]),[user,setUser]=useState<any>(null),[loading,setLoading]=useState(true),[status,setStatus]=useState("Connecting");
+ const [assets,setAssets]=useState<Asset[]>(fallback),[query,setQuery]=useState(""),[category,setCategory]=useState("All"),[sort,setSort]=useState("default"),[watchlist,setWatchlist]=useState<string[]>([]),[user,setUser]=useState<any>(null),[loading,setLoading]=useState(true),[status,setStatus]=useState("Connecting");
 
  const load=async()=>{
   const {data,error}=await supabase.from("assets").select("symbol,name,price,prev_close").order("symbol");
@@ -77,10 +77,16 @@ export default function MarketsPage(){
 
  useEffect(()=>{const i=window.setInterval(()=>void live(),30000);return()=>window.clearInterval(i)},[]);
 
- const filtered=useMemo(()=>assets.filter(a=>{
+ const filtered=useMemo(()=>{
   const q=query.trim().toLowerCase();
-  return (!q||a.symbol.toLowerCase().includes(q)||a.name.toLowerCase().includes(q))&&(category==="All"||categoryOf(a.symbol)===category);
- }),[assets,query,category]);
+  const rows=assets.filter(a=>(!q||a.symbol.toLowerCase().includes(q)||a.name.toLowerCase().includes(q))&&(category==="All"||categoryOf(a.symbol)===category));
+  if(sort==="price-high")rows.sort((a,b)=>b.price-a.price);
+  else if(sort==="price-low")rows.sort((a,b)=>a.price-b.price);
+  else if(sort==="gainers")rows.sort((a,b)=>change(b)-change(a));
+  else if(sort==="losers")rows.sort((a,b)=>change(a)-change(b));
+  return rows;
+ },[assets,query,category,sort]);
+ const movers=useMemo(()=>[...assets].filter(a=>a.price>0).sort((a,b)=>Math.abs(change(b))-Math.abs(change(a))).slice(0,3),[assets]);
 
  async function toggle(symbol:string){
   if(!user){setWatchlist(x=>x.includes(symbol)?x.filter(s=>s!==symbol):[...x,symbol]);return}
@@ -103,14 +109,16 @@ export default function MarketsPage(){
 
   <label className="markets-search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search assets or symbols" aria-label="Search assets or symbols"/>{query&&<button onClick={()=>setQuery("")} aria-label="Clear search">×</button>}</label>
 
-  <div className="markets-categories" role="tablist">{["All","Forex","Crypto","Indices","Commodities"].map(c=><button key={c} className={category===c?"active":""} onClick={()=>setCategory(c)}>{c}</button>)}</div>
+  <div className="markets-categories" role="tablist" aria-label="Filter markets by category">{["All","Forex","Crypto","Indices","Commodities"].map(c=><button key={c} type="button" role="tab" aria-selected={category===c} className={category===c?"active":""} onClick={()=>setCategory(c)}>{c}</button>)}</div>
+
+  {movers.length>0&&<section className="markets-movers" aria-label="Biggest percentage movers"><div className="markets-movers-title"><span>MARKET PULSE</span><b>Biggest movers</b></div>{movers.map(a=>{const c=change(a);return <button type="button" className="markets-mover" key={a.symbol} onClick={()=>{setQuery(a.symbol);setCategory("All")}}><span>{a.symbol}</span><b className={c>=0?"positive":"negative"}>{c>=0?"+":""}{c.toFixed(2)}%</b></button>})}</section>}
 
   {watchlist.length===0&&<section className="markets-watch-card"><div className="markets-watch-icon">☆</div><div><span>YOUR WATCHLIST</span><h2>Create your watchlist</h2><p>Tap the star beside an asset to keep your favorite markets close.</p></div></section>}
 
   {watchlist.length>0&&<section className="markets-watch-strip"><div><span>YOUR WATCHLIST</span><strong>{watchlist.length} {watchlist.length===1?"asset":"assets"} saved</strong></div><button onClick={()=>setCategory("All")}>View all →</button></section>}
 
   <section className="markets-list-card">
-   <div className="markets-list-head"><div><span>MARKET WATCH</span><h2>{category==="All"?"All markets":category}</h2></div><small>{filtered.length} assets</small></div>
+   <div className="markets-list-head"><div><span>MARKET WATCH</span><h2>{category==="All"?"All markets":category}</h2></div><div className="markets-list-tools"><small>{filtered.length} assets</small><label className="markets-sort-label">Sort by <select aria-label="Sort markets" value={sort} onChange={e=>setSort(e.target.value)}><option value="default">Default</option><option value="gainers">Top gainers</option><option value="losers">Top losers</option><option value="price-high">Highest price</option><option value="price-low">Lowest price</option></select></label></div></div>
    <div className="markets-list-columns"><span>ASSET</span><span>PRICE / 24H</span></div>
    <div className="markets-list">{filtered.length ? filtered.map(a=>{const c=change(a),positive=c>=0,saved=watchlist.includes(a.symbol);return (
     <Link href={"/trade?symbol="+encodeURIComponent(a.symbol)} className="market-row" key={a.symbol}>
