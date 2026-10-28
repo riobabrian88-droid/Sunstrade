@@ -7,16 +7,10 @@ type CorganoResponse = {
     metal?: string;
     symbol?: string;
     price_usd?: { per_oz?: number };
-    change_usd?: number;
     change_pct?: number;
     as_of?: string;
   };
-  attribution?: {
-    required?: boolean;
-    text?: string;
-    url?: string;
-  };
-  meta?: Record<string, unknown>;
+  attribution?: { required?: boolean; text?: string; url?: string };
 };
 
 export async function GET() {
@@ -64,7 +58,7 @@ export async function GET() {
       change: typeof payload.data?.change_pct === "number" ? payload.data.change_pct : null,
       asOf,
       ageSeconds,
-      freshWithinFiveMinutes: ageSeconds <= 300,
+      freshWithinFiveMinutes: ageSeconds !== null && ageSeconds <= 300,
       attribution: {
         text: payload.attribution?.text ?? "Silver price data by Corgano",
         url: payload.attribution?.url ?? "https://silverprice.corgano.com/",
