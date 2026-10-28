@@ -12,6 +12,8 @@ export default function SignupPage() {
   const [country, setCountry] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -94,9 +96,15 @@ export default function SignupPage() {
                 <option value="">Select your country</option><option value="Kenya">Kenya</option><option value="Japan">Japan</option><option value="United States">United States</option><option value="United Kingdom">United Kingdom</option><option value="Singapore">Singapore</option><option value="Australia">Australia</option><option value="Other">Other</option>
               </select>
               <label htmlFor="signup-password">Password</label>
-              <input id="signup-password" type="password" placeholder="Create a password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="new-password" minLength={6} required />
+              <div style={{ position: "relative", width: "100%" }}>
+                <input id="signup-password" type={showPassword ? "text" : "password"} placeholder="Create a password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="new-password" minLength={6} required style={{ paddingRight: "76px" }} />
+                <button type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", border: 0, background: "transparent", color: "#5de2a3", fontSize: "10px", cursor: "pointer", padding: "6px" }}>{showPassword ? "Hide" : "Show"}</button>
+              </div>
               <label htmlFor="signup-confirm-password">Confirm password</label>
-              <input id="signup-confirm-password" type="password" placeholder="Confirm your password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} autoComplete="new-password" minLength={6} required />
+              <div style={{ position: "relative", width: "100%" }}>
+                <input id="signup-confirm-password" type={showConfirmPassword ? "text" : "password"} placeholder="Confirm your password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} autoComplete="new-password" minLength={6} required style={{ paddingRight: "76px" }} />
+                <button type="button" onClick={() => setShowConfirmPassword(value => !value)} aria-label={showConfirmPassword ? "Hide confirmation password" : "Show confirmation password"} aria-pressed={showConfirmPassword} style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", border: 0, background: "transparent", color: "#5de2a3", fontSize: "10px", cursor: "pointer", padding: "6px" }}>{showConfirmPassword ? "Hide" : "Show"}</button>
+              </div>
               <label className="sun-signup-terms"><input type="checkbox" checked={terms} onChange={e => setTerms(e.target.checked)} /><span>I agree to the SunStrade terms and conditions.</span></label>
               {error && <p className="sun-login-error" role="alert">{error}</p>}
               {message && <p className="sun-signup-success" role="status">{message}</p>}
