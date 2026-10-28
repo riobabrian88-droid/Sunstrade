@@ -22,14 +22,14 @@ const cryptoSymbols: Record<string, string> = {
 
 const twelveDataSymbols = [
   // Keep at or below the Basic plan's eight API-credit-per-minute limit.
-  // Silver is excluded until a usable quote can be confirmed.
+  // Temporary test: verify whether the rotated API key can return silver.
   "EUR/USD",
   "GBP/USD",
   "USD/JPY",
   "AUD/USD",
   "USD/CHF",
   "USD/CAD",
-  "NZD/USD",
+  "XAG/USD",
   "XAU/USD",
 ];
 
