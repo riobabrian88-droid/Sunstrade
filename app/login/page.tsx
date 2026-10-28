@@ -9,6 +9,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -85,7 +86,10 @@ export default function LoginPage() {
               <label htmlFor="login-email">Email</label>
               <input id="login-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email" autoComplete="email" required />
               <label htmlFor="login-password">Password</label>
-              <input id="login-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
+              <div style={{ position: "relative", width: "100%" }}>
+                <input id="login-password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" autoComplete="current-password" required style={{ paddingRight: "76px" }} />
+                <button type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", border: 0, background: "transparent", color: "#5de2a3", fontSize: "10px", cursor: "pointer", padding: "6px" }}>{showPassword ? "Hide" : "Show"}</button>
+              </div>
               <div className="sun-login-options">
                 <span className="sun-login-secure"><span aria-hidden="true">✓</span> Secure sign in</span>
                 <span className="sun-login-forgot-note">Account help? Contact support.</span>
